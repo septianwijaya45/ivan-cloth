@@ -11,6 +11,7 @@ class KainRollController extends Controller
 {
     public function index()
     {
+
         return view('kain_roll.index');
     }
 
@@ -84,5 +85,8 @@ class KainRollController extends Controller
                 'message' => 'Berhasil Hapus data Kain Roll',
             ]);
         }
+        $kain_roll = Kain_roll::all();
+        
+        return view('kain_roll.index',$kain_roll);
     }
 }
