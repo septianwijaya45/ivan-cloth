@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Kain Roll')
+@section('title', 'Karyawan')
 
 @section('content')
     <!-- Content Wrapper. Contains page content -->
@@ -9,12 +9,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Master Kain Roll</h1>
+                        <h1 class="m-0">Master Karyawan</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Kain Roll</li>
+                            <li class="breadcrumb-item active">Karyawan</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -31,28 +31,32 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title">Data Kain Roll</h5>
+                                <h5 class="card-title">Data Karyawan</h5>
 
                                 <div class="card-tools">
                                     <button class="btn btn-success btn-sm" data-toggle="modal"
-                                        data-target="#modalAddKainRoll">
+                                        data-target="#modalAddKaryawan">
                                         <i class="fas fa-plus"></i> Tambah Data
                                     </button>
                                 </div>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <div id="tbl_kain_roll_wrapper"
+                                <div id="tbl_karyawan_wrapper"
                                     class="dataTables_wrapper dt-bootstrap4 table-responsive text-nowrap">
-                                    <table id="tbl_kain_roll" class="table table-bordered table-striped dataTable"
-                                        aria-describedby="tbl_kain_roll" style="width: 100%;">
+                                    <table id="tbl_karyawan" class="table table-bordered table-striped dataTable"
+                                        aria-describedby="tbl_karyawan" style="width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th width="5%" style="text-align: center;">ID</th>
-                                                <th>Kode LOT</th>
-                                                <th>Jenis Kain</th>
-                                                <th>Berat</th>
-                                                <th>Warna</th>
+                                                <th>Nama</th>
+                                                <th>JK</th>
+                                                <th>NIK</th>
+                                                <th>No. Telepon</th>
+                                                <th>NPWP</th>
+                                                <th>Posisi</th>
+                                                <th>Status</th>
+                                                <th>Gaji</th>
                                                 <th width="10%">Aksi</th>
                                             </tr>
                                         </thead>
@@ -75,52 +79,90 @@
     </div>
 
     <!-- The Modal -->
-    <div class="modal fade" id="modalAddKainRoll" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+    <div class="modal fade" id="modalAddKaryawan" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true">
         <div class="modal-dialog-scrollable modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Tambah Data Kain Roll</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Tambah Data Karyawan</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body bg-light">
-                    <form enctype="multipart/form-data" autocomplete="off" id="formAddKainRoll" class="needs-validation"
+                    <form enctype="multipart/form-data" autocomplete="off" id="formAddKaryawan" class="needs-validation"
                         novalidate>
                         @csrf
                         <div class="row">
-                            <div class="col-md-4">
-                                <label for="kode_lot">Kode LOT</label>
-                                <div class="col-md-14 row">
-                                    <div class="col-md-12">
-                                        <input type="text" placeholder="LOT-0001" name="kode_lot" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-md-8">
-                                <label for="jenis_kain">Jenis Kain</label>
+                                <label for="nama">Nama</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="Katun, Linen, Denim, dll" name="jenis_kain"
+                                        <input type="text" placeholder="Nama Karyawan" name="nama"
                                             class="form-control">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 mt-3">
-                                <label for="berat">Berat (Kg)</label>
+                            <div class="col-md-4">
+                                <label for="jenis_kelamin">Jenis Kelamin</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="number" placeholder="Berat kain" name="berat" class="form-control"
-                                            step=".01" min="1">
+                                        <select name="jenis_kelamin" class="form-control">
+                                            <option value="L" selected>Laki-laki</option>
+                                            <option value="P">Perempuan</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8 mt-3">
-                                <label for="warna">Warna</label>
+                            <div class="col-md-12 mt-3">
+                                <label for="no_telepon">No Telepon</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="Warna kain." name="warna" class="form-control">
+                                        <input type="text" placeholder="Nomor Telepon" name="no_telepon"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <label for="nik">NIK</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="text" placeholder="Nomor Induk Karyawan" name="nik"
+                                            class="form-control" minlength="16" maxlength="16">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <label for="npwp">NPWP</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="text" placeholder="NPWP Karyawan" name="npwp"
+                                            class="form-control" minlength="16" maxlength="16">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <label for="posisi">Posisi</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <select name="posisi" class="form-control">
+                                            <option value="Direktur" selected>Direktur</option>
+                                            <option value="Wakil Direktur">Wakil Direktur</option>
+                                            <option value="HRD">HRD</option>
+                                            <option value="Manager">Manager</option>
+                                            <option value="Supervisor">Supervisor</option>
+                                            <option value="Staff Pekerja">Staff Pekerja</option>
+                                            <option value="Staff Gudang">Staff Gudang</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <label for="gaji_pokok">Gaji Pokok</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="number" placeholder="Gaji Pokok Karyawan" name="gaji_pokok"
+                                            class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -135,56 +177,103 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalEditKainRoll" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true">
+    <div class="modal fade" id="modalEditKaryawan" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog-scrollable modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Data Kain Roll</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Data Karyawan</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body bg-light">
-                    <form enctype="multipart/form-data" autocomplete="off" id="formEditKainRoll" data-id=""
+                    <form enctype="multipart/form-data" autocomplete="off" id="formEditKaryawan" data-id=""
                         class="needs-validation" novalidate>
                         @method('PUT')
                         @csrf
                         <input type="hidden" name="id">
                         <div class="row">
-                            <div class="col-md-4">
-                                <label for="kode_lot">Kode LOT</label>
+                            <div class="col-md-8">
+                                <label for="nama">Nama</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="LOT-0001" name="kode_lot"
+                                        <input type="text" placeholder="Nama Karyawan" name="nama"
                                             class="form-control">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8">
-                                <label for="jenis_kain">Jenis Kain</label>
+                            <div class="col-md-4">
+                                <label for="jenis_kelamin">Jenis Kelamin</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="Katun, Linen, Denim, dll" name="jenis_kain"
+                                        <select name="jenis_kelamin" class="form-control">
+                                            <option value="L">Laki-laki</option>
+                                            <option value="P">Perempuan</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <label for="no_telepon">No Telepon</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="text" placeholder="Nomor Telepon" name="no_telepon"
+                                            class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <label for="nik">NIK</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="text" placeholder="Nomor Induk Karyawan" name="nik"
+                                            class="form-control" minlength="16" maxlength="16">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-3">
+                                <label for="npwp">NPWP</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="text" placeholder="NPWP Karyawan" name="npwp"
+                                            class="form-control" minlength="16" maxlength="16">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12 mt-3">
+                                <label for="posisi">Posisi/Jabatan</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <select name="posisi" class="form-control">
+                                            <option value="Direktur" selected>Direktur</option>
+                                            <option value="Wakil Direktur">Wakil Direktur</option>
+                                            <option value="HRD">HRD</option>
+                                            <option value="Manager">Manager</option>
+                                            <option value="Supervisor">Supervisor</option>
+                                            <option value="Staff Pekerja">Staff Pekerja</option>
+                                            <option value="Staff Gudang">Staff Gudang</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-8 mt-3">
+                                <label for="gaji_pokok">Gaji Pokok</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="number" placeholder="Gaji Pokok Karyawan" name="gaji_pokok"
                                             class="form-control">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-4 mt-3">
-                                <label for="berat">Berat (Kg)</label>
+                                <label for="status_karyawan">Status Karyawan</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="number" placeholder="Berat kain" name="berat"
-                                            class="form-control" step=".01">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-8 mt-3">
-                                <label for="warna">Warna</label>
-                                <div class="col-md-14 row">
-                                    <div class="col-md-12">
-                                        <input type="text" placeholder="Warna kain." name="warna"
-                                            class="form-control">
+                                        <select name="status_karyawan" class="form-control">
+                                            <option value="Aktif">Aktif</option>
+                                            <option value="Tidak Aktif">Tidak Aktif</option>
+                                        </select>
                                     </div>
                                 </div>
                             </div>
@@ -253,27 +342,42 @@
             timerProgressBar: true,
         })
 
-        getKainRoll()
+        getKaryawan()
 
-        function getKainRoll() {
+        function getKaryawan() {
             var htmlview
             $.ajax({
-                url: "{{ route('kain_roll.data') }}",
+                url: "{{ route('karyawan.data') }}",
                 type: 'GET',
                 success: function(res) {
                     $('tbody').html('')
                     $.each(res, function(i, data) {
+
+                        var status = data.status_karyawan
+                        if (status == 'Aktif') {
+                            status =
+                                '<span class="btn btn-success btn-sm container-fluid"> Aktif </span>'
+                        } else {
+                            status =
+                                '<span class="btn btn-danger btn-sm container-fluid"> Tidak Aktif </span>'
+                        }
+
                         htmlview += `<tr>
                         <td style="text-align: center;">` + data.id + `</td>
-                        <td>` + data.kode_lot + `</td>
-                        <td>` + data.jenis_kain + `</td>
-                        <td style='text-align: right;'>` + data.berat + ` kg</td>
-                        <td>` + data.warna + `</td>
+                        <td>` + data.nama + `</td>
+                        <td>` + data.jenis_kelamin + `</td>
+                        <td>` + data.nik + `</td>
+                        <td>` + data.no_telepon + `</td>
+                        <td>` + data.npwp + `</td>
+                        <td>` + data.posisi + `</td>
+                        <td>` + status + `</td>
+                        <td style='text-align:right;'>Rp. ` + data.gaji_pokok.toString().replace(
+                                /(\d)(?=(\d{3})+(?!\d))/g, "$1.") + `</td>
                         <td>
-                          <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailKainRoll('` + data
+                          <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailKaryawan('` + data
                             .uuid + `')"> <i class="fas fa-pencil-alt"></i>
                           </button>
-                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteKainRoll('` + data
+                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteKaryawan('` + data
                             .uuid + `')"> <i class="fas fa-trash"></i>
                           </button>
                         </td>
@@ -281,39 +385,39 @@
                     });
 
                     $('tbody').html(htmlview)
-                    $("#tbl_kain_roll").DataTable(dtTableOption).buttons().container().appendTo(
-                        '#tbl_kain_roll_wrapper .col-md-6:eq(0)')
+                    $("#tbl_karyawan").DataTable(dtTableOption).buttons().container().appendTo(
+                        '#tbl_karyawan_wrapper .col-md-6:eq(0)')
                 }
             })
         }
 
-        function addKainRoll() {
+        function addKaryawan() {
             $.ajax({
-                url: "{{ route('kain_roll.add') }}",
+                url: "{{ route('karyawan.add') }}",
                 type: "POST",
-                data: $('#formAddKainRoll').serialize(),
+                data: $('#formAddKaryawan').serialize(),
                 dataType: 'json',
                 success: function(res) {
                     if (res.code == 200) {
-                        $('#formAddKainRoll').trigger('reset')
-                        $('#modalAddKainRoll').modal('hide')
+                        $('#formAddKaryawan').trigger('reset')
+                        $('#modalAddKaryawan').modal('hide')
 
                         Notif.fire({
                             icon: 'success',
                             title: res.message,
                         })
-                        $("#tbl_kain_roll").DataTable().destroy();
-                        getKainRoll()
+                        $("#tbl_karyawan").DataTable().destroy();
+                        getKaryawan()
                     }
                 },
                 error: function(err) {
                     Notif.fire({
                         icon: 'error',
-                        title: 'Gagal Menyimpan Data Kain Roll',
+                        title: 'Gagal Menyimpan Data Karyawan',
                     });
-
+                    console.log(err);
                     $.each(err.responseJSON.errors, function(i, error) {
-                        var el = $('#formAddKainRoll').find('[name="' + i + '"]');
+                        var el = $('#formAddKaryawan').find('[name="' + i + '"]');
                         el.addClass('is-invalid');
                         el.after('<div class="invalid-feedback">' + error[0] + '</div>');
                     });
@@ -321,55 +425,55 @@
             })
         }
 
-        function detailKainRoll(id) {
-            var _url = "{{ route('kain_roll.detail', ':id') }}"
+        function detailKaryawan(id) {
+            var _url = "{{ route('karyawan.detail', ':id') }}"
             _url = _url.replace(':id', id)
 
             $.ajax({
                 url: _url,
                 type: 'GET',
                 success: function(res) {
-                    $('#modalEditKainRoll').modal('show')
-                    $('#formEditKainRoll').attr("data-id", id)
+                    $('#modalEditKaryawan').modal('show')
+                    $('#formEditKaryawan').attr("data-id", id)
                     $.each(res, function(i, data) {
-                        var el = $('#formEditKainRoll').find('[name="' + i + '"]');
+                        var el = $('#formEditKaryawan').find('[name="' + i + '"]');
                         el.val(data);
                     })
                 }
             })
         }
 
-        function updateKainRoll() {
-            var id = $('#formEditKainRoll').data('id')
-            var _url = "{{ route('kain_roll.update', ':id') }}"
+        function updateKaryawan() {
+            var id = $('#formEditKaryawan').data('id')
+            var _url = "{{ route('karyawan.update', ':id') }}"
             _url = _url.replace(':id', id)
 
             $.ajax({
                 url: _url,
                 type: 'PUT',
-                data: $('#formEditKainRoll').serialize(),
+                data: $('#formEditKaryawan').serialize(),
                 dataType: 'json',
                 success: function(res) {
                     if (res.code == 200) {
-                        $('#formEditKainRoll').trigger('reset')
-                        $('#modalEditKainRoll').modal('hide')
+                        $('#formEditKaryawan').trigger('reset')
+                        $('#modalEditKaryawan').modal('hide')
 
                         Notif.fire({
                             icon: 'success',
                             title: res.message,
                         })
-                        $("#tbl_kain_roll").DataTable().destroy();
-                        getKainRoll()
+                        $("#tbl_karyawan").DataTable().destroy();
+                        getKaryawan()
                     }
                 },
                 error: function(err) {
                     Notif.fire({
                         icon: 'error',
-                        title: 'Gagal Menyimpan Data Kain Roll',
+                        title: 'Gagal Menyimpan Data Karyawan',
                     });
 
                     $.each(err.responseJSON.errors, function(i, error) {
-                        var el = $('#formEditKainRoll').find('[name="' + i + '"]');
+                        var el = $('#formEditKaryawan').find('[name="' + i + '"]');
                         el.addClass('is-invalid');
                         el.after('<div class="invalid-feedback">' + error[0] + '</div>');
                     });
@@ -381,17 +485,17 @@
             e.preventDefault()
             $('.is-invalid').removeClass('is-invalid');
             $('.invalid-feedback').remove();
-            addKainRoll()
+            addKaryawan()
         })
 
         $('#simpanData').on('click', function(e) {
             e.preventDefault()
             $('.is-invalid').removeClass('is-invalid');
             $('.invalid-feedback').remove();
-            updateKainRoll()
+            updateKaryawan()
         })
 
-        function deleteKainRoll(id) {
+        function deleteKaryawan(id) {
             Swal.fire({
                     title: "Apakah anda yakin hapus data ini?",
                     icon: "warning",
@@ -401,7 +505,7 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        var _url = "{{ route('kain_roll.delete', ':id') }}";
+                        var _url = "{{ route('karyawan.delete', ':id') }}";
                         _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
@@ -415,8 +519,8 @@
                                     icon: 'success',
                                     title: res.message,
                                 })
-                                $("#tbl_kain_roll").DataTable().destroy();
-                                getKainRoll();
+                                $("#tbl_karyawan").DataTable().destroy();
+                                getKaryawan();
                             },
                             error: function(err) {
                                 console.log(err);

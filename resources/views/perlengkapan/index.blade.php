@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Kain Roll')
+@section('title', 'Perlengkapan')
 
 @section('content')
     <!-- Content Wrapper. Contains page content -->
@@ -9,12 +9,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Master Kain Roll</h1>
+                        <h1 class="m-0">Master Perlengkapan</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Kain Roll</li>
+                            <li class="breadcrumb-item active">Perlengkapan</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -31,28 +31,26 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title">Data Kain Roll</h5>
+                                <h5 class="card-title">Data Perlengkapan</h5>
 
                                 <div class="card-tools">
                                     <button class="btn btn-success btn-sm" data-toggle="modal"
-                                        data-target="#modalAddKainRoll">
+                                        data-target="#modalAddPerlengkapan">
                                         <i class="fas fa-plus"></i> Tambah Data
                                     </button>
                                 </div>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <div id="tbl_kain_roll_wrapper"
+                                <div id="tbl_perlengkapan_wrapper"
                                     class="dataTables_wrapper dt-bootstrap4 table-responsive text-nowrap">
-                                    <table id="tbl_kain_roll" class="table table-bordered table-striped dataTable"
-                                        aria-describedby="tbl_kain_roll" style="width: 100%;">
+                                    <table id="tbl_perlengkapan" class="table table-bordered table-striped dataTable"
+                                        aria-describedby="tbl_perlengkapan" style="width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th width="5%" style="text-align: center;">ID</th>
-                                                <th>Kode LOT</th>
-                                                <th>Jenis Kain</th>
-                                                <th>Berat</th>
-                                                <th>Warna</th>
+                                                <th>Nama Perlengkapan / Barang</th>
+                                                <th>Total Stok</th>
                                                 <th width="10%">Aksi</th>
                                             </tr>
                                         </thead>
@@ -75,52 +73,35 @@
     </div>
 
     <!-- The Modal -->
-    <div class="modal fade" id="modalAddKainRoll" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true">
+    <div class="modal fade" id="modalAddPerlengkapan" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog-scrollable modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Tambah Data Kain Roll</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Tambah Data Perlengkapan</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body bg-light">
-                    <form enctype="multipart/form-data" autocomplete="off" id="formAddKainRoll" class="needs-validation"
+                    <form enctype="multipart/form-data" autocomplete="off" id="formAddPerlengkapan" class="needs-validation"
                         novalidate>
                         @csrf
                         <div class="row">
-                            <div class="col-md-4">
-                                <label for="kode_lot">Kode LOT</label>
-                                <div class="col-md-14 row">
-                                    <div class="col-md-12">
-                                        <input type="text" placeholder="LOT-0001" name="kode_lot" class="form-control">
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-md-8">
-                                <label for="jenis_kain">Jenis Kain</label>
+                                <label for="nama">Nama Perlengkapan / Barang</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="Katun, Linen, Denim, dll" name="jenis_kain"
+                                        <input type="text" placeholder="Nama Perlengkapan / Barang" name="nama"
                                             class="form-control">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 mt-3">
-                                <label for="berat">Berat (Kg)</label>
+                            <div class="col-md-4">
+                                <label for="total_stok">Total Stok</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="number" placeholder="Berat kain" name="berat" class="form-control"
-                                            step=".01" min="1">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-8 mt-3">
-                                <label for="warna">Warna</label>
-                                <div class="col-md-14 row">
-                                    <div class="col-md-12">
-                                        <input type="text" placeholder="Warna kain." name="warna" class="form-control">
+                                        <input type="number" name="total_stok" class="form-control" value="0">
                                     </div>
                                 </div>
                             </div>
@@ -135,56 +116,37 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalEditKainRoll" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true">
+    <div class="modal fade" id="modalEditPerlengkapan" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog-scrollable modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Data Kain Roll</h5>
+                    <h5 class="modal-title" id="exampleModalLongTitle">Edit Data Perlengkapan</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
                 </div>
                 <div class="modal-body bg-light">
-                    <form enctype="multipart/form-data" autocomplete="off" id="formEditKainRoll" data-id=""
+                    <form enctype="multipart/form-data" autocomplete="off" id="formEditPerlengkapan" data-id=""
                         class="needs-validation" novalidate>
                         @method('PUT')
                         @csrf
                         <input type="hidden" name="id">
                         <div class="row">
-                            <div class="col-md-4">
-                                <label for="kode_lot">Kode LOT</label>
-                                <div class="col-md-14 row">
-                                    <div class="col-md-12">
-                                        <input type="text" placeholder="LOT-0001" name="kode_lot"
-                                            class="form-control">
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-md-8">
-                                <label for="jenis_kain">Jenis Kain</label>
+                                <label for="nama">Nama Perlengkapan / Barang</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="Katun, Linen, Denim, dll" name="jenis_kain"
+                                        <input type="text" placeholder="Nama Perlengkapan / Barang" name="nama"
                                             class="form-control">
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 mt-3">
-                                <label for="berat">Berat (Kg)</label>
+                            <div class="col-md-4">
+                                <label for="total_stok">Total Stok</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="number" placeholder="Berat kain" name="berat"
-                                            class="form-control" step=".01">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-8 mt-3">
-                                <label for="warna">Warna</label>
-                                <div class="col-md-14 row">
-                                    <div class="col-md-12">
-                                        <input type="text" placeholder="Warna kain." name="warna"
-                                            class="form-control">
+                                        <input type="number" name="total_stok" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -253,67 +215,65 @@
             timerProgressBar: true,
         })
 
-        getKainRoll()
+        getPerlengkapan()
 
-        function getKainRoll() {
+        function getPerlengkapan() {
             var htmlview
             $.ajax({
-                url: "{{ route('kain_roll.data') }}",
+                url: "{{ route('perlengkapan.data') }}",
                 type: 'GET',
                 success: function(res) {
                     $('tbody').html('')
                     $.each(res, function(i, data) {
                         htmlview += `<tr>
                         <td style="text-align: center;">` + data.id + `</td>
-                        <td>` + data.kode_lot + `</td>
-                        <td>` + data.jenis_kain + `</td>
-                        <td style='text-align: right;'>` + data.berat + ` kg</td>
-                        <td>` + data.warna + `</td>
+                        <td>` + data.nama + `</td>
+                        <td>` + data.total_stok + `</td>
                         <td>
-                          <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailKainRoll('` + data
+                          <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailPerlengkapan('` + data
                             .uuid + `')"> <i class="fas fa-pencil-alt"></i>
                           </button>
-                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteKainRoll('` + data
-                            .uuid + `')"> <i class="fas fa-trash"></i>
+                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deletePerlengkapan('` +
+                            data.uuid + `')"> <i class="fas fa-trash"></i>
                           </button>
                         </td>
                        </tr>`
                     });
 
                     $('tbody').html(htmlview)
-                    $("#tbl_kain_roll").DataTable(dtTableOption).buttons().container().appendTo(
-                        '#tbl_kain_roll_wrapper .col-md-6:eq(0)')
+                    $("#tbl_perlengkapan").DataTable(dtTableOption).buttons().container().appendTo(
+                        '#tbl_perlengkapan_wrapper .col-md-6:eq(0)')
                 }
             })
         }
 
-        function addKainRoll() {
+        function addPerlengkapan() {
             $.ajax({
-                url: "{{ route('kain_roll.add') }}",
+                url: "{{ route('perlengkapan.add') }}",
                 type: "POST",
-                data: $('#formAddKainRoll').serialize(),
+                data: $('#formAddPerlengkapan').serialize(),
                 dataType: 'json',
                 success: function(res) {
                     if (res.code == 200) {
-                        $('#formAddKainRoll').trigger('reset')
-                        $('#modalAddKainRoll').modal('hide')
+                        $('#formAddPerlengkapan').trigger('reset')
+                        $('#modalAddPerlengkapan').modal('hide')
 
                         Notif.fire({
                             icon: 'success',
                             title: res.message,
                         })
-                        $("#tbl_kain_roll").DataTable().destroy();
-                        getKainRoll()
+                        $("#tbl_perlengkapan").DataTable().destroy();
+                        getPerlengkapan()
                     }
                 },
                 error: function(err) {
                     Notif.fire({
                         icon: 'error',
-                        title: 'Gagal Menyimpan Data Kain Roll',
+                        title: 'Gagal Menyimpan Data Perlengkapan',
                     });
 
                     $.each(err.responseJSON.errors, function(i, error) {
-                        var el = $('#formAddKainRoll').find('[name="' + i + '"]');
+                        var el = $('#formAddPerlengkapan').find('[name="' + i + '"]');
                         el.addClass('is-invalid');
                         el.after('<div class="invalid-feedback">' + error[0] + '</div>');
                     });
@@ -321,55 +281,55 @@
             })
         }
 
-        function detailKainRoll(id) {
-            var _url = "{{ route('kain_roll.detail', ':id') }}"
+        function detailPerlengkapan(id) {
+            var _url = "{{ route('perlengkapan.detail', ':id') }}"
             _url = _url.replace(':id', id)
 
             $.ajax({
                 url: _url,
                 type: 'GET',
                 success: function(res) {
-                    $('#modalEditKainRoll').modal('show')
-                    $('#formEditKainRoll').attr("data-id", id)
+                    $('#modalEditPerlengkapan').modal('show')
+                    $('#formEditPerlengkapan').attr("data-id", id)
                     $.each(res, function(i, data) {
-                        var el = $('#formEditKainRoll').find('[name="' + i + '"]');
+                        var el = $('#formEditPerlengkapan').find('[name="' + i + '"]');
                         el.val(data);
                     })
                 }
             })
         }
 
-        function updateKainRoll() {
-            var id = $('#formEditKainRoll').data('id')
-            var _url = "{{ route('kain_roll.update', ':id') }}"
+        function updatePerlengkapan() {
+            var id = $('#formEditPerlengkapan').data('id')
+            var _url = "{{ route('perlengkapan.update', ':id') }}"
             _url = _url.replace(':id', id)
 
             $.ajax({
                 url: _url,
                 type: 'PUT',
-                data: $('#formEditKainRoll').serialize(),
+                data: $('#formEditPerlengkapan').serialize(),
                 dataType: 'json',
                 success: function(res) {
                     if (res.code == 200) {
-                        $('#formEditKainRoll').trigger('reset')
-                        $('#modalEditKainRoll').modal('hide')
+                        $('#formEditPerlengkapan').trigger('reset')
+                        $('#modalEditPerlengkapan').modal('hide')
 
                         Notif.fire({
                             icon: 'success',
                             title: res.message,
                         })
-                        $("#tbl_kain_roll").DataTable().destroy();
-                        getKainRoll()
+                        $("#tbl_perlengkapan").DataTable().destroy();
+                        getPerlengkapan()
                     }
                 },
                 error: function(err) {
                     Notif.fire({
                         icon: 'error',
-                        title: 'Gagal Menyimpan Data Kain Roll',
+                        title: 'Gagal Menyimpan Data Perlengkapan',
                     });
 
                     $.each(err.responseJSON.errors, function(i, error) {
-                        var el = $('#formEditKainRoll').find('[name="' + i + '"]');
+                        var el = $('#formEditPerlengkapan').find('[name="' + i + '"]');
                         el.addClass('is-invalid');
                         el.after('<div class="invalid-feedback">' + error[0] + '</div>');
                     });
@@ -381,17 +341,17 @@
             e.preventDefault()
             $('.is-invalid').removeClass('is-invalid');
             $('.invalid-feedback').remove();
-            addKainRoll()
+            addPerlengkapan()
         })
 
         $('#simpanData').on('click', function(e) {
             e.preventDefault()
             $('.is-invalid').removeClass('is-invalid');
             $('.invalid-feedback').remove();
-            updateKainRoll()
+            updatePerlengkapan()
         })
 
-        function deleteKainRoll(id) {
+        function deletePerlengkapan(id) {
             Swal.fire({
                     title: "Apakah anda yakin hapus data ini?",
                     icon: "warning",
@@ -401,7 +361,7 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        var _url = "{{ route('kain_roll.delete', ':id') }}";
+                        var _url = "{{ route('perlengkapan.delete', ':id') }}";
                         _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
@@ -415,8 +375,8 @@
                                     icon: 'success',
                                     title: res.message,
                                 })
-                                $("#tbl_kain_roll").DataTable().destroy();
-                                getKainRoll();
+                                $("#tbl_perlengkapan").DataTable().destroy();
+                                getPerlengkapan();
                             },
                             error: function(err) {
                                 console.log(err);
