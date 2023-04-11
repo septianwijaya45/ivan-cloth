@@ -6,6 +6,7 @@ use App\Http\Controllers\KainPotonganController;
 use App\Http\Controllers\KainRollController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\GajiController;
 use App\Http\Controllers\PerlengkapanController;
 use App\Http\Controllers\UkuranController;
 use Illuminate\Support\Facades\Route;
@@ -41,6 +42,16 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         Route::get('{uuid}', [UkuranController::class, 'edit'])->name('ukuran.edit');
         Route::put('{uuid}', [UkuranController::class, 'update'])->name('ukuran.update');
         Route::delete('{uuid}', [UkuranController::class, 'delete'])->name('ukuran.delete');
+    });
+
+    // Module Gaji
+    Route::group(['prefix' => 'gaji'], function(){
+        Route::get('', [GajiController::class, 'index'])->name('gaji');
+        Route::get('data', [GajiController::class, 'indexData'])->name('gaji.data');
+        Route::post('', [GajiController::class, 'store'])->name('gaji.add');
+        Route::get('{uuid}', [GajiController::class, 'edit'])->name('gaji.edit');
+        Route::put('{uuid}', [GajiController::class, 'update'])->name('gaji.update');
+        Route::delete('{uuid}', [GajiController::class, 'delete'])->name('gaji.delete');
     });
     
     //Route Module Kain Roll

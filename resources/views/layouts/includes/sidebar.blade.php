@@ -42,27 +42,10 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('gaji') }}" class="nav-link">
                         <i class="nav-icon fas fa-box"></i>
                         <p>
                             Gaji
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('kain_roll') }}"
-                        class="nav-link {{ request()->is('kain_roll') ? ' active' : '' }}">
-                        <i class="nav-icon fas fa-scroll"></i>
-                        <p>
-                            Kain Roll
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="{{ route('kain_potongan') }}" class="nav-link">
-                        <i class="nav-icon fas fa-cut"></i>
-                        <p>
-                            Kain Potongan
                         </p>
                     </a>
                 </li>
@@ -72,22 +55,6 @@
                         <i class="nav-icon fas fa-pencil-ruler"></i>
                         <p>
                             Perlengkapan
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-tshirt"></i>
-                        <p>
-                            Barang Jadi
-                        </p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-warehouse"></i>
-                        <p>
-                            Stok
                         </p>
                     </a>
                 </li>
@@ -117,101 +84,96 @@
                         </p>
                     </a>
                 </li>
-                <li class="nav-header">MISCELLANEOUS</li>
+                <li class="nav-header">Stok Barang</li>
                 <li class="nav-item">
-                    <a href="iframe.html" class="nav-link">
-                        <i class="nav-icon fas fa-ellipsis-h"></i>
-                        <p>Tabbed IFrame Plugin</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="https://adminlte.io/docs/3.1/" class="nav-link">
-                        <i class="nav-icon fas fa-file"></i>
-                        <p>Documentation</p>
-                    </a>
-                </li>
-                <li class="nav-header">MULTI LEVEL EXAMPLE</li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-circle nav-icon"></i>
-                        <p>Level 1</p>
-                    </a>
-                </li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon fas fa-circle"></i>
+                    <a href="{{ route('kain_roll') }}"
+                        class="nav-link {{ request()->is('kain_roll') ? ' active' : '' }}">
+                        <i class="nav-icon fas fa-scroll"></i>
                         <p>
-                            Level 1
-                            <i class="right fas fa-angle-left"></i>
+                            Kain Roll
                         </p>
                     </a>
-                    <ul class="nav nav-treeview">
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Level 2</p>
-                            </a>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>
-                                    Level 2
-                                    <i class="right fas fa-angle-left"></i>
-                                </p>
-                            </a>
-                            <ul class="nav nav-treeview">
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-dot-circle nav-icon"></i>
-                                        <p>Level 3</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-dot-circle nav-icon"></i>
-                                        <p>Level 3</p>
-                                    </a>
-                                </li>
-                                <li class="nav-item">
-                                    <a href="#" class="nav-link">
-                                        <i class="far fa-dot-circle nav-icon"></i>
-                                        <p>Level 3</p>
-                                    </a>
-                                </li>
-                            </ul>
-                        </li>
-                        <li class="nav-item">
-                            <a href="#" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Level 2</p>
-                            </a>
-                        </li>
-                    </ul>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="fas fa-circle nav-icon"></i>
-                        <p>Level 1</p>
-                    </a>
-                </li>
-                <li class="nav-header">LABELS</li>
-                <li class="nav-item">
-                    <a href="#" class="nav-link">
-                        <i class="nav-icon far fa-circle text-danger"></i>
-                        <p class="text">Important</p>
+                    <a href="{{ route('kain_potongan') }}" class="nav-link">
+                        <i class="nav-icon fas fa-cut"></i>
+                        <p>
+                            Kain Potongan
+                        </p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon far fa-circle text-warning"></i>
-                        <p>Warning</p>
+                        <i class="nav-icon fas fa-tshirt"></i>
+                        <p>
+                            Barang Jadi
+                        </p>
                     </a>
                 </li>
                 <li class="nav-item">
                     <a href="#" class="nav-link">
-                        <i class="nav-icon far fa-circle text-info"></i>
-                        <p>Informational</p>
+                        <i class="nav-icon fas fa-warehouse"></i>
+                        <p>
+                            Stok
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-header">Surat Perintah</li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-cut"></i>
+                        <p>
+                            SPP (Potong)
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-palette"></i>
+                        <p>
+                            SPK (Sablon)
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-layer-group"></i>
+                        <p>
+                            Jahit
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-clipboard-list"></i>
+                        <p>
+                            Finishing
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-header">Keuangan</li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-chart-line"></i>
+                        <p>
+                            Pemasukkan
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-receipt"></i>
+                        <p>
+                            Pengeluaran
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="#" class="nav-link">
+                        <i class="nav-icon fas fa-money-bill"></i>
+                        <p>
+                            Laba
+                        </p>
                     </a>
                 </li>
             </ul>
