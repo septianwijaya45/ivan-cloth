@@ -8,6 +8,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\GajiController;
 use App\Http\Controllers\PerlengkapanController;
+use App\Http\Controllers\SPPController;
 use App\Http\Controllers\UkuranController;
 use Illuminate\Support\Facades\Route;
 
@@ -32,7 +33,9 @@ Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 
 Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
-    Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::group(['roles' => ['owner', 'admin', 'warehouse']], function(){
+        Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    });
     
     // Module Ukuran
     Route::group(['prefix' => 'ukuran'], function(){
@@ -102,5 +105,21 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         Route::get('{uuid}', [AsetController::class, 'detailData'])->name('aset.detail');
         Route::put('{uuid}', [AsetController::class, 'updateData'])->name('aset.update');
         Route::delete('{uuid}', [AsetController::class, 'deleteData'])->name('aset.delete');
+    });
+
+    // Route SPP
+    Route::group(['prefix' => 'surat-perintah-potong'], function(){
+        Route::get('', [SPPController::class, 'index'])->name('spp');
+        Route::get('data', [SPPController::class, 'indexData'])->name('spp.data');
+        // create
+        Route::get('tambah-data', [SPPController::class, 'insert'])->name('spp.insert');
+        Route::post('tambah-data', [SPPController::class, 'store'])->name('spp.store');
+        // edit
+        Route::get('edit-data/{kode_spp}', [SPPController::class, 'edit'])->name('spp.edit');
+        Route::post('edit-data/{kode_spp}', [SPPController::class, 'update'])->name('spp.update');
+        // delete detail
+        Route::delete('detail-data/delete', [SPPController::class, 'deleteInsertorEdit'])->name('spp.deleteInsertEdit');
+        // delete spp
+        Route::delete('delete', [SPPController::class, 'destroy'])->name('spp.delete');
     });
 });

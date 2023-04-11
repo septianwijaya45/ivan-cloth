@@ -120,7 +120,7 @@
                 </li>
                 <li class="nav-header">Surat Perintah</li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{route('spp')}}" class="nav-link">
                         <i class="nav-icon fas fa-cut"></i>
                         <p>
                             SPP (Potong)

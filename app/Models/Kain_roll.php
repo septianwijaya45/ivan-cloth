@@ -12,4 +12,9 @@ class Kain_roll extends Model
     protected $fillable = [
         'uuid', 'kode_lot', 'jenis_kain', 'berat', 'warna'
     ];
+
+    public function spp()
+    {
+        return $this->hasMany(SPP::class);
+    }
 }
