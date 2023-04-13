@@ -118,8 +118,8 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         Route::get('edit-data/{kode_spp}', [SPPController::class, 'edit'])->name('spp.edit');
         Route::post('edit-data/{kode_spp}', [SPPController::class, 'update'])->name('spp.update');
         // delete detail
-        Route::delete('detail-data/delete', [SPPController::class, 'deleteInsertorEdit'])->name('spp.deleteInsertEdit');
+        Route::delete('detail-data/delete/{id}', [SPPController::class, 'deleteInsertorEdit'])->name('spp.deleteInsertEdit');
         // delete spp
-        Route::delete('delete', [SPPController::class, 'destroy'])->name('spp.delete');
+        Route::delete('delete/{kode_spp}', [SPPController::class, 'destroy'])->name('spp.delete');
     });
 });

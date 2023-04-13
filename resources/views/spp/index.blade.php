@@ -48,6 +48,7 @@
                                                 <th width="5%" style="text-align: center;">ID</th>
                                                 <th>Kode SPP</th>
                                                 <th>Total Perintah Potongan</th>
+                                                <th>Tanggal</th>
                                                 <th width="10%">Aksi</th>
                                             </tr>
                                         </thead>
@@ -131,16 +132,18 @@
                 url: "{{ route('spp.data') }}",
                 type: 'GET',
                 success: function(res) {
+                    let no = 0;
                     $('tbody').html('')
                     $.each(res, function(i, data) {
                         htmlview += `<tr>
-                        <td style="text-align: center;">` + data.id + `</td>
+                        <td style="text-align: center;">` + (no = no+1) + `</td>
                         <td>` + data.kode_spp + `</td>
                         <td>` + data.total + `</td>
+                        <td>` + data.tanggal + `</td>
                         <td>
                           <a class="btn btn-info btn-sm" title="Edit Data!" href="/edit-data/`+data.kode_spp+`"> <i class="fas fa-pencil-alt"></i>
                           </a>
-                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteUkuran('` + data
+                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPP('` + data
                             .kode_spp + `')"> <i class="fas fa-trash"></i>
                           </button>
                         </td>
@@ -154,7 +157,7 @@
             })
         }
 
-        function deleteUkuran(kode_spp) {
+        function deleteSPP(kode_spp) {
             Swal.fire({
                     title: "Apakah anda yakin hapus data ini?",
                     icon: "warning",
@@ -164,8 +167,8 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        var _url = "{{ route('spp.delete', ':kode_spp') }}";
-                        _url = _url.replace(':kode_spp', kode_spp)
+                        var _url = "{{ route('spp.delete', 'kode_spp') }}";
+                        _url = _url.replace('kode_spp', kode_spp)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,

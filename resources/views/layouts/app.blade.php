@@ -61,6 +61,7 @@
     <!-- REQUIRED SCRIPTS -->
     <!-- jQuery -->
     <script src="{{ asset('plugins/jquery/jquery.min.js') }}"></script>
+    <script src="{{ asset('javascript/helper.js') }}"></script>
     {{-- <script src="{{asset('plugins/popper/esm/popper.min.js')}}"></script> --}}
     <!-- Bootstrap -->
     <script src="{{ asset('plugins/bootstrap/js/bootstrap.bundle.min.js') }}"></script>
