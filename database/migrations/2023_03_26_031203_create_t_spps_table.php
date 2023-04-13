@@ -14,15 +14,19 @@ return new class extends Migration
         Schema::create('t_spps', function (Blueprint $table) {
             $table->string('uuid',32);
             $table->id();
+            $table->string('kode_spp');
+            $table->string('ukuran');
             $table->foreignId('kain_roll_id')
                     ->references('id')
                     ->on('m_kain_rolls');
-            $table->string('kode_spp');
-            $table->json('karyawan_id');
-            $table->integer('jumlah_roll');
-            $table->integer('hasil_potongan');
+            $table->date('tanggal');
+            $table->integer('berat');
+            $table->integer('hasil_potongan')->nullable();
+            $table->json('karyawan');
+            $table->integer('gaji');
             $table->string('status');
             $table->timestamps();
+            
         });
     }
 

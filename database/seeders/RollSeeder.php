@@ -15,11 +15,25 @@ class RollSeeder extends Seeder
     public function run(): void
     {
         DB::table('m_kain_rolls')->insert([
-            'uuid'          => Uuid::uuid4()->getHex(),
-            'kode_lot'      => 'LOT-0001',
-            'jenis_kain'    => 'Katun',
-            'berat'         => 5,
-            'warna'         => 'Black',
+            [
+                'uuid'          => Uuid::uuid4()->getHex(),
+                'kode_lot'      => 'LOT-0001',
+                'jenis_kain'    => 'Katun',
+                'berat'         => 5,
+                'warna'         => 'Black',
+            ],[
+                'uuid'          => Uuid::uuid4()->getHex(),
+                'kode_lot'      => 'LOT-0002',
+                'jenis_kain'    => 'Katun',
+                'berat'         => 5,
+                'warna'         => 'White',
+            ], [
+                'uuid'          => Uuid::uuid4()->getHex(),
+                'kode_lot'      => 'LOT-0003',
+                'jenis_kain'    => 'Katun',
+                'berat'         => 5,
+                'warna'         => 'Green',
+            ]
         ]);
     }
 }

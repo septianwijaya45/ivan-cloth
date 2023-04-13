@@ -15,7 +15,7 @@ return new class extends Migration
             $table->string('uuid',32);
             $table->id();
             $table->string('nama');
-            $table->string('jenis_kelamin',1);
+            $table->string('jenis_kelamin',32);
             $table->string('nik',16);
             $table->string('no_telepon',16);
             $table->string('npwp',16);

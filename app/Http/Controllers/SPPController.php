@@ -3,9 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\Gaji;
+use App\Models\GajiMaster;
 use App\Models\Kain_roll;
 use App\Models\Karyawan;
 use App\Models\SPP;
+use App\Models\Ukuran;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -26,8 +29,10 @@ class SPPController extends Controller
     {
         $kainroll   = Kain_roll::all();
         $karyawan   = Karyawan::where('posisi', 'pemotong')->get();
-        $gaji       = Gaji::all();
-        return view('spp.insert');
+        $gaji       = GajiMaster::all();
+        $ukuran     = Ukuran::all();
+        $date = Carbon::now()->format('Y-m-d');
+        return view('spp.insert', compact(['kainroll', 'karyawan', 'gaji', 'date', 'ukuran']));
     }
 
     public function store(Request $request)
