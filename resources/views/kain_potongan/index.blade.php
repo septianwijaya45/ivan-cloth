@@ -32,13 +32,6 @@
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title">Data Kain Potongan</h5>
-
-                                <div class="card-tools">
-                                    <button class="btn btn-success btn-sm" data-toggle="modal"
-                                        data-target="#modalAddKainPotongan">
-                                        <i class="fas fa-plus"></i> Tambah Data
-                                    </button>
-                                </div>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
@@ -49,8 +42,9 @@
                                         <thead>
                                             <tr>
                                                 <th width="5%" style="text-align: center;">ID</th>
-                                                <th>Kain Roll</th>
-                                                <th>Ukuran</th>
+                                                <th>Kain Potongan</th>
+                                                <th>Quantity</th>
+                                                <th>Warna</th>
                                                 <th width="10%">Aksi</th>
                                             </tr>
                                         </thead>
@@ -231,6 +225,7 @@
                         <td style="text-align: center;">` + data.id + `</td>
                         <td>` + data.kain_roll + `</td>
                         <td>` + data.ukuran + `</td>
+                        <td>` + data.warna + `</td>
                         <td>
                           <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailKainPotongan('` + data
                             .uuid + `')"> <i class="fas fa-pencil-alt"></i>

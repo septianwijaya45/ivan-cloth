@@ -19,7 +19,7 @@ class KainPotonganController extends Controller
     public function indexData()
     {
         $data = DB::select("
-            SELECT CONCAT(kr.kode_lot, ' | ', kr.jenis_kain) as kain_roll, kp.ukuran, kp.uuid, kp.id
+            SELECT CONCAT(kr.kode_lot, ' | ', kr.jenis_kain) as kain_roll, kr.warna,  kp.ukuran, kp.uuid, kp.id
             FROM m_kain_rolls kr, m_kain_potongans kp
             WHERE kr.id = kp.kain_roll_id
         ");

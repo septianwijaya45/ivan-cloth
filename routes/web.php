@@ -115,8 +115,8 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         Route::get('tambah-data', [SPPController::class, 'insert'])->name('spp.insert');
         Route::post('tambah-data', [SPPController::class, 'store'])->name('spp.store');
         // edit
-        Route::get('edit-data/{kode_spp}', [SPPController::class, 'edit'])->name('spp.edit');
-        Route::post('edit-data/{kode_spp}', [SPPController::class, 'update'])->name('spp.update');
+        Route::get('edit-data/{uuid}', [SPPController::class, 'edit'])->name('spp.edit');
+        Route::post('edit-data', [SPPController::class, 'update'])->name('spp.update');
         // delete detail
         Route::delete('detail-data/delete/{id}', [SPPController::class, 'deleteInsertorEdit'])->name('spp.deleteInsertEdit');
         // delete spp

@@ -141,7 +141,7 @@
                         <td>` + data.total + `</td>
                         <td>` + data.tanggal + `</td>
                         <td>
-                          <a class="btn btn-info btn-sm" title="Edit Data!" href="/edit-data/`+data.kode_spp+`"> <i class="fas fa-pencil-alt"></i>
+                          <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-potong/edit-data/`+data.uuid+`"> <i class="fas fa-pencil-alt"></i>
                           </a>
                           <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPP('` + data
                             .kode_spp + `')"> <i class="fas fa-trash"></i>
@@ -182,7 +182,7 @@
                                     title: res.message,
                                 })
                                 $("#tbl_ukuran").DataTable().destroy();
-                                getUkuran();
+                                getSPP();
 
                                 if(res.code == 500){
                                     Notif.fire({

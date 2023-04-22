@@ -19,12 +19,14 @@ return new class extends Migration
             $table->foreignId('kain_roll_id')
                     ->references('id')
                     ->on('m_kain_rolls');
+            $table->json('karyawan_id');
             $table->date('tanggal');
             $table->integer('berat');
             $table->integer('hasil_potongan')->nullable();
             $table->json('karyawan');
             $table->integer('gaji');
             $table->string('status');
+            $table->text('note')->nullable();
             $table->timestamps();
             
         });

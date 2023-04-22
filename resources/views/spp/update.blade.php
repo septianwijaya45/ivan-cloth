@@ -1,5 +1,8 @@
 @extends('layouts.app')
 @section('title', 'Surat Perintah Potong')
+<?php 
+    // dd(json_encode($spp_all));
+?>
 
 @section('content')
     <!-- Content Wrapper. Contains page content -->
@@ -9,13 +12,13 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Tambah Surat Perintah Potong</h1>
+                        <h1 class="m-0">Edit Surat Perintah Potong</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Home</a></li>
                             <li class="breadcrumb-item">Surat Perintah Potong</li>
-                            <li class="breadcrumb-item active">Tambah SPP</li>
+                            <li class="breadcrumb-item active">Edit SPP</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -32,7 +35,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title">Form Tambah SPP</h5>
+                                <h5 class="card-title">Form Edit SPP</h5>
                                 <div class="card-tools">
                                     <button class="btn btn-warning btn-sm" onclick="cancelSPP()">Kembali</button>
                                 </div>
@@ -41,10 +44,11 @@
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-6">
+                                            <input type="text" name="id" id="id-data" value="" class="form-control" hidden readonly>
                                             <label for="kode_spp">Kode SPP</label>
                                             <div class="col-md-14 row">
                                                 <div class="col-md-12">
-                                                    <input type="text" name="kode_spp" id="kode_spp" class="form-control" value="{{kodeSPP()}}" readonly>
+                                                    <input type="text" name="kode_spp" id="kode_spp" class="form-control" value="{{$spp->kode_spp}}" readonly>
                                                 </div>
                                             </div>
                                         </div>
@@ -64,7 +68,7 @@
                                         <div class="col-lg-3">
                                             <label for="tanggal">Tanggal</label>
                                             <div class="col-md-12">
-                                                <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{$date}}">
+                                                <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{$spp->tanggal}}">
                                             </div>
                                         </div>
                                         <div class="col-lg-3">
@@ -78,13 +82,19 @@
                                                 </select>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3">
+                                        <div class="col-lg-2">
                                             <label for="warna">Warna</label>
                                             <div class="col-md-12">
                                                 <input type="text" name="warna" id="warna" class="form-control" placeholder="Warna Lot" readonly>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3">
+                                        <div class="col-lg-2">
+                                            <label for="berat">Berat Sisa</label>
+                                            <div class="col-md-12">
+                                                <input type="number" name="berat_data" id="berat_data" class="form-control"  placeholder="Berat Sisa Di LOT" disabled>
+                                            </div>
+                                        </div>
+                                        <div class="col-lg-2">
                                             <label for="berat">Berat</label>
                                             <div class="col-md-12">
                                                 <input type="number" name="berat" id="berat" class="form-control"  placeholder="Berat">
@@ -171,7 +181,7 @@
                                         </table>
                                         <div class="col-lg-12">
                                             <label for="note">Notes</label>
-                                            <textarea name="note" id="note" cols="30" rows="2" placeholder="Keterangan" class="form-control"></textarea>
+                                            <textarea name="note" id="note" cols="30" rows="2" placeholder="Keterangan" class="form-control">{{$spp->note}}</textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-3 mt-2 offset-md-9">
@@ -256,14 +266,14 @@
             
             $('#kode_lot').on('change', function(e){
                 e.preventDefault();
-                let data = $(this).val();
-                data = data.split('~')[0];
+                let dt = $(this).val();
+                dt = dt.split('~')[0];
                 $.ajax({
-                    url: "{{ url('kain-roll') }}/"+data,
+                    url: "{{ url('kain-roll') }}/"+dt,
                     method: "GET",
                     success: function(res){
                         $('#warna').val(res.warna)
-                        $('#berat').val(res.berat)
+                        $('#berat_data').val(res.berat)
                     }
                 })
             });
@@ -282,16 +292,19 @@
                 "stateSave": true
             };
 
-            var data = [];
+            var data = @json($spp_all);
+            // var data = {{json_encode($spp_all)}};
+            dataInsert(data);
 
             // Simpan
             $('#btn-tambah').on('click', function(){
                 let karyawan = [];
-                let k_id    = [];
                 let kode_spp    = $('#kode_spp').val();
+                let id    = $('#id-data').val();
                 let ukuran      = $('#ukuran').val();
                 let tanggal     = $('#tanggal').val();
                 let kode_lot    = $('#kode_lot').val();
+                let uuid_lot    = (kode_lot != null) ? kode_lot.split('~')[0] : '';
                 let nama_lot    = (kode_lot != null) ? kode_lot.split('~')[1] : '';
                 let warna       = $('#warna').val();
                 let berat       = $('#berat').val();
@@ -322,9 +335,10 @@
                             u1              : u1,
                             u2              : u2,
                             karyawan        : karyawan,
-                            gaji            : gaji
+                            gaji            : gaji,
+                            id              : id
                         })
-                        console.log(data)
+                        console.log(data);
     
                         dataInsert(data);
                         clearForm()
@@ -393,6 +407,20 @@
                         {
                             data: 'karyawan',
                             name: 'karyawan',
+                            render: function(data){
+                                if(data.includes('[')){
+                                    data = data.replace('[', '')
+                                    data = data.replace('"', '')
+                                    data = data.replace('"', '')
+                                    data = data.replace(', ', ',')
+                                    data = data.replace('"', '')
+                                    data = data.replace('"', '')
+                                    data = data.replace(']', '')
+                                    return data
+                                }else{
+                                    return data
+                                }
+                            }
                         },
                         {
                             data: 'gaji',
@@ -459,16 +487,27 @@
             $('#tabel_insert').on('click', '#edit-data', function(){
                 let uuid = $(this).data('uuid');
                 let dt_detail = data.find(dt => dt.uuid === uuid)
-                console.log(dt_detail);
+                $('#id-data').val(dt_detail.id);
                 $('#ukuran').val(dt_detail.ukuran).change();
                 $('#tanggal').val(dt_detail.tanggal);
-                $('#kode_lot').val(dt_detail.kode_lot).change();
                 $('#warna').val(dt_detail.warna);
                 $('#berat').val(dt_detail.berat);
                 $('#hasil').val(dt_detail.hasil);
                 $('#gaji').val(dt_detail.gaji).change();
-                $('#karyawan_1').val(dt_detail.k1).change();
-                $('#karyawan_2').val(dt_detail.k2).change();
+                console.log(dt_detail.id);
+                
+                try {
+                    let karyawan =JSON.parse(dt_detail.karyawan)
+                    let k_id =JSON.parse(dt_detail.karyawan_id)
+                    // console.log(k_id)
+                    $('#karyawan_1').val(k_id[0]+'-'+karyawan[0]).change();
+                    $('#karyawan_2').val(k_id[1]+'-'+karyawan[1]).change();
+                    $('#kode_lot').val(dt_detail.uuid+'~'+dt_detail.nama_lot).change();
+                } catch (error) {                
+                    $('#kode_lot').val(dt_detail.kode_lot).change();
+                    $('#karyawan_1').val(dt_detail.k1).change();
+                    $('#karyawan_2').val(dt_detail.k2).change();
+                }
 
                 let check = data.findIndex(e => e['uuid'] === uuid)
                 if(check !== -1){
@@ -490,7 +529,7 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
-                            url         : "{{route('spp.store')}}",
+                            url         : "{{route('spp.update')}}",
                             method      : "POST",
                             data        : {'data': data, 'notes': $('#note').val()},
                             success     : function(res){

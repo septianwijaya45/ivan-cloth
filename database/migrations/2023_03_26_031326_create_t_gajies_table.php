@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('t_gajies', function (Blueprint $table) {
             $table->string('uuid',32);
             $table->id();
+            $table->string('kode_transaksi');
             $table->foreignId('karyawan_id')
                     ->references('id')
                     ->on('m_karyawans');
