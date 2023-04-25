@@ -23,7 +23,7 @@ class SPPController extends Controller
 
     public function indexData(Request $request)
     {
-        $data = SPP::select('uuid', 'kode_spp', DB::raw('COUNT(*) as total'), DB::raw('DATE_FORMAT(tanggal, "%d %M %Y") as tanggal'))->groupBy('kode_spp')->get();
+        $data = SPP::select('uuid', 'kode_spp', DB::raw('COUNT(*) as total'), DB::raw('DATE_FORMAT(tanggal, "%d %M %Y") as tanggal'), 'status')->groupBy('kode_spp')->get();
         return response()->json($data);
     }
 
@@ -248,11 +248,6 @@ class SPPController extends Controller
         }
     }
 
-    public function destroyInsertorEdit($id)
-    {
-        # code...
-    }
-
     public function destroy($kode_spp)
     {
         try {
@@ -278,7 +273,7 @@ class SPPController extends Controller
             }
             return response()->json([
                 'code'      => 200,
-                'message'   => 'Berhasil Hapus data Kain Roll',
+                'message'   => 'Berhasil Hapus data SPP',
             ]);
 
             $ukuran = Ukuran::all();
@@ -288,9 +283,62 @@ class SPPController extends Controller
             //throw $th;
             return response()->json([
                 'code'      => 500,
-                'message'   => 'Gagal Hapus data Kain Roll!',
+                'message'   => 'Gagal Hapus data SPP!',
                 'error'     => $th
             ]);
         }
+    }
+
+    public function confirm($kode_spp)
+    {
+        try {
+            SPP::where('kode_spp', $kode_spp)->update([
+                'status' => 'Sedang Dikerjakan'
+            ]);
+
+            return response()->json([
+                'code'      => 200,
+                'message'   => 'Berhasil Konfirmasi Data SPP!',
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'code'      => 500,
+                'message'   => 'Gagal Konfirmasi Data SPP!',
+                'error'     => $th
+            ]);
+        }
+    }
+
+    public function finished($kode_spp)
+    {
+        try {
+            SPP::where('kode_spp', $kode_spp)->update([
+                'status' => 'Selesai Dikerjakan'
+            ]);
+
+            return response()->json([
+                'code'      => 200,
+                'message'   => 'Berhasil Konfirmasi Data SPP!',
+            ]);
+        } catch (\Throwable $th) {
+            //throw $th;
+            return response()->json([
+                'code'      => 500,
+                'message'   => 'Gagal Konfirmasi Data SPP!',
+                'error'     => $th
+            ]);
+        }
+    }
+
+    public function dataSPP($kode_spp)
+    {
+        $spp = SPP::query()
+        ->join('m_kain_rolls', function($query){
+            $query->on('m_kain_rolls.id', '=', 't_spps.kain_roll_id');
+        })
+        ->where('kode_spp', $kode_spp)
+        ->get();
+        return response()->json($spp);
     }
 }

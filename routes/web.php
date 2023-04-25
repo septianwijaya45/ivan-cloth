@@ -8,6 +8,7 @@ use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\GajiController;
 use App\Http\Controllers\PerlengkapanController;
+use App\Http\Controllers\SPKController;
 use App\Http\Controllers\SPPController;
 use App\Http\Controllers\UkuranController;
 use Illuminate\Support\Facades\Route;
@@ -121,5 +122,34 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         Route::delete('detail-data/delete/{id}', [SPPController::class, 'deleteInsertorEdit'])->name('spp.deleteInsertEdit');
         // delete spp
         Route::delete('delete/{kode_spp}', [SPPController::class, 'destroy'])->name('spp.delete');
+        // Confirm & Finishing
+        Route::put('confirm-work/{kode_spp}', [SPPController::class, 'confirm'])->name('spp.confirm');
+        Route::put('finished-work/{kode_spp}', [SPPController::class, 'finished'])->name('spp.finished');
+        // get spp for SPK
+        Route::get('data/{kode_spp}', [SPPController::class, 'dataSPP'])->name('spp.getData');
+    });
+
+    // Route SPK
+    Route::group(['prefix' => 'surat-perintah-kain'], function(){
+        // getArticle
+        Route::get('artikel/{artikel}', [SPKController::class, 'getArtikel'])->name('spk.artikel');
+        // get Hasil Potongan
+        Route::get('hasil-potongan/{kode_spp}/{ukuran}/{warna}', [SPKController::class, 'getHasilPotongan'])->name('spk.hasilPotongan');
+        // index
+        Route::get('', [SPKController::class, 'index'])->name('spk');
+        Route::get('data', [SPKController::class, 'indexData'])->name('spk.data');
+        // create
+        Route::get('tambah-data', [SPKController::class, 'insert'])->name('spk.insert');
+        Route::post('tambah-data', [SPKController::class, 'store'])->name('spk.store');
+        // save image
+        Route::post('tambah-gambar', [SPKController::class, 'storeGambar'])->name('spk.storeGambar');
+
+        // edit
+        Route::get('edit-data/{uuid}', [SPKController::class, 'edit'])->name('spk.edit');
+        Route::post('edit-data', [SPKController::class, 'update'])->name('spk.update');
+        // delete detail
+        Route::delete('detail-data/delete/{id}', [SPKController::class, 'deleteInsertorEdit'])->name('spk.deleteInsertEdit');
+        // delete spp
+        Route::delete('delete/{kode_spk}', [SPKController::class, 'destroy'])->name('spk.delete');
     });
 });

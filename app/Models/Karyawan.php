@@ -17,4 +17,9 @@ class Karyawan extends Model
     {
         return $this->belongsToMany(SPP::class, 'karyawan_id');
     }
+
+    public function SPK()
+    {
+        return $this->belongsToMany(SPK::class, 'karyawan_id');
+    }
 }

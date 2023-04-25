@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Surat Perintah Potong')
+@section('title', 'Surat Perintah Kerja')
 
 @section('content')
     <!-- Content Wrapper. Contains page content -->
@@ -9,12 +9,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Surat Perintah Potong</h1>
+                        <h1 class="m-0">Surat Perintah Kerja</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Home</a></li>
-                            <li class="breadcrumb-item active">Surat Perintah Potong</li>
+                            <li class="breadcrumb-item active">Surat Perintah Kerja</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -31,10 +31,10 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title">Data Surat Perintah Potong</h5>
+                                <h5 class="card-title">Data Surat Perintah Kerja</h5>
 
                                 <div class="card-tools">
-                                    <a href="{{ route('spp.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
+                                    <a href="{{ route('spk.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
                                 </div>
                             </div>
                             <!-- /.card-header -->
@@ -46,10 +46,10 @@
                                         <thead>
                                             <tr>
                                                 <th width="5%" style="text-align: center;">ID</th>
-                                                <th>Kode SPP</th>
+                                                <th>Kode SPK</th>
                                                 <th>Total Perintah Potongan</th>
                                                 <th>Tanggal</th>
-                                                <th width="10%">Status</th>
+                                                <th>Status Surat</th>
                                                 <th width="10%">Aksi</th>
                                             </tr>
                                         </thead>
@@ -130,7 +130,7 @@
         function getSPP() {
             var htmlview
             $.ajax({
-                url: "{{ route('spp.data') }}",
+                url: "{{ route('spk.data') }}",
                 type: 'GET',
                 success: function(res) {
                     let no = 0;
@@ -138,19 +138,20 @@
                     $.each(res, function(i, data) {
                         htmlview += `<tr>
                         <td style="text-align: center;">` + (no = no+1) + `</td>
-                        <td>` + data.kode_spp + `</td>
+                        <td>` + data.kode_spk + `</td>
                         <td>` + data.total + `</td>
-                        <td>` + data.tanggal + `</td>`;
+                        <td>` + data.tanggal + `</td>
+                        `;
                         if(data.status == 'Belum Konfirmasi'){
                             htmlview += `<td>
                                 <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="confirmSPP('` + data
-                                .kode_spp + `')"> Belum Konfirmasi </button></td>
+                                .kode_spk + `')"> Belum Konfirmasi </button></td>
                             `;
                         }
                         if(data.status == 'Sedang Dikerjakan'){
                             htmlview += `<td>
                                 <button class="btn btn-warning btn-sm" title="Delete Data!" onClick="finishedSPP('` + data
-                                .kode_spp + `')"> Sedang Dikerjakan </button></td>
+                                .kode_spk + `')"> Sedang Dikerjakan </button></td>
                             `;
                         }
                         if(data.status == 'Selesai Dikerjakan'){
@@ -162,7 +163,7 @@
                           <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-potong/edit-data/`+data.uuid+`"> <i class="fas fa-pencil-alt"></i>
                           </a>
                           <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPP('` + data
-                            .kode_spp + `')"> <i class="fas fa-trash"></i>
+                            .kode_spk + `')"> <i class="fas fa-trash"></i>
                           </button>
                         </td>
                        </tr>`
@@ -206,94 +207,6 @@
                                     Notif.fire({
                                         icon: 'error',
                                         title: 'Gagal Menyimpan Data Gaji',
-                                        text: 'Server Error!'
-                                    });
-                                    
-                                }
-                            },
-                            error: function(err) {
-                                console.log(err);
-                            }
-                        })
-                    }
-                });
-        }
-
-        function confirmSPP(kode_spp) {
-            Swal.fire({
-                    title: "Apakah anda yakin konfirmasi data ini?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Ya, Konfirmasi!",
-                    cancelButtonText: "Tidak",
-                })
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        var _url = "{{ route('spp.confirm', 'kode_spp') }}";
-                        _url = _url.replace('kode_spp', kode_spp)
-                        var _token = $('meta[name="csrf-token"]').attr('content');
-                        $.ajax({
-                            url: _url,
-                            type: 'PUT',
-                            data: {
-                                _token: _token
-                            },
-                            success: function(res) {
-                                Notif.fire({
-                                    icon: 'success',
-                                    title: res.message,
-                                })
-                                $("#tbl_ukuran").DataTable().destroy();
-                                getSPP();
-
-                                if(res.code == 500){
-                                    Notif.fire({
-                                        icon: 'error',
-                                        title: 'Gagal Konfirmasi Data SPP',
-                                        text: 'Server Error!'
-                                    });
-                                    
-                                }
-                            },
-                            error: function(err) {
-                                console.log(err);
-                            }
-                        })
-                    }
-                });
-        }
-
-        function finishedSPP(kode_spp) {
-            Swal.fire({
-                    title: "Apakah anda yakin konfirmasi selesai data ini?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Ya, Konfirmasi!",
-                    cancelButtonText: "Tidak",
-                })
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        var _url = "{{ route('spp.finished', 'kode_spp') }}";
-                        _url = _url.replace('kode_spp', kode_spp)
-                        var _token = $('meta[name="csrf-token"]').attr('content');
-                        $.ajax({
-                            url: _url,
-                            type: 'PUT',
-                            data: {
-                                _token: _token
-                            },
-                            success: function(res) {
-                                Notif.fire({
-                                    icon: 'success',
-                                    title: res.message,
-                                })
-                                $("#tbl_ukuran").DataTable().destroy();
-                                getSPP();
-
-                                if(res.code == 500){
-                                    Notif.fire({
-                                        icon: 'error',
-                                        title: 'Gagal Konfirmasi Selesai Data SPP',
                                         text: 'Server Error!'
                                     });
                                     
