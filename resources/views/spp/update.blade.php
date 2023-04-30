@@ -37,7 +37,7 @@
                             <div class="card-header">
                                 <h5 class="card-title">Form Edit SPP</h5>
                                 <div class="card-tools">
-                                    <button class="btn btn-warning btn-sm" onclick="cancelSPP()">Kembali</button>
+                                    <a href="{{ route('spp') }}" class="btn btn-warning btn-sm">Kembali</a>
                                 </div>
                             </div>
                             <form action="#" method="POST" enctype="multipart/form-data" id="formSPP">
@@ -338,7 +338,6 @@
                             gaji            : gaji,
                             id              : id
                         })
-                        console.log(data);
     
                         dataInsert(data);
                         clearForm()
@@ -457,7 +456,6 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         check = data.findIndex(e => e['uuid'] === uuid)
-                        console.log(check)
                         if(check !== -1){
                             data.splice(check, 1)
                         }
@@ -494,7 +492,6 @@
                 $('#berat').val(dt_detail.berat);
                 $('#hasil').val(dt_detail.hasil);
                 $('#gaji').val(dt_detail.gaji).change();
-                console.log(dt_detail.id);
                 
                 try {
                     let karyawan =JSON.parse(dt_detail.karyawan)
@@ -552,7 +549,6 @@
                                     )
                                 }
                                 if(res.code === 500){
-                                    console.log(res.error)
                                     Swal.fire(
                                         'Gagal!',
                                         'Server Error!',
@@ -561,7 +557,6 @@
                                 }
                             },
                             error       : function(err){
-                                console.log(err);
                                 Swal.fire(
                                     'Gagal!',
                                     'Server Error!',

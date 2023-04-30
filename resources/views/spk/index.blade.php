@@ -125,9 +125,9 @@
             timerProgressBar: true,
         })
 
-        getSPP()
+        getSPK()
 
-        function getSPP() {
+        function getSPK() {
             var htmlview
             $.ajax({
                 url: "{{ route('spk.data') }}",
@@ -144,13 +144,13 @@
                         `;
                         if(data.status == 'Belum Konfirmasi'){
                             htmlview += `<td>
-                                <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="confirmSPP('` + data
+                                <button class="btn btn-danger btn-sm" title="Confirm Data!" onClick="confirmSPK('` + data
                                 .kode_spk + `')"> Belum Konfirmasi </button></td>
                             `;
                         }
                         if(data.status == 'Sedang Dikerjakan'){
                             htmlview += `<td>
-                                <button class="btn btn-warning btn-sm" title="Delete Data!" onClick="finishedSPP('` + data
+                                <button class="btn btn-warning btn-sm" title="Finish Data!" onClick="finishedSPK('` + data
                                 .kode_spk + `')"> Sedang Dikerjakan </button></td>
                             `;
                         }
@@ -160,9 +160,9 @@
                             `;
                         }
                         htmlview +=`<td>
-                          <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-potong/edit-data/`+data.uuid+`"> <i class="fas fa-pencil-alt"></i>
+                          <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-kain/edit-data/`+data.uuid+`"> <i class="fas fa-pencil-alt"></i>
                           </a>
-                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPP('` + data
+                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPK('` + data
                             .kode_spk + `')"> <i class="fas fa-trash"></i>
                           </button>
                         </td>
@@ -176,7 +176,7 @@
             })
         }
 
-        function deleteSPP(kode_spp) {
+        function deleteSPK(kode_spk) {
             Swal.fire({
                     title: "Apakah anda yakin hapus data ini?",
                     icon: "warning",
@@ -186,8 +186,8 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        var _url = "{{ route('spp.delete', 'kode_spp') }}";
-                        _url = _url.replace('kode_spp', kode_spp)
+                        var _url = "{{ route('spk.delete', 'kode_spk') }}";
+                        _url = _url.replace('kode_spk', kode_spk)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,
@@ -201,12 +201,100 @@
                                     title: res.message,
                                 })
                                 $("#tbl_ukuran").DataTable().destroy();
-                                getSPP();
+                                getSPK();
 
                                 if(res.code == 500){
                                     Notif.fire({
                                         icon: 'error',
                                         title: 'Gagal Menyimpan Data Gaji',
+                                        text: 'Server Error!'
+                                    });
+                                    
+                                }
+                            },
+                            error: function(err) {
+                                console.log(err);
+                            }
+                        })
+                    }
+                });
+        }
+
+        function confirmSPK(kode_spk) {
+            Swal.fire({
+                    title: "Apakah anda yakin konfirmasi data ini?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Konfirmasi!",
+                    cancelButtonText: "Tidak",
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        var _url = "{{ route('spk.confirm', 'kode_spk') }}";
+                        _url = _url.replace('kode_spk', kode_spk)
+                        var _token = $('meta[name="csrf-token"]').attr('content');
+                        $.ajax({
+                            url: _url,
+                            type: 'PUT',
+                            data: {
+                                _token: _token
+                            },
+                            success: function(res) {
+                                Notif.fire({
+                                    icon: 'success',
+                                    title: res.message,
+                                })
+                                $("#tbl_ukuran").DataTable().destroy();
+                                getSPK();
+
+                                if(res.code == 500){
+                                    Notif.fire({
+                                        icon: 'error',
+                                        title: 'Gagal Konfirmasi Data SPK',
+                                        text: 'Server Error!'
+                                    });
+                                    
+                                }
+                            },
+                            error: function(err) {
+                                console.log(err);
+                            }
+                        })
+                    }
+                });
+        }
+
+        function finishedSPK(kode_spk) {
+            Swal.fire({
+                    title: "Apakah anda yakin konfirmasi selesai data ini?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Konfirmasi!",
+                    cancelButtonText: "Tidak",
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        var _url = "{{ route('spk.finished', 'kode_spk') }}";
+                        _url = _url.replace('kode_spk', kode_spk)
+                        var _token = $('meta[name="csrf-token"]').attr('content');
+                        $.ajax({
+                            url: _url,
+                            type: 'PUT',
+                            data: {
+                                _token: _token
+                            },
+                            success: function(res) {
+                                Notif.fire({
+                                    icon: 'success',
+                                    title: res.message,
+                                })
+                                $("#tbl_ukuran").DataTable().destroy();
+                                getSPK();
+
+                                if(res.code == 500){
+                                    Notif.fire({
+                                        icon: 'error',
+                                        title: 'Gagal Konfirmasi Selesai Data SPK',
                                         text: 'Server Error!'
                                     });
                                     

@@ -46,7 +46,10 @@ class SPPController extends Controller
                 $hasil = ($dt['hasil'] == 0) ? 1 :  $dt['hasil'];
                 // insert spp
                 $m_kainroll = Kain_roll::where('kode_lot', $dt['nama_lot'])->first();
-                $m_kainpotongan = Kain_potongan::where('kain_roll_id', $m_kainroll->id)->first();
+                $m_kainpotongan = Kain_potongan::where([
+                    ['kain_roll_id', $m_kainroll->id],
+                    ['ukuran', $dt['ukuran']]
+                ])->first();
                 if($m_kainroll->berat < $dt['berat']){
                     return response()->json([
                         'code'      => 400,
@@ -78,14 +81,18 @@ class SPPController extends Controller
                 ]);
 
                 if($m_kainpotongan != null || !empty($m_kainpotongan)){
-                    Kain_potongan::where('kain_roll_id', $m_kainroll->id)->update([
-                        'ukuran'    => $m_kainpotongan->ukuran + $dt['hasil']
+                    Kain_potongan::where([
+                        ['kain_roll_id', $m_kainroll->id],
+                        ['ukuran', $dt['ukuran']]
+                    ])->update([
+                        'stok'    => $m_kainpotongan->stok + $dt['hasil']
                     ]);
                 }else{
                     Kain_potongan::insert([
                         'uuid'              => Uuid::uuid4()->getHex(),
                         'kain_roll_id'      => $m_kainroll->id,
-                        'ukuran'            => $dt['hasil'],
+                        'ukuran'            => $dt['ukuran'],
+                        'stok'              => $dt['hasil'],
                         'created_at'        => Carbon::now(),
                         'updated_at'        => Carbon::now()
                     ]);
@@ -147,7 +154,7 @@ class SPPController extends Controller
             WHERE spp.kode_spp = '$spp->kode_spp' AND spp.kain_roll_id = kd.id 
         ");
         // dd($spp_all);
-        // return view('spp.update', compact(['spp', 'spp_all', 'kainroll', 'karyawan', 'gaji', 'ukuran']));
+        
         return view('spp.update', ['spp' => $spp, 'spp_all' => $spp_all, 'kainroll' => $kainroll, 'karyawan' => $karyawan, 'gaji' => $gaji,'ukuran' => $ukuran]);
     }
 
@@ -160,7 +167,10 @@ class SPPController extends Controller
                 $hasil = ($dt['hasil'] == 0) ? 1 :  $dt['hasil'];
                 $spp = SPP::where('kode_spp', $dt['kode_spp'])->first();
                 $m_kainroll = Kain_roll::where('kode_lot', $dt['nama_lot'])->first();
-                $m_kainpotongan = Kain_potongan::where('kain_roll_id', $m_kainroll->id)->first();
+                $m_kainpotongan = Kain_potongan::where([
+                    ['kain_roll_id', $m_kainroll->id],
+                    ['ukuran', $dt['ukuran']]
+                ])->first();
                 if($dt['berat'] > $spp->berat){
                     $berat = $dt['berat'] - $spp->berat;
                     if($m_kainroll->berat < $berat){
@@ -200,14 +210,18 @@ class SPPController extends Controller
                 ]);
 
                 if($m_kainpotongan != null || !empty($m_kainpotongan)){
-                    Kain_potongan::where('kain_roll_id', $m_kainroll->id)->update([
-                        'ukuran'    => $m_kainpotongan->ukuran + $dt['hasil']
+                    Kain_potongan::where([
+                        ['kain_roll_id', $m_kainroll->id],
+                        ['ukuran', $dt['ukuran']]
+                    ])->update([
+                        'stok'    => $m_kainpotongan->stok + $dt['hasil']
                     ]);
                 }else{
                     Kain_potongan::insert([
                         'uuid'              => Uuid::uuid4()->getHex(),
                         'kain_roll_id'      => $m_kainroll->id,
-                        'ukuran'            => $dt['hasil'],
+                        'stok'              => $dt['hasil'],
+                        'ukuran'            => $dt['ukuran'],
                         'created_at'        => Carbon::now(),
                         'updated_at'        => Carbon::now()
                     ]);
@@ -253,19 +267,25 @@ class SPPController extends Controller
         try {
             $spp = SPP::where('kode_spp', $kode_spp);
             $m_kainroll = Kain_roll::where('id', $spp->value('kain_roll_id'))->first();
-            $m_kainpotongan = Kain_potongan::where('kain_roll_id', $spp->value('kain_roll_id'))->first();
+            $m_kainpotongan = Kain_potongan::where([
+                ['kain_roll_id', $spp->value('kain_roll_id')],
+                ['ukuran', $spp->value('ukuran')]
+            ])->first();
             
             if($spp !== null && $m_kainroll !== null){
                 $dt_spp = $spp->first();
                 $k_spp = json_decode($dt_spp->karyawan_id);
                 // update stok kain roll
                 Kain_roll::where('id', $dt_spp->kain_roll_id)->update([
-                    'berat'     => $m_kainpotongan->berat + $dt_spp->berat
+                    'berat'     => $m_kainroll->berat + $dt_spp->berat
                 ]);
 
                 //  update stok kain potongan
-                Kain_potongan::where('kain_roll_id', $dt_spp->kain_roll_id)->update([
-                    'ukuran'    => $m_kainpotongan->ukuran - $dt_spp->hasil_potongan
+                Kain_potongan::where([
+                    ['kain_roll_id', $dt_spp->kain_roll_id],
+                    ['ukuran', $dt_spp->ukuran]
+                ])->update([
+                    'stok'    => $m_kainpotongan->stok - $dt_spp->hasil_potongan
                 ]);
 
                 Gaji::where('kode_transaksi', $dt_spp->kode_spp)->delete();

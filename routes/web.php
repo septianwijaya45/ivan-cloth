@@ -149,7 +149,15 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         Route::post('edit-data', [SPKController::class, 'update'])->name('spk.update');
         // delete detail
         Route::delete('detail-data/delete/{id}', [SPKController::class, 'deleteInsertorEdit'])->name('spk.deleteInsertEdit');
-        // delete spp
+        // delete spk
         Route::delete('delete/{kode_spk}', [SPKController::class, 'destroy'])->name('spk.delete');
+        // delete gambar
+        Route::delete('delete-gambar-spk/{uuid}', [SPKController::class, 'destroyImage'])->name('spk.deleteImage');
+        // delete detail SPK
+        Route::delete('delete-detail-spk/{uuid}', [SPKController::class, 'destroyDetail'])->name('spk.deleteDetail');
+
+        // Confirm & Finishing
+        Route::put('confirm-work/{kode_spk}', [SPKController::class, 'confirm'])->name('spk.confirm');
+        Route::put('finished-work/{kode_spk}', [SPKController::class, 'finished'])->name('spk.finished');
     });
 });

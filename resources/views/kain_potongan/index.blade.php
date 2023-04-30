@@ -95,7 +95,16 @@
                                 <label for="ukurang">Ukuran</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="number" placeholder="Ukuran" name="ukuran"
+                                        <input type="text" placeholder="Ukuran" name="ukuran"
+                                            class="form-control" step=".01">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="stok">Stok</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="number" placeholder="Stok" name="stok"
                                             class="form-control" step=".01">
                                     </div>
                                 </div>
@@ -130,7 +139,7 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="kain_roll_id">Kain Roll</label>
-                                <select name="kain_roll_id" id="kain_roll_id" class="form-control">
+                                <select name="kain_roll_id" id="kain_roll_id" class="form-control" @readonly(true)>
                                     <option value="" selected disabled class="text-center">Pilih Kain Roll</option>
                                     @foreach ($kain_roll as $dt)
                                         <option value="{{$dt->id}}">{{$dt->kode_lot}} | {{$dt->jenis_kain}}</option>
@@ -141,7 +150,20 @@
                                 <label for="ukurang">Ukuran</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="number" placeholder="Ukuran" name="ukuran"
+                                        <select name="ukuran" id="ukuran" class="form-control" @readonly(true)>
+                                            <option value="" selected>===== Pilih Ukuran ======</option>
+                                            @foreach ($ukuran as $dt)
+                                                <option value="{{$dt->ukuran}}">{{$dt->ukuran}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label for="stok">Stok</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="number" placeholder="Stok" name="stok"
                                             class="form-control" step=".01">
                                     </div>
                                 </div>
@@ -224,7 +246,7 @@
                         htmlview += `<tr>
                         <td style="text-align: center;">` + data.id + `</td>
                         <td>` + data.kain_roll + `</td>
-                        <td>` + data.ukuran + `</td>
+                        <td>` + data.stok + `</td>
                         <td>` + data.warna + `</td>
                         <td>
                           <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailKainPotongan('` + data

@@ -35,7 +35,7 @@
                             <div class="card-header">
                                 <h5 class="card-title">Form Tambah SPK</h5>
                                 <div class="card-tools">
-                                    <button class="btn btn-warning btn-sm" onclick="cancelSPP()">Kembali</button>
+                                    <a href="{{ route('spk') }}" class="btn btn-warning btn-sm">Kembali</a>
                                 </div>
                             </div>
                             <form action="#" method="POST" enctype="multipart/form-data" id="formSPP">
@@ -382,7 +382,7 @@
                     method: "GET",
                     success: function(res){
                         $('#hasil_kain_potongan').val(res.spp.hasilspp);
-                        $('#sisa_stok').val(res.hasil.ukuran)
+                        $('#sisa_stok').val(res.hasil.stok)
                     }
                 })
             })
@@ -769,70 +769,6 @@
                     }
                 })
             })
-            // $("#form-data-gambar").validate({
-            //     rules: {
-            //         'gambar[]': {
-            //             required: true,
-            //         }
-            //     },
-            //     messages: {
-            //         'gambar[]': {
-            //             required: "Please upload the image(s)",
-            //         } 
-            //     },
-            //     submitHandler: function(form, event) {
-            //         event.preventDefault();
-            //         let formData = new FormData(form);
-                    
-            //         const totalImages = $("#gambar")[0].files.length;
-            //         let images = $("#gambar")[0];
-
-            //         for (let i = 0; i < totalImages; i++) {
-            //             formData.append('gambar' + i, images.files[i]);
-            //         }
-            //         formData.append('totalImages', totalImages);
-
-            //         console.log(formData);
-
-            //         $.ajax({
-            //             url: "{{ route('spk.storeGambar') }}",
-            //             type: 'POST',
-            //             data: formData,
-            //             processData: false,
-            //             cache: false,
-            //             contentType: false,
-            //             success: function(response) {
-            //                 form.reset();
-            //                 if(res.code === 200){
-            //                     Swal.fire(
-            //                         'Berhasil!',
-            //                         'Berhasil Simpan Data! Silahkan Upload Gambar!',
-            //                         'success'
-            //                     )
-                                
-            //                     setTimeout(() => {
-            //                         window.location.href = "{{route('spk')}}"
-            //                     }, 1500);
-            //                 }
-            //                 if(res.code === 400){
-            //                     Swal.fire(
-            //                         'Gagal!',
-            //                         res.message+' LOT: '+res.kode_lot,
-            //                         'error'
-            //                     )
-            //                 }
-            //                 if(res.code === 500){
-            //                     console.log(res.error)
-            //                     Swal.fire(
-            //                         'Gagal!',
-            //                         'Server Error!',
-            //                         'error'
-            //                     )
-            //                 }
-            //             }            
-            //         });
-            //     }
-            // });
         });
     </script>
 @endsection

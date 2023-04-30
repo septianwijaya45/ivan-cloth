@@ -34,7 +34,7 @@
                             <div class="card-header">
                                 <h5 class="card-title">Form Tambah SPP</h5>
                                 <div class="card-tools">
-                                    <button class="btn btn-warning btn-sm" onclick="cancelSPP()">Kembali</button>
+                                    <a href="{{ route('spp') }}" class="btn btn-warning btn-sm">Kembali</a>
                                 </div>
                             </div>
                             <form action="#" method="POST" enctype="multipart/form-data" id="formSPP">

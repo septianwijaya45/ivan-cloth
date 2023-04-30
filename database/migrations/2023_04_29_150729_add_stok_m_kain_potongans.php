@@ -11,12 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('t_spp_files', function (Blueprint $table) {
-            $table->string('uuid',32);
-            $table->id();
-            $table->string('kode_spk');
-            $table->text('nama_foto');
-            $table->timestamps();
+        Schema::table('m_kain_potongans', function (Blueprint $table) {
+            $table->integer('stok')->after('kain_roll_id');
         });
     }
 
@@ -25,6 +21,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('t_spp_files');
+        //
     }
 };

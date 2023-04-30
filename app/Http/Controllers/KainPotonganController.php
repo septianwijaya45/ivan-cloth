@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Kain_potongan;
 use App\Models\Kain_roll;
+use App\Models\Ukuran;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
@@ -12,14 +13,15 @@ class KainPotonganController extends Controller
 {
     public function index()
     {
+        $ukuran    = Ukuran::all();
         $kain_roll = Kain_roll::select('id','kode_lot','jenis_kain')->get();
-        return view('kain_potongan.index', compact(['kain_roll']));
+        return view('kain_potongan.index', compact(['kain_roll', 'ukuran']));
     }
 
     public function indexData()
     {
         $data = DB::select("
-            SELECT CONCAT(kr.kode_lot, ' | ', kr.jenis_kain) as kain_roll, kr.warna,  kp.ukuran, kp.uuid, kp.id
+            SELECT CONCAT(kr.kode_lot, ' | ', kr.jenis_kain, ' | ',  kp.ukuran) as kain_roll, kr.warna, kp.stok, kp.uuid, kp.id
             FROM m_kain_rolls kr, m_kain_potongans kp
             WHERE kr.id = kp.kain_roll_id
         ");
@@ -30,13 +32,15 @@ class KainPotonganController extends Controller
     {
         $this->validate($request, [
             'kain_roll_id'  => 'required',
-            'ukuran'        => 'required|numeric|min:0'
+            'stok'        => 'required|numeric|min:0',
+            'ukuran'        => 'required'
         ]);
 
         Kain_potongan::create([
             'uuid'          => Uuid::uuid4()->getHex(),
             'kain_roll_id'  => $request->kain_roll_id,
-            'ukuran'        => $request->ukuran
+            'ukuran'        => $request->ukuran,
+            'stok'          => $request->stok
         ]);
 
         return response()->json([
@@ -55,14 +59,16 @@ class KainPotonganController extends Controller
     {
         $this->validate($request, [
             'kain_roll_id'  => 'required',
-            'ukuran'        => 'required|numeric|min:0'
+            'stok'          => 'required|numeric|min:0',
+            'ukuran'          => 'required'
         ]);
 
         Kain_potongan::where('id', $request->id)
         ->where('uuid', $uuid)
         ->update([
             'kain_roll_id'  => $request->kain_roll_id,
-            'ukuran'        => $request->ukuran
+            'ukuran'        => $request->ukuran,
+            'stok'        => $request->stok,
         ]);
 
         return response()->json([
