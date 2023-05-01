@@ -12,4 +12,14 @@ class Karyawan extends Model
     protected $fillable = [
         'uuid', 'nama', 'jenis_kelamin', 'nik', 'no_telepon', 'npwp', 'posisi', 'status_karyawan', 'gaji_pokok'
     ];
+
+    public function SPP()
+    {
+        return $this->belongsToMany(SPP::class, 'karyawan_id');
+    }
+
+    public function SPK()
+    {
+        return $this->belongsToMany(SPK::class, 'karyawan_id');
+    }
 }

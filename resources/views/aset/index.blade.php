@@ -259,7 +259,11 @@
         function getAset() {
             var htmlview
             $.ajax({
+                @if(Auth::user()->role_id == 1)
                 url: "{{ route('aset.data') }}",
+                @else
+                url: "{{ route('a.aset.data') }}",
+                @endif
                 type: 'GET',
                 success: function(res) {
                     $('tbody').html('')
@@ -300,7 +304,11 @@
 
         function addAset() {
             $.ajax({
+                @if(Auth::user()->role_id == 1)
                 url: "{{ route('aset.add') }}",
+                @else
+                url: "{{ route('a.aset.add') }}",
+                @endif
                 type: "POST",
                 data: $('#formAddAset').serialize(),
                 dataType: 'json',
@@ -333,7 +341,11 @@
         }
 
         function detailAset(id) {
+            @if(Auth::user()->role_id == 1)
             var _url = "{{ route('aset.detail', ':id') }}"
+            @else
+            var _url = "{{ route('a.aset.detail', ':id') }}"
+            @endif
             _url = _url.replace(':id', id)
 
             $.ajax({
@@ -352,7 +364,11 @@
 
         function updateAset() {
             var id = $('#formEditAset').data('id')
+            @if(Auth::user()->role_id == 1)
             var _url = "{{ route('aset.update', ':id') }}"
+            @else
+            var _url = "{{ route('a.aset.update', ':id') }}"
+            @endif
             _url = _url.replace(':id', id)
 
             $.ajax({
@@ -412,7 +428,11 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
+                        @if(Auth::user()->role_id == 1)
                         var _url = "{{ route('aset.delete', ':id') }}";
+                        @else
+                        var _url = "{{ route('a.aset.delete', ':id') }}";
+                        @endif
                         _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
