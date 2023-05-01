@@ -34,7 +34,12 @@
                             <div class="card-header">
                                 <h5 class="card-title">Form Tambah SPP</h5>
                                 <div class="card-tools">
+                                    @if(Auth::user()->role_id == 1)
                                     <a href="{{ route('spp') }}" class="btn btn-warning btn-sm">Kembali</a>
+                                    @endif
+                                    @if(Auth::user()->role_id == 3)
+                                    <a href="{{ route('w.spp') }}" class="btn btn-warning btn-sm">Kembali</a>
+                                    @endif
                                 </div>
                             </div>
                             <form action="#" method="POST" enctype="multipart/form-data" id="formSPP">
@@ -259,7 +264,12 @@
                 let data = $(this).val();
                 data = data.split('~')[0];
                 $.ajax({
+                    @if(Auth::user()->role_id == 1)
                     url: "{{ url('kain-roll') }}/"+data,
+                    @endif
+                    @if(Auth::user()->role_id == 3)
+                    url: "{{ url('w.kain-roll') }}/"+data,
+                    @endif
                     method: "GET",
                     success: function(res){
                         $('#warna').val(res.warna)
@@ -459,7 +469,6 @@
             $('#tabel_insert').on('click', '#edit-data', function(){
                 let uuid = $(this).data('uuid');
                 let dt_detail = data.find(dt => dt.uuid === uuid)
-                console.log(dt_detail);
                 $('#ukuran').val(dt_detail.ukuran).change();
                 $('#tanggal').val(dt_detail.tanggal);
                 $('#kode_lot').val(dt_detail.kode_lot).change();
@@ -490,7 +499,12 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
+                            @if(Auth::user()->role_id == 1)
                             url         : "{{route('spp.store')}}",
+                            @endif
+                            @if(Auth::user()->role_id == 3)
+                            url         : "{{route('w.spp.store')}}",
+                            @endif
                             method      : "POST",
                             data        : {'data': data, 'notes': $('#note').val()},
                             success     : function(res){

@@ -37,7 +37,12 @@
                             <div class="card-header">
                                 <h5 class="card-title">Form Edit SPP</h5>
                                 <div class="card-tools">
+                                    @if(Auth::user()->role_id == 1)
                                     <a href="{{ route('spp') }}" class="btn btn-warning btn-sm">Kembali</a>
+                                    @endif
+                                    @if(Auth::user()->role_id == 3)
+                                    <a href="{{ route('w.spp') }}" class="btn btn-warning btn-sm">Kembali</a>
+                                    @endif
                                 </div>
                             </div>
                             <form action="#" method="POST" enctype="multipart/form-data" id="formSPP">
@@ -526,7 +531,12 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         $.ajax({
+                            @if(Auth::user()->role_id == 1)
                             url         : "{{route('spp.update')}}",
+                            @endif
+                            @if(Auth::user()->role_id == 3)
+                            url         : "{{route('w.spp.update')}}",
+                            @endif
                             method      : "POST",
                             data        : {'data': data, 'notes': $('#note').val()},
                             success     : function(res){

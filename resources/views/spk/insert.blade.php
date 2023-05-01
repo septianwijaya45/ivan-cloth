@@ -35,7 +35,12 @@
                             <div class="card-header">
                                 <h5 class="card-title">Form Tambah SPK</h5>
                                 <div class="card-tools">
+                                    @if(Auth::user()->role_id == 1)
                                     <a href="{{ route('spk') }}" class="btn btn-warning btn-sm">Kembali</a>
+                                    @endif
+                                    @if(Auth::user()->role_id == 3)
+                                    <a href="{{ route('w.spk') }}" class="btn btn-warning btn-sm">Kembali</a>
+                                    @endif
                                 </div>
                             </div>
                             <form action="#" method="POST" enctype="multipart/form-data" id="formSPP">
@@ -342,7 +347,12 @@
                 e.preventDefault();
                 let data = $(this).val();
                 $.ajax({
+                    @if(Auth::user()->role_id == 1)
                     url: "{{ url('surat-perintah-potong/data') }}/"+data,
+                    @endif
+                    @if(Auth::user()->role_id == 3)
+                    url: "{{ url('warehouse/surat-perintah-potong/data') }}/"+data,
+                    @endif
                     // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
                     method: "GET",
                     success: function(res){
@@ -364,7 +374,12 @@
                 e.preventDefault();
                 let data = $(this).val();
                 $.ajax({
+                    @if(Auth::user()->role_id == 1)
                     url: "{{ url('surat-perintah-kain/artikel') }}/"+data,
+                    @endif
+                    @if(Auth::user()->role_id == 3)
+                    url: "{{ url('warehouse/surat-perintah-kain/artikel') }}/"+data,
+                    @endif
                     // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
                     method: "GET",
                     success: function(res){
@@ -378,7 +393,12 @@
                 let ukuran = $('#ukuran').val();
                 let warna = $('#warna').val();
                 $.ajax({
+                    @if(Auth::user()->role_id == 1)
                     url: "{{ url('surat-perintah-kain/hasil-potongan') }}/"+kode_spp+"/"+ukuran+"/"+warna,
+                    @endif
+                    @if(Auth::user()->role_id == 3)
+                    url: "{{ url('warehouse/surat-perintah-kain/hasil-potongan') }}/"+kode_spp+"/"+ukuran+"/"+warna,
+                    @endif
                     method: "GET",
                     success: function(res){
                         $('#hasil_kain_potongan').val(res.spp.hasilspp);
@@ -612,7 +632,6 @@
             $('#tabel_insert').on('click', '#edit-data', function(){
                 let uuid = $(this).data('uuid');
                 let dt_detail = data.find(dt => dt.uuid === uuid)
-                console.log(dt_detail);
                 $('#ukuran').val(dt_detail.ukuran).change();
                 $('#tanggal').val(dt_detail.tanggal);
                 $('#kode_lot').val(dt_detail.kode_lot).change();
@@ -649,7 +668,12 @@
                         });
 
                         $.ajax({
+                            @if(Auth::user()->role_id == 1)
                             url         : "{{route('spk.store')}}",
+                            @endif
+                            @if(Auth::user()->role_id == 3)
+                            url         : "{{route('w.spk.store')}}",
+                            @endif
                             method      : "POST",
                             data        : {'data': data, 'notes': $('#note').val()},
                             success     : function(res){
@@ -723,7 +747,12 @@
                         });
 
                         $.ajax({
+                            @if(Auth::user()->role_id == 1)
                             url         : "{{route('spk.storeGambar')}}",
+                            @endif
+                            @if(Auth::user()->role_id == 3)
+                            url         : "{{route('w.spk.storeGambar')}}",
+                            @endif
                             method      : "POST",
                             data        : formData,
                             processData: false,

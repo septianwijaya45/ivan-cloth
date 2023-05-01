@@ -202,36 +202,44 @@
 
         function getUkuran() {
             var htmlview
-            $.ajax({
-                url: "{{ route('ukuran.data') }}",
-                type: 'GET',
-                success: function(res) {
-                    $('tbody').html('')
-                    $.each(res, function(i, data) {
-                        htmlview += `<tr>
-                        <td style="text-align: center;">` + data.id + `</td>
-                        <td>` + data.ukuran + `</td>
-                        <td>
-                          <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailUkuran('` + data
-                            .uuid + `')"> <i class="fas fa-pencil-alt"></i>
-                          </button>
-                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteUkuran('` + data
-                            .uuid + `')"> <i class="fas fa-trash"></i>
-                          </button>
-                        </td>
-                       </tr>`
-                    });
+                $.ajax({
+                    @if(Auth::user()->role_id == 1)
+                    url: "{{ route('ukuran.data') }}",
+                    @else
+                    url: "{{ route('a.ukuran.data') }}",
+                    @endif
+                    type: 'GET',
+                    success: function(res) {
+                        $('tbody').html('')
+                        $.each(res, function(i, data) {
+                            htmlview += `<tr>
+                            <td style="text-align: center;">` + data.id + `</td>
+                            <td>` + data.ukuran + `</td>
+                            <td>
+                            <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailUkuran('` + data
+                                .uuid + `')"> <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteUkuran('` + data
+                                .uuid + `')"> <i class="fas fa-trash"></i>
+                            </button>
+                            </td>
+                        </tr>`
+                        });
 
-                    $('tbody').html(htmlview)
-                    $("#tbl_ukuran").DataTable(dtTableOption).buttons().container().appendTo(
-                        '#tbl_ukuran_wrapper .col-md-6:eq(0)')
-                }
-            })
+                        $('tbody').html(htmlview)
+                        $("#tbl_ukuran").DataTable(dtTableOption).buttons().container().appendTo(
+                            '#tbl_ukuran_wrapper .col-md-6:eq(0)')
+                    }
+                })
         }
 
         function addUkuran() {
             $.ajax({
+                @if(Auth::user()->role_id == 1)
                 url: "{{ route('ukuran.add') }}",
+                @else
+                url: "{{ route('a.ukuran.add') }}",
+                @endif
                 type: "POST",
                 data: $('#formAddUkuran').serialize(),
                 dataType: 'json',
@@ -273,7 +281,11 @@
         }
 
         function detailUkuran(id) {
+            @if(Auth::user()->role_id == 1)
             var _url = "{{ route('ukuran.edit', ':id') }}"
+            @else
+            var _url = "{{ route('a.ukuran.edit', ':id') }}"
+            @endif
             _url = _url.replace(':id', id)
 
             $.ajax({
@@ -292,7 +304,12 @@
 
         function updateUkuran() {
             var id = $('#formEditUkuran').data('id')
+            
+            @if(Auth::user()->role_id == 1)
             var _url = "{{ route('ukuran.update', ':id') }}"
+            @else
+            var _url = "{{ route('a.ukuran.update', ':id') }}"
+            @endif
             _url = _url.replace(':id', id)
 
             $.ajax({
@@ -361,7 +378,11 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
+                        @if(Auth::user()->role_id == 1)
                         var _url = "{{ route('ukuran.delete', ':id') }}";
+                        @else
+                        var _url = "{{ route('a.ukuran.delete', ':id') }}";
+                        @endif
                         _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({

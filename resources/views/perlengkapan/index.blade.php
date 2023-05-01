@@ -220,7 +220,11 @@
         function getPerlengkapan() {
             var htmlview
             $.ajax({
+                @if(Auth::user()->role_id == 1)
                 url: "{{ route('perlengkapan.data') }}",
+                @else
+                url: "{{ route('a.perlengkapan.data') }}",
+                @endif
                 type: 'GET',
                 success: function(res) {
                     $('tbody').html('')
@@ -249,7 +253,11 @@
 
         function addPerlengkapan() {
             $.ajax({
+                @if(Auth::user()->role_id == 1)
                 url: "{{ route('perlengkapan.add') }}",
+                @else
+                url: "{{ route('a.perlengkapan.add') }}",
+                @endif
                 type: "POST",
                 data: $('#formAddPerlengkapan').serialize(),
                 dataType: 'json',
@@ -282,7 +290,11 @@
         }
 
         function detailPerlengkapan(id) {
+            @if(Auth::user()->role_id == 1)
             var _url = "{{ route('perlengkapan.detail', ':id') }}"
+            @else
+            var _url = "{{ route('a.perlengkapan.detail', ':id') }}"
+            @endif
             _url = _url.replace(':id', id)
 
             $.ajax({
@@ -301,7 +313,12 @@
 
         function updatePerlengkapan() {
             var id = $('#formEditPerlengkapan').data('id')
+            
+            @if(Auth::user()->role_id == 1)
             var _url = "{{ route('perlengkapan.update', ':id') }}"
+            @else
+            var _url = "{{ route('a.perlengkapan.update', ':id') }}"
+            @endif
             _url = _url.replace(':id', id)
 
             $.ajax({
@@ -361,7 +378,11 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
+                        @if(Auth::user()->role_id == 1)
                         var _url = "{{ route('perlengkapan.delete', ':id') }}";
+                        @else
+                        var _url = "{{ route('a.perlengkapan.delete', ':id') }}";
+                        @endif
                         _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({

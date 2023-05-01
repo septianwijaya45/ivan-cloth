@@ -238,7 +238,12 @@
         function getKainPotongan() {
             var htmlview
             $.ajax({
+                @if(Auth::user()->role_id == 1)
                 url: "{{ route('kain_potongan.data') }}",
+                @endif
+                @if(Auth::user()->role_id == 3)
+                url: "{{ route('w.kain_potongan.data') }}",
+                @endif
                 type: 'GET',
                 success: function(res) {
                     $('tbody').html('')
@@ -268,7 +273,12 @@
 
         function addKainPotongan() {
             $.ajax({
+                @if(Auth::user()->role_id == 1)
                 url: "{{ route('kain_potongan.add') }}",
+                @endif
+                @if(Auth::user()->role_id == 3)
+                url: "{{ route('w.kain_potongan.add') }}",
+                @endif
                 type: "POST",
                 data: $('#formAddKainPotongan').serialize(),
                 dataType: 'json',
@@ -301,7 +311,12 @@
         }
 
         function detailKainPotongan(id) {
+            @if(Auth::user()->role_id == 1)
             var _url = "{{ route('kain_potongan.detail', ':id') }}"
+            @endif
+            @if(Auth::user()->role_id == 3)
+            var _url = "{{ route('w.kain_potongan.detail', ':id') }}"
+            @endif
             _url = _url.replace(':id', id)
 
             $.ajax({
@@ -320,7 +335,13 @@
 
         function updateKainPotongan() {
             var id = $('#formEditKainPotongan').data('id')
+            
+            @if(Auth::user()->role_id == 1)
             var _url = "{{ route('kain_potongan.update', ':id') }}"
+            @endif
+            @if(Auth::user()->role_id == 3)
+            var _url = "{{ route('w.kain_potongan.update', ':id') }}"
+            @endif
             _url = _url.replace(':id', id)
 
             $.ajax({
@@ -380,7 +401,12 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
+                        @if(Auth::user()->role_id == 1)
                         var _url = "{{ route('kain_potongan.delete', ':id') }}";
+                        @endif
+                        @if(Auth::user()->role_id == 3)
+                        var _url = "{{ route('w.kain_potongan.delete', ':id') }}";
+                        @endif
                         _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({

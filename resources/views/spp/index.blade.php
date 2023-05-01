@@ -34,7 +34,12 @@
                                 <h5 class="card-title">Data Surat Perintah Potong</h5>
 
                                 <div class="card-tools">
+                                    @if(Auth::user()->role_id == 1)
                                     <a href="{{ route('spp.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
+                                    @endif
+                                    @if(Auth::user()->role_id == 3)
+                                    <a href="{{ route('w.spp.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
+                                    @endif
                                 </div>
                             </div>
                             <!-- /.card-header -->
@@ -130,7 +135,12 @@
         function getSPP() {
             var htmlview
             $.ajax({
+                @if(Auth::user()->role_id == 1)
                 url: "{{ route('spp.data') }}",
+                @endif
+                @if(Auth::user()->role_id == 3)
+                url: "{{ route('w.spp.data') }}",
+                @endif
                 type: 'GET',
                 success: function(res) {
                     let no = 0;
@@ -185,7 +195,12 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
+                        @if(Auth::user()->role_id == 1)
                         var _url = "{{ route('spp.delete', 'kode_spp') }}";
+                        @endif
+                        @if(Auth::user()->role_id == 3)
+                        var _url = "{{ route('w.spp.delete', 'kode_spp') }}";
+                        @endif
                         _url = _url.replace('kode_spp', kode_spp)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
@@ -229,7 +244,12 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
+                        @if(Auth::user()->role_id == 1)
                         var _url = "{{ route('spp.confirm', 'kode_spp') }}";
+                        @endif
+                        @if(Auth::user()->role_id == 3)
+                        var _url = "{{ route('w.spp.confirm', 'kode_spp') }}";
+                        @endif
                         _url = _url.replace('kode_spp', kode_spp)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
@@ -273,7 +293,12 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
+                        @if(Auth::user()->role_id == 1)
                         var _url = "{{ route('spp.finished', 'kode_spp') }}";
+                        @endif
+                        @if(Auth::user()->role_id == 3)
+                        var _url = "{{ route('w.spp.finished', 'kode_spp') }}";
+                        @endif
                         _url = _url.replace('kode_spp', kode_spp)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({

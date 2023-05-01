@@ -53,7 +53,7 @@ class KainRollController extends Controller
     public function updateData(Request $request, $uuid)
     {
         $this->validate($request, [
-            'kode_lot'      => 'required|unique:m_kain_rolls,kode_lot',
+            'kode_lot'      => 'required',
             'jenis_kain'    => 'required',
             'berat'         => 'required|numeric|min:0.1',
             'warna'         => 'required',
