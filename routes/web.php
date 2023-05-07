@@ -7,6 +7,8 @@ use App\Http\Controllers\KainRollController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\GajiController;
+use App\Http\Controllers\PemasukkanController;
+use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\PerlengkapanController;
 use App\Http\Controllers\SPKController;
 use App\Http\Controllers\SPPController;
@@ -159,6 +161,40 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
             // Confirm & Finishing
             Route::put('confirm-work/{kode_spk}', [SPKController::class, 'confirm'])->name('spk.confirm');
             Route::put('finished-work/{kode_spk}', [SPKController::class, 'finished'])->name('spk.finished');
+        });
+
+        // Route Pemasukkan
+        Route::group(['prefix' => 'pemasukkan'], function(){
+            // index
+            Route::get('',  [PemasukkanController::class, 'index'])->name('pemasukkan');
+            Route::get('data', [PemasukkanController::class, 'indexData'])->name('pemasukkan.data');
+            Route::post('search-data', [PemasukkanController::class, 'indexData'])->name('pemasukkan.searchData');
+            // Insert
+            Route::get('tambah-data',  [PemasukkanController::class, 'insert'])->name('pemasukkan.insert');
+            Route::post('tambah-data',  [PemasukkanController::class, 'store'])->name('pemasukkan.store');
+            // edit
+            Route::get('edit-data/{uuid}',  [PemasukkanController::class, 'edit'])->name('pemasukkan.edit');
+            Route::post('edit-data',  [PemasukkanController::class, 'update'])->name('pemasukkan.update');
+            // delete
+            Route::delete('delete/{uuid}', [PemasukkanController::class, 'destroy'])->name('pemasukkan.delete');
+            Route::delete('delete-detail/{uuid}', [PemasukkanController::class, 'destroyDetail'])->name('pemasukkan.deleteDetail');
+        });
+
+         // Route Pengeluaran
+         Route::group(['prefix' => 'pengeluaran'], function(){
+            // index
+            Route::get('',  [PengeluaranController::class, 'index'])->name('pengeluaran');
+            Route::get('data', [PengeluaranController::class, 'indexData'])->name('pengeluaran.data');
+            Route::post('search-data', [PengeluaranController::class, 'indexData'])->name('pengeluaran.searchData');
+            // Insert
+            Route::get('tambah-data',  [PengeluaranController::class, 'insert'])->name('pengeluaran.insert');
+            Route::post('tambah-data',  [PengeluaranController::class, 'store'])->name('pengeluaran.store');
+            // edit
+            Route::get('edit-data/{uuid}',  [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
+            Route::post('edit-data',  [PengeluaranController::class, 'update'])->name('pengeluaran.update');
+            // delete
+            Route::delete('delete/{uuid}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.delete');
+            Route::delete('delete-detail/{uuid}', [PengeluaranController::class, 'destroyDetail'])->name('pengeluaran.deleteDetail');
         });
     });
 
