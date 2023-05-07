@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('satuan')->after('jumlah_kain');
             $table->string('ukuran')->after('satuan');
             $table->integer('gaji')->after('ukuran');
-            $table->text('note')->after('gaji');
+            $table->text('note')->nullable()->after('gaji');
         });
     }
 
