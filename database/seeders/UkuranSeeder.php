@@ -15,25 +15,31 @@ class UkuranSeeder extends Seeder
     public function run(): void
     {
         DB::table('m_ukurans')->insert([
+
             [
                 'uuid'          => Uuid::uuid4()->getHex(),
-                'ukuran'        => 'M',
+                'kode_ukuran'  => 'S',
+                'ukuran'        => 'Small',
             ],
             [
                 'uuid'          => Uuid::uuid4()->getHex(),
-                'ukuran'        => 'L',
+                'kode_ukuran'  => 'M',
+                'ukuran'        => 'Medium',
             ],
             [
                 'uuid'          => Uuid::uuid4()->getHex(),
-                'ukuran'        => 'XL',
+                'kode_ukuran'  => 'L',
+                'ukuran'        => 'Large',
             ],
             [
                 'uuid'          => Uuid::uuid4()->getHex(),
-                'ukuran'        => 'XXL',
+                'kode_ukuran'  => 'XL',
+                'ukuran'        => 'Extra Large',
             ],
             [
                 'uuid'          => Uuid::uuid4()->getHex(),
-                'ukuran'        => 'XXXL',
+                'kode_ukuran'  => 'XXL',
+                'ukuran'        => 'Extra Extra Large',
             ],
         ]);
     }

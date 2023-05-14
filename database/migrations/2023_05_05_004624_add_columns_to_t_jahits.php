@@ -15,10 +15,7 @@ return new class extends Migration
             $table->dropForeign(['spk_id']);
             $table->dropColumn('spk_id');
             $table->string('kode_spk')->after('id');
-            $table->foreignId('kain_tersablon_id')->after('kode_jahit')
-                ->references('id')
-                ->on('m_kain_tersablons');
-            $table->string('artikel')->after('kain_tersablon_id');
+            $table->string('artikel')->after('kode_jahit');
             $table->date('tanggal')->after('artikel');
             $table->json('karyawan')->after('karyawan_id');
             $table->integer('kain_tersablon_dipakai')->after('karyawan');

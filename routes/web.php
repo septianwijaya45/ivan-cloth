@@ -35,13 +35,13 @@ Route::post('login', [LoginController::class, 'login'])->name('login');
 Route::get('logout', [LoginController::class, 'logout'])->name('logout');
 
 
-Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
+Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
     Route::get('dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    
+
     // ***** OWNER ROLE ***** //
-    Route::group(['roles' => 'Owner'], function(){
+    Route::group(['roles' => 'Owner'], function () {
         // Module Ukuran
-        Route::group(['prefix' => 'ukuran'], function(){
+        Route::group(['prefix' => 'ukuran'], function () {
             Route::get('', [UkuranController::class, 'index'])->name('ukuran');
             Route::get('data', [UkuranController::class, 'indexData'])->name('ukuran.data');
             Route::post('', [UkuranController::class, 'store'])->name('ukuran.add');
@@ -51,7 +51,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         });
 
         // Module Gaji
-        Route::group(['prefix' => 'gaji'], function(){
+        Route::group(['prefix' => 'gaji'], function () {
             Route::get('', [GajiController::class, 'index'])->name('gaji');
             Route::get('data', [GajiController::class, 'indexData'])->name('gaji.data');
             Route::post('', [GajiController::class, 'store'])->name('gaji.add');
@@ -59,9 +59,9 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
             Route::put('{uuid}', [GajiController::class, 'update'])->name('gaji.update');
             Route::delete('{uuid}', [GajiController::class, 'delete'])->name('gaji.delete');
         });
-        
+
         //Route Module Kain Roll
-        Route::group(['prefix' => 'kain-roll'], function(){
+        Route::group(['prefix' => 'kain-roll'], function () {
             Route::get('', [KainRollController::class, 'index'])->name('kain_roll');
             Route::get('data', [KainRollController::class, 'indexData'])->name('kain_roll.data');
             Route::post('', [KainRollController::class, 'addData'])->name('kain_roll.add');
@@ -69,9 +69,9 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
             Route::put('{uuid}', [KainRollController::class, 'updateData'])->name('kain_roll.update');
             Route::delete('{uuid}', [KainRollController::class, 'deleteData'])->name('kain_roll.delete');
         });
-        
+
         // Route Module Kain Potongan
-        Route::group(['prefix' => 'kain-potongan'], function(){
+        Route::group(['prefix' => 'kain-potongan'], function () {
             Route::get('', [KainPotonganController::class, 'index'])->name('kain_potongan');
             Route::get('data', [KainPotonganController::class, 'indexData'])->name('kain_potongan.data');
             Route::post('', [KainPotonganController::class, 'store'])->name('kain_potongan.add');
@@ -79,9 +79,9 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
             Route::put('{uuid}', [KainPotonganController::class, 'update'])->name('kain_potongan.update');
             Route::delete('{uuid}', [KainPotonganController::class, 'delete'])->name('kain_potongan.delete');
         });
-        
+
         //Route Module Karyawan
-        Route::group(['prefix' => 'karyawan'], function(){
+        Route::group(['prefix' => 'karyawan'], function () {
             Route::get('', [KaryawanController::class, 'index'])->name('karyawan');
             Route::get('data', [KaryawanController::class, 'indexData'])->name('karyawan.data');
             Route::post('', [KaryawanController::class, 'addData'])->name('karyawan.add');
@@ -89,9 +89,9 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
             Route::put('{uuid}', [KaryawanController::class, 'updateData'])->name('karyawan.update');
             Route::delete('{uuid}', [KaryawanController::class, 'deleteData'])->name('karyawan.delete');
         });
-        
+
         //Route Module Perlengkapan
-        Route::group(['prefix' => 'perlengkapan'], function(){
+        Route::group(['prefix' => 'perlengkapan'], function () {
             Route::get('', [PerlengkapanController::class, 'index'])->name('perlengkapan');
             Route::get('data', [PerlengkapanController::class, 'indexData'])->name('perlengkapan.data');
             Route::post('', [PerlengkapanController::class, 'addData'])->name('perlengkapan.add');
@@ -99,9 +99,9 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
             Route::put('{uuid}', [PerlengkapanController::class, 'updateData'])->name('perlengkapan.update');
             Route::delete('{uuid}', [PerlengkapanController::class, 'deleteData'])->name('perlengkapan.delete');
         });
-        
+
         //Route Module Aset
-        Route::group(['prefix' => 'aset'], function(){
+        Route::group(['prefix' => 'aset'], function () {
             Route::get('', [AsetController::class, 'index'])->name('aset');
             Route::get('data', [AsetController::class, 'indexData'])->name('aset.data');
             Route::post('', [AsetController::class, 'addData'])->name('aset.add');
@@ -111,7 +111,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         });
 
         // Route SPP
-        Route::group(['prefix' => 'surat-perintah-potong'], function(){
+        Route::group(['prefix' => 'surat-perintah-potong'], function () {
             Route::get('', [SPPController::class, 'index'])->name('spp');
             Route::get('data', [SPPController::class, 'indexData'])->name('spp.data');
             // create
@@ -129,10 +129,13 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
             Route::put('finished-work/{kode_spp}', [SPPController::class, 'finished'])->name('spp.finished');
             // get spp for SPK
             Route::get('data/{kode_spp}', [SPPController::class, 'dataSPP'])->name('spp.getData');
+
+            Route::get('get-data/{ukuran}', [SPPController::class, 'searchKainPotongan'])->name('spp.searchKainPotongan');
+            Route::get('get-data/{ukuran}/{kode_lot}', [SPPController::class, 'searchKainPotonganStok'])->name('spp.searchKainPotonganStok');
         });
 
         // Route SPK
-        Route::group(['prefix' => 'surat-perintah-kain'], function(){
+        Route::group(['prefix' => 'surat-perintah-kain'], function () {
             // getArticle
             Route::get('artikel/{artikel}', [SPKController::class, 'getArtikel'])->name('spk.artikel');
             // get Hasil Potongan
@@ -164,7 +167,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         });
 
         // Route Pemasukkan
-        Route::group(['prefix' => 'pemasukkan'], function(){
+        Route::group(['prefix' => 'pemasukkan'], function () {
             // index
             Route::get('',  [PemasukkanController::class, 'index'])->name('pemasukkan');
             Route::get('data', [PemasukkanController::class, 'indexData'])->name('pemasukkan.data');
@@ -180,8 +183,8 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
             Route::delete('delete-detail/{uuid}', [PemasukkanController::class, 'destroyDetail'])->name('pemasukkan.deleteDetail');
         });
 
-         // Route Pengeluaran
-         Route::group(['prefix' => 'pengeluaran'], function(){
+        // Route Pengeluaran
+        Route::group(['prefix' => 'pengeluaran'], function () {
             // index
             Route::get('',  [PengeluaranController::class, 'index'])->name('pengeluaran');
             Route::get('data', [PengeluaranController::class, 'indexData'])->name('pengeluaran.data');
@@ -199,9 +202,9 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
     });
 
     // ***** ADMIN ROLE ***** //
-    Route::group(['roles' => 'Admin', 'prefix' => 'admin'], function(){
+    Route::group(['roles' => 'Admin', 'prefix' => 'admin'], function () {
         // Module Ukuran
-        Route::group(['prefix' => 'ukuran'], function(){
+        Route::group(['prefix' => 'ukuran'], function () {
             Route::get('', [UkuranController::class, 'index'])->name('a.ukuran');
             Route::get('data', [UkuranController::class, 'indexData'])->name('a.ukuran.data');
             Route::post('', [UkuranController::class, 'store'])->name('a.ukuran.add');
@@ -211,7 +214,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         });
 
         // Module Gaji
-        Route::group(['prefix' => 'gaji'], function(){
+        Route::group(['prefix' => 'gaji'], function () {
             Route::get('', [GajiController::class, 'index'])->name('a.gaji');
             Route::get('data', [GajiController::class, 'indexData'])->name('a.gaji.data');
             Route::post('', [GajiController::class, 'store'])->name('a.gaji.add');
@@ -221,7 +224,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         });
 
         //Route Module Karyawan
-        Route::group(['prefix' => 'karyawan'], function(){
+        Route::group(['prefix' => 'karyawan'], function () {
             Route::get('', [KaryawanController::class, 'index'])->name('a.karyawan');
             Route::get('data', [KaryawanController::class, 'indexData'])->name('a.karyawan.data');
             Route::post('', [KaryawanController::class, 'addData'])->name('a.karyawan.add');
@@ -229,9 +232,9 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
             Route::put('{uuid}', [KaryawanController::class, 'updateData'])->name('a.karyawan.update');
             Route::delete('{uuid}', [KaryawanController::class, 'deleteData'])->name('a.karyawan.delete');
         });
-        
+
         //Route Module Perlengkapan
-        Route::group(['prefix' => 'perlengkapan'], function(){
+        Route::group(['prefix' => 'perlengkapan'], function () {
             Route::get('', [PerlengkapanController::class, 'index'])->name('a.perlengkapan');
             Route::get('data', [PerlengkapanController::class, 'indexData'])->name('a.perlengkapan.data');
             Route::post('', [PerlengkapanController::class, 'addData'])->name('a.perlengkapan.add');
@@ -239,9 +242,9 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
             Route::put('{uuid}', [PerlengkapanController::class, 'updateData'])->name('a.perlengkapan.update');
             Route::delete('{uuid}', [PerlengkapanController::class, 'deleteData'])->name('a.perlengkapan.delete');
         });
-        
+
         //Route Module Aset
-        Route::group(['prefix' => 'aset'], function(){
+        Route::group(['prefix' => 'aset'], function () {
             Route::get('', [AsetController::class, 'index'])->name('a.aset');
             Route::get('data', [AsetController::class, 'indexData'])->name('a.aset.data');
             Route::post('', [AsetController::class, 'addData'])->name('a.aset.add');
@@ -252,9 +255,9 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
     });
 
     // ***** Warehouse ROLE ***** //
-    Route::group(['roles' => 'Warehouse', 'prefix' => 'warehouse'], function(){
+    Route::group(['roles' => 'Warehouse', 'prefix' => 'warehouse'], function () {
         //Route Module Kain Roll
-        Route::group(['prefix' => 'kain-roll'], function(){
+        Route::group(['prefix' => 'kain-roll'], function () {
             Route::get('', [KainRollController::class, 'index'])->name('w.kain_roll');
             Route::get('data', [KainRollController::class, 'indexData'])->name('w.kain_roll.data');
             Route::post('', [KainRollController::class, 'addData'])->name('w.kain_roll.add');
@@ -262,9 +265,9 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
             Route::put('{uuid}', [KainRollController::class, 'updateData'])->name('w.kain_roll.update');
             Route::delete('{uuid}', [KainRollController::class, 'deleteData'])->name('w.kain_roll.delete');
         });
-        
+
         // Route Module Kain Potongan
-        Route::group(['prefix' => 'kain-potongan'], function(){
+        Route::group(['prefix' => 'kain-potongan'], function () {
             Route::get('', [KainPotonganController::class, 'index'])->name('w.kain_potongan');
             Route::get('data', [KainPotonganController::class, 'indexData'])->name('w.kain_potongan.data');
             Route::post('', [KainPotonganController::class, 'store'])->name('w.kain_potongan.add');
@@ -272,9 +275,9 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
             Route::put('{uuid}', [KainPotonganController::class, 'update'])->name('w.kain_potongan.update');
             Route::delete('{uuid}', [KainPotonganController::class, 'delete'])->name('w.kain_potongan.delete');
         });
-        
-       // Route SPP
-        Route::group(['prefix' => 'surat-perintah-potong'], function(){
+
+        // Route SPP
+        Route::group(['prefix' => 'surat-perintah-potong'], function () {
             Route::get('', [SPPController::class, 'index'])->name('w.spp');
             Route::get('data', [SPPController::class, 'indexData'])->name('w.spp.data');
             // create
@@ -295,7 +298,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
         });
 
         // Route SPK
-        Route::group(['prefix' => 'surat-perintah-kain'], function(){
+        Route::group(['prefix' => 'surat-perintah-kain'], function () {
             // getArticle
             Route::get('artikel/{artikel}', [SPKController::class, 'getArtikel'])->name('w.spk.artikel');
             // get Hasil Potongan
@@ -324,6 +327,6 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function(){
             // Confirm & Finishing
             Route::put('confirm-work/{kode_spk}', [SPKController::class, 'confirm'])->name('w.spk.confirm');
             Route::put('finished-work/{kode_spk}', [SPKController::class, 'finished'])->name('w.spk.finished');
-        }); 
+        });
     });
 });

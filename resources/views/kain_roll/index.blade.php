@@ -51,8 +51,10 @@
                                                 <th width="5%" style="text-align: center;">ID</th>
                                                 <th>Kode LOT</th>
                                                 <th>Jenis Kain</th>
-                                                <th>Berat</th>
                                                 <th>Warna</th>
+                                                <th>Stok Roll</th>
+                                                <th>Berat /roll</th>
+                                                <th>Total Berat</th>
                                                 <th width="10%">Aksi</th>
                                             </tr>
                                         </thead>
@@ -90,7 +92,7 @@
                         novalidate>
                         @csrf
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label for="kode_lot">Kode LOT</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
@@ -98,7 +100,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-5">
                                 <label for="jenis_kain">Jenis Kain</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
@@ -107,20 +109,29 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 mt-3">
-                                <label for="berat">Berat (Kg)</label>
-                                <div class="col-md-14 row">
-                                    <div class="col-md-12">
-                                        <input type="number" placeholder="Berat kain" name="berat" class="form-control"
-                                            step=".01" min="1">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-8 mt-3">
+                            <div class="col-md-4">
                                 <label for="warna">Warna</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
                                         <input type="text" placeholder="Warna kain." name="warna" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-2">
+                                <label for="stok_roll">Stok Roll</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="number" placeholder="Stok Kain Roll" name="stok_roll"
+                                            class="form-control" min="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-2">
+                                <label for="berat">Berat (per Kg)</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="number" placeholder="Berat kain" name="berat" class="form-control"
+                                            step=".01" min="1">
                                     </div>
                                 </div>
                             </div>
@@ -135,8 +146,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalEditKainRoll" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true">
+    <div class="modal fade" id="modalEditKainRoll" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog-scrollable modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -152,7 +163,7 @@
                         @csrf
                         <input type="hidden" name="id">
                         <div class="row">
-                            <div class="col-md-4">
+                            <div class="col-md-3">
                                 <label for="kode_lot">Kode LOT</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
@@ -161,7 +172,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-8">
+                            <div class="col-md-5">
                                 <label for="jenis_kain">Jenis Kain</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
@@ -170,21 +181,30 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-4 mt-3">
-                                <label for="berat">Berat (Kg)</label>
-                                <div class="col-md-14 row">
-                                    <div class="col-md-12">
-                                        <input type="number" placeholder="Berat kain" name="berat"
-                                            class="form-control" step=".01">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-8 mt-3">
+                            <div class="col-md-4">
                                 <label for="warna">Warna</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
                                         <input type="text" placeholder="Warna kain." name="warna"
                                             class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-2">
+                                <label for="stok_roll">Stok Roll</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="number" placeholder="Stok Kain Roll" name="stok_roll"
+                                            class="form-control" min="0">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mt-2">
+                                <label for="berat">Berat (per Kg)</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="number" placeholder="Berat kain" name="berat"
+                                            class="form-control" step=".01" min="1">
                                     </div>
                                 </div>
                             </div>
@@ -258,11 +278,11 @@
         function getKainRoll() {
             var htmlview
             $.ajax({
-                @if(Auth::user()->role_id == 1)
-                url: "{{ route('kain_roll.data') }}",
+                @if (Auth::user()->role_id == 1)
+                    url: "{{ route('kain_roll.data') }}",
                 @endif
-                @if(Auth::user()->role_id == 3)
-                url: "{{ route('w.kain_roll.data') }}",
+                @if (Auth::user()->role_id == 3)
+                    url: "{{ route('w.kain_roll.data') }}",
                 @endif
                 type: 'GET',
                 success: function(res) {
@@ -272,8 +292,10 @@
                         <td style="text-align: center;">` + data.id + `</td>
                         <td>` + data.kode_lot + `</td>
                         <td>` + data.jenis_kain + `</td>
-                        <td style='text-align: right;'>` + data.berat + ` kg</td>
                         <td>` + data.warna + `</td>
+                        <td style='text-align: right;'>` + data.stok_roll + `</td>
+                        <td style='text-align: right;'>` + data.berat + ` kg</td>
+                        <td style='text-align: right;'>` + (data.stok_roll * data.berat) + ` kg</td>
                         <td>
                           <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailKainRoll('` + data
                             .uuid + `')"> <i class="fas fa-pencil-alt"></i>
@@ -294,11 +316,11 @@
 
         function addKainRoll() {
             $.ajax({
-                @if(Auth::user()->role_id == 1)
-                url: "{{ route('kain_roll.add') }}",
+                @if (Auth::user()->role_id == 1)
+                    url: "{{ route('kain_roll.add') }}",
                 @endif
-                @if(Auth::user()->role_id == 3)
-                url: "{{ route('w.kain_roll.add') }}",
+                @if (Auth::user()->role_id == 3)
+                    url: "{{ route('w.kain_roll.add') }}",
                 @endif
                 type: "POST",
                 data: $('#formAddKainRoll').serialize(),
@@ -332,11 +354,11 @@
         }
 
         function detailKainRoll(id) {
-            @if(Auth::user()->role_id == 1)
-            var _url = "{{ route('kain_roll.detail', ':id') }}"
+            @if (Auth::user()->role_id == 1)
+                var _url = "{{ route('kain_roll.detail', ':id') }}"
             @endif
-            @if(Auth::user()->role_id == 3)
-            var _url = "{{ route('w.kain_roll.detail', ':id') }}"
+            @if (Auth::user()->role_id == 3)
+                var _url = "{{ route('w.kain_roll.detail', ':id') }}"
             @endif
             _url = _url.replace(':id', id)
 
@@ -356,11 +378,11 @@
 
         function updateKainRoll() {
             var id = $('#formEditKainRoll').data('id')
-            @if(Auth::user()->role_id == 1)
-            var _url = "{{ route('kain_roll.update', ':id') }}"
+            @if (Auth::user()->role_id == 1)
+                var _url = "{{ route('kain_roll.update', ':id') }}"
             @endif
-            var _url = "{{ route('w.kain_roll.update', ':id') }}"
-            @if(Auth::user()->role_id == 3)
+            @if (Auth::user()->role_id == 3)
+                var _url = "{{ route('w.kain_roll.update', ':id') }}"
             @endif
             _url = _url.replace(':id', id)
 
@@ -421,11 +443,11 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        @if(Auth::user()->role_id == 1)
-                        var _url = "{{ route('kain_roll.delete', ':id') }}";
+                        @if (Auth::user()->role_id == 1)
+                            var _url = "{{ route('kain_roll.delete', ':id') }}";
                         @endif
-                        @if(Auth::user()->role_id == 3)
-                        var _url = "{{ route('w.kain_roll.delete', ':id') }}";
+                        @if (Auth::user()->role_id == 3)
+                            var _url = "{{ route('w.kain_roll.delete', ':id') }}";
                         @endif
                         _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');

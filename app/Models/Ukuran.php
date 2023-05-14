@@ -10,6 +10,6 @@ class Ukuran extends Model
     use HasFactory;
     protected $table = 'm_ukurans';
     protected $fillable = [
-        'uuid', 'ukuran', 'created_at', 'updated_at'
+        'uuid', 'kode_ukuran', 'ukuran', 'created_at', 'updated_at'
     ];
 }

@@ -10,7 +10,7 @@ class Kain_roll extends Model
     protected $table = 'm_kain_rolls';
 
     protected $fillable = [
-        'uuid', 'kode_lot', 'jenis_kain', 'berat', 'warna'
+        'uuid', 'kode_lot', 'jenis_kain', 'stok_roll', 'berat', 'warna'
     ];
 
     public function spp()

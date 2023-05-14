@@ -22,18 +22,22 @@ class UkuranController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'ukuran'    => 'required|unique:m_ukurans'
+            'kode_ukuran'    => 'required|unique:m_ukurans',
+            'ukuran'          => 'required|unique:m_ukurans',
         ], [
-            'ukuran.required'   => 'Ukuran Harus Diisi!',
-            'ukuran.unique'     => 'Ukuran Sudah Tersedia!',
+            'kode_ukuran.required'   => 'Kode Ukuran Harus Diisi!',
+            'kode_ukuran.unique'     => 'Kode Ukuran Sudah Tersedia!',
+            'ukuran.required'         => 'Ukuran Harus Diisi!',
+            'ukuran.unique'           => 'Ukuran Sudah Tersedia!',
         ]);
 
         try {
             Ukuran::create([
                 'uuid'          => Uuid::uuid4()->getHex(),
-                'ukuran'    => $request->ukuran
+                'kode_ukuran'  => $request->kode_ukuran,
+                'ukuran'        => $request->ukuran,
             ]);
-    
+
             return response()->json([
                 'code'      => 200,
                 'message'   => 'Berhasil Menyimpan Data Ukuran',
@@ -57,10 +61,13 @@ class UkuranController extends Controller
     public function update(Request $request, $uuid)
     {
         $this->validate($request, [
-            'ukuran'    => 'required|unique:m_ukurans'
+            'kode_ukuran'    => 'required|unique:m_ukurans',
+            'ukuran'          => 'required|unique:m_ukurans'
         ], [
-            'ukuran.required'   => 'Ukuran Harus Diisi!',
-            'ukuran.unique'     => 'Ukuran Sudah Tersedia!',
+            'kode_ukuran.required'   => 'Kode Ukuran Harus Diisi!',
+            'kode_ukuran.unique'     => 'Kode Ukuran Sudah Tersedia!',
+            'ukuran.required'         => 'Ukuran Harus Diisi!',
+            'ukuran.unique'           => 'Ukuran Sudah Tersedia!',
         ]);
 
         try {
@@ -68,9 +75,10 @@ class UkuranController extends Controller
                 ->where('uuid', $uuid)
                 ->update([
                     'uuid'          => Uuid::uuid4()->getHex(),
-                    'ukuran'    => $request->ukuran
+                    'kode_ukuran'  => $request->kode_ukuran,
+                    'ukuran'        => $request->ukuran
                 ]);
-    
+
             return response()->json([
                 'code'      => 200,
                 'message'   => 'Berhasil Ubah Data Ukuran',
@@ -96,8 +104,8 @@ class UkuranController extends Controller
             ]);
 
             $ukuran = Ukuran::all();
-        
-            return view('ukuran.index',$ukuran);
+
+            return view('ukuran.index', $ukuran);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([

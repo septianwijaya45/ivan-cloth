@@ -11,7 +11,6 @@ class KainRollController extends Controller
 {
     public function index()
     {
-
         return view('kain_roll.index');
     }
 
@@ -26,16 +25,18 @@ class KainRollController extends Controller
         $this->validate($request, [
             'kode_lot'      => 'required|unique:m_kain_rolls,kode_lot',
             'jenis_kain'    => 'required',
-            'berat'         => 'required|numeric|min:0.1',
             'warna'         => 'required',
+            'stok_roll'     => 'required|numeric',
+            'berat'         => 'required|numeric|min:0.1',
         ]);
 
         Kain_roll::create([
             'uuid'          => Uuid::uuid4()->getHex(),
             'kode_lot'      => $request->kode_lot,
             'jenis_kain'    => $request->jenis_kain,
-            'berat'         => $request->berat,
             'warna'         => $request->warna,
+            'stok_roll'     => $request->stok_roll,
+            'berat'         => $request->berat,
         ]);
 
         return response()->json([
@@ -55,8 +56,9 @@ class KainRollController extends Controller
         $this->validate($request, [
             'kode_lot'      => 'required',
             'jenis_kain'    => 'required',
-            'berat'         => 'required|numeric|min:0.1',
             'warna'         => 'required',
+            'stok_roll'     => 'required|numeric',
+            'berat'         => 'required|numeric|min:0.1',
         ]);
 
         Kain_roll::where('id', $request->id)
@@ -64,8 +66,9 @@ class KainRollController extends Controller
             ->update([
                 'kode_lot'      => $request->kode_lot,
                 'jenis_kain'    => $request->jenis_kain,
-                'berat'         => $request->berat,
                 'warna'         => $request->warna,
+                'stok_roll'     => $request->stok_roll,
+                'berat'         => $request->berat,
             ]);
 
         return response()->json([
@@ -86,7 +89,7 @@ class KainRollController extends Controller
             ]);
         }
         $kain_roll = Kain_roll::all();
-        
-        return view('kain_roll.index',$kain_roll);
+
+        return view('kain_roll.index', $kain_roll);
     }
 }

@@ -42,9 +42,11 @@
                                         <thead>
                                             <tr>
                                                 <th width="5%" style="text-align: center;">ID</th>
-                                                <th>Kain Potongan</th>
-                                                <th>Quantity</th>
+                                                <th>Kode Lot</th>
+                                                <th>Ukuran</th>
                                                 <th>Warna</th>
+                                                <th>Jenis Kain</th>
+                                                <th>Quantity</th>
                                                 <th width="10%">Aksi</th>
                                             </tr>
                                         </thead>
@@ -67,8 +69,8 @@
     </div>
 
     <!-- The Modal -->
-    <div class="modal fade" id="modalAddKainPotongan" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true">
+    <div class="modal fade" id="modalAddKainPotongan" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog-scrollable modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -87,7 +89,8 @@
                                 <select name="kain_roll_id" id="kain_roll_id" class="form-control">
                                     <option value="" selected disabled class="text-center">Pilih Kain Roll</option>
                                     @foreach ($kain_roll as $dt)
-                                        <option value="{{$dt->id}}">{{$dt->kode_lot}} | {{$dt->jenis_kain}}</option>
+                                        <option value="{{ $dt->id }}">{{ $dt->kode_lot }} | {{ $dt->jenis_kain }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -95,8 +98,8 @@
                                 <label for="ukurang">Ukuran</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="Ukuran" name="ukuran"
-                                            class="form-control" step=".01">
+                                        <input type="text" placeholder="Ukuran" name="ukuran" class="form-control"
+                                            step=".01">
                                     </div>
                                 </div>
                             </div>
@@ -104,8 +107,8 @@
                                 <label for="stok">Stok</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="number" placeholder="Stok" name="stok"
-                                            class="form-control" step=".01">
+                                        <input type="number" placeholder="Stok" name="stok" class="form-control"
+                                            step=".01">
                                     </div>
                                 </div>
                             </div>
@@ -120,8 +123,8 @@
         </div>
     </div>
 
-    <div class="modal fade" id="modalEditKainPotongan" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
-        aria-hidden="true">
+    <div class="modal fade" id="modalEditKainPotongan" tabindex="-1" role="dialog"
+        aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
         <div class="modal-dialog-scrollable modal-dialog modal-dialog-centered" role="document">
             <div class="modal-content">
                 <div class="modal-header">
@@ -142,7 +145,8 @@
                                 <select name="kain_roll_id" id="kain_roll_id" class="form-control" @readonly(true)>
                                     <option value="" selected disabled class="text-center">Pilih Kain Roll</option>
                                     @foreach ($kain_roll as $dt)
-                                        <option value="{{$dt->id}}">{{$dt->kode_lot}} | {{$dt->jenis_kain}}</option>
+                                        <option value="{{ $dt->id }}">{{ $dt->kode_lot }} | {{ $dt->jenis_kain }}
+                                        </option>
                                     @endforeach
                                 </select>
                             </div>
@@ -153,7 +157,7 @@
                                         <select name="ukuran" id="ukuran" class="form-control" @readonly(true)>
                                             <option value="" selected>===== Pilih Ukuran ======</option>
                                             @foreach ($ukuran as $dt)
-                                                <option value="{{$dt->ukuran}}">{{$dt->ukuran}}</option>
+                                                <option value="{{ $dt->ukuran }}">{{ $dt->ukuran }}</option>
                                             @endforeach
                                         </select>
                                     </div>
@@ -163,8 +167,8 @@
                                 <label for="stok">Stok</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="number" placeholder="Stok" name="stok"
-                                            class="form-control" step=".01">
+                                        <input type="number" placeholder="Stok" name="stok" class="form-control"
+                                            step=".01">
                                     </div>
                                 </div>
                             </div>
@@ -238,11 +242,11 @@
         function getKainPotongan() {
             var htmlview
             $.ajax({
-                @if(Auth::user()->role_id == 1)
-                url: "{{ route('kain_potongan.data') }}",
+                @if (Auth::user()->role_id == 1)
+                    url: "{{ route('kain_potongan.data') }}",
                 @endif
-                @if(Auth::user()->role_id == 3)
-                url: "{{ route('w.kain_potongan.data') }}",
+                @if (Auth::user()->role_id == 3)
+                    url: "{{ route('w.kain_potongan.data') }}",
                 @endif
                 type: 'GET',
                 success: function(res) {
@@ -250,14 +254,17 @@
                     $.each(res, function(i, data) {
                         htmlview += `<tr>
                         <td style="text-align: center;">` + data.id + `</td>
-                        <td>` + data.kain_roll + `</td>
-                        <td>` + data.stok + `</td>
+                        <td>` + data.kode_lot + `</td>
+                        <td>` + data.ukuran + `</td>
                         <td>` + data.warna + `</td>
+                        <td>` + data.jenis_kain + `</td>
+                        <td>` + data.stok + `</td>
                         <td>
                           <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailKainPotongan('` + data
                             .uuid + `')"> <i class="fas fa-pencil-alt"></i>
                           </button>
-                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteKainPotongan('` + data
+                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteKainPotongan('` +
+                            data
                             .uuid + `')"> <i class="fas fa-trash"></i>
                           </button>
                         </td>
@@ -273,11 +280,11 @@
 
         function addKainPotongan() {
             $.ajax({
-                @if(Auth::user()->role_id == 1)
-                url: "{{ route('kain_potongan.add') }}",
+                @if (Auth::user()->role_id == 1)
+                    url: "{{ route('kain_potongan.add') }}",
                 @endif
-                @if(Auth::user()->role_id == 3)
-                url: "{{ route('w.kain_potongan.add') }}",
+                @if (Auth::user()->role_id == 3)
+                    url: "{{ route('w.kain_potongan.add') }}",
                 @endif
                 type: "POST",
                 data: $('#formAddKainPotongan').serialize(),
@@ -311,11 +318,11 @@
         }
 
         function detailKainPotongan(id) {
-            @if(Auth::user()->role_id == 1)
-            var _url = "{{ route('kain_potongan.detail', ':id') }}"
+            @if (Auth::user()->role_id == 1)
+                var _url = "{{ route('kain_potongan.detail', ':id') }}"
             @endif
-            @if(Auth::user()->role_id == 3)
-            var _url = "{{ route('w.kain_potongan.detail', ':id') }}"
+            @if (Auth::user()->role_id == 3)
+                var _url = "{{ route('w.kain_potongan.detail', ':id') }}"
             @endif
             _url = _url.replace(':id', id)
 
@@ -335,12 +342,12 @@
 
         function updateKainPotongan() {
             var id = $('#formEditKainPotongan').data('id')
-            
-            @if(Auth::user()->role_id == 1)
-            var _url = "{{ route('kain_potongan.update', ':id') }}"
+
+            @if (Auth::user()->role_id == 1)
+                var _url = "{{ route('kain_potongan.update', ':id') }}"
             @endif
-            @if(Auth::user()->role_id == 3)
-            var _url = "{{ route('w.kain_potongan.update', ':id') }}"
+            @if (Auth::user()->role_id == 3)
+                var _url = "{{ route('w.kain_potongan.update', ':id') }}"
             @endif
             _url = _url.replace(':id', id)
 
@@ -401,11 +408,11 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        @if(Auth::user()->role_id == 1)
-                        var _url = "{{ route('kain_potongan.delete', ':id') }}";
+                        @if (Auth::user()->role_id == 1)
+                            var _url = "{{ route('kain_potongan.delete', ':id') }}";
                         @endif
-                        @if(Auth::user()->role_id == 3)
-                        var _url = "{{ route('w.kain_potongan.delete', ':id') }}";
+                        @if (Auth::user()->role_id == 3)
+                            var _url = "{{ route('w.kain_potongan.delete', ':id') }}";
                         @endif
                         _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');

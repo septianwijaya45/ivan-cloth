@@ -13,7 +13,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                             <li class="breadcrumb-item active">Surat Perintah Potong</li>
                         </ol>
                     </div><!-- /.col -->
@@ -34,11 +34,11 @@
                                 <h5 class="card-title">Data Surat Perintah Potong</h5>
 
                                 <div class="card-tools">
-                                    @if(Auth::user()->role_id == 1)
-                                    <a href="{{ route('spp.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
+                                    @if (Auth::user()->role_id == 1)
+                                        <a href="{{ route('spp.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
                                     @endif
-                                    @if(Auth::user()->role_id == 3)
-                                    <a href="{{ route('w.spp.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
+                                    @if (Auth::user()->role_id == 3)
+                                        <a href="{{ route('w.spp.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
                                     @endif
                                 </div>
                             </div>
@@ -135,11 +135,11 @@
         function getSPP() {
             var htmlview
             $.ajax({
-                @if(Auth::user()->role_id == 1)
-                url: "{{ route('spp.data') }}",
+                @if (Auth::user()->role_id == 1)
+                    url: "{{ route('spp.data') }}",
                 @endif
-                @if(Auth::user()->role_id == 3)
-                url: "{{ route('w.spp.data') }}",
+                @if (Auth::user()->role_id == 3)
+                    url: "{{ route('w.spp.data') }}",
                 @endif
                 type: 'GET',
                 success: function(res) {
@@ -147,29 +147,32 @@
                     $('tbody').html('')
                     $.each(res, function(i, data) {
                         htmlview += `<tr>
-                        <td style="text-align: center;">` + (no = no+1) + `</td>
+                        <td style="text-align: center;">` + (no = no + 1) + `</td>
                         <td>` + data.kode_spp + `</td>
                         <td>` + data.total + `</td>
                         <td>` + data.tanggal + `</td>`;
-                        if(data.status == 'Belum Konfirmasi'){
+                        if (data.status == 'Belum Konfirmasi') {
                             htmlview += `<td>
-                                <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="confirmSPP('` + data
+                                <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="confirmSPP('` +
+                                data
                                 .kode_spp + `')"> Belum Konfirmasi </button></td>
                             `;
                         }
-                        if(data.status == 'Sedang Dikerjakan'){
+                        if (data.status == 'Sedang Dikerjakan') {
                             htmlview += `<td>
-                                <button class="btn btn-warning btn-sm" title="Delete Data!" onClick="finishedSPP('` + data
+                                <button class="btn btn-warning btn-sm" title="Delete Data!" onClick="finishedSPP('` +
+                                data
                                 .kode_spp + `')"> Sedang Dikerjakan </button></td>
                             `;
                         }
-                        if(data.status == 'Selesai Dikerjakan'){
+                        if (data.status == 'Selesai Dikerjakan') {
                             htmlview += `<td>
                                 <span class="bg-success p-2">Selesai Dikerjakan</span></td>
                             `;
                         }
-                        htmlview +=`<td>
-                          <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-potong/edit-data/`+data.uuid+`"> <i class="fas fa-pencil-alt"></i>
+                        htmlview += `<td>
+                          <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-potong/edit-data/` +
+                            data.uuid + `"> <i class="fas fa-pencil-alt"></i>
                           </a>
                           <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPP('` + data
                             .kode_spp + `')"> <i class="fas fa-trash"></i>
@@ -195,11 +198,11 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        @if(Auth::user()->role_id == 1)
-                        var _url = "{{ route('spp.delete', 'kode_spp') }}";
+                        @if (Auth::user()->role_id == 1)
+                            var _url = "{{ route('spp.delete', 'kode_spp') }}";
                         @endif
-                        @if(Auth::user()->role_id == 3)
-                        var _url = "{{ route('w.spp.delete', 'kode_spp') }}";
+                        @if (Auth::user()->role_id == 3)
+                            var _url = "{{ route('w.spp.delete', 'kode_spp') }}";
                         @endif
                         _url = _url.replace('kode_spp', kode_spp)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -217,13 +220,13 @@
                                 $("#tbl_ukuran").DataTable().destroy();
                                 getSPP();
 
-                                if(res.code == 500){
+                                if (res.code == 500) {
                                     Notif.fire({
                                         icon: 'error',
-                                        title: 'Gagal Menyimpan Data Gaji',
+                                        title: 'Gagal Menghapus Data SPP!',
                                         text: 'Server Error!'
                                     });
-                                    
+
                                 }
                             },
                             error: function(err) {
@@ -244,11 +247,11 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        @if(Auth::user()->role_id == 1)
-                        var _url = "{{ route('spp.confirm', 'kode_spp') }}";
+                        @if (Auth::user()->role_id == 1)
+                            var _url = "{{ route('spp.confirm', 'kode_spp') }}";
                         @endif
-                        @if(Auth::user()->role_id == 3)
-                        var _url = "{{ route('w.spp.confirm', 'kode_spp') }}";
+                        @if (Auth::user()->role_id == 3)
+                            var _url = "{{ route('w.spp.confirm', 'kode_spp') }}";
                         @endif
                         _url = _url.replace('kode_spp', kode_spp)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -266,13 +269,13 @@
                                 $("#tbl_ukuran").DataTable().destroy();
                                 getSPP();
 
-                                if(res.code == 500){
+                                if (res.code == 500) {
                                     Notif.fire({
                                         icon: 'error',
                                         title: 'Gagal Konfirmasi Data SPP',
                                         text: 'Server Error!'
                                     });
-                                    
+
                                 }
                             },
                             error: function(err) {
@@ -293,11 +296,11 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        @if(Auth::user()->role_id == 1)
-                        var _url = "{{ route('spp.finished', 'kode_spp') }}";
+                        @if (Auth::user()->role_id == 1)
+                            var _url = "{{ route('spp.finished', 'kode_spp') }}";
                         @endif
-                        @if(Auth::user()->role_id == 3)
-                        var _url = "{{ route('w.spp.finished', 'kode_spp') }}";
+                        @if (Auth::user()->role_id == 3)
+                            var _url = "{{ route('w.spp.finished', 'kode_spp') }}";
                         @endif
                         _url = _url.replace('kode_spp', kode_spp)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -315,13 +318,13 @@
                                 $("#tbl_ukuran").DataTable().destroy();
                                 getSPP();
 
-                                if(res.code == 500){
+                                if (res.code == 500) {
                                     Notif.fire({
                                         icon: 'error',
                                         title: 'Gagal Konfirmasi Selesai Data SPP',
                                         text: 'Server Error!'
                                     });
-                                    
+
                                 }
                             },
                             error: function(err) {

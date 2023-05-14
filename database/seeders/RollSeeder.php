@@ -19,19 +19,22 @@ class RollSeeder extends Seeder
                 'uuid'          => Uuid::uuid4()->getHex(),
                 'kode_lot'      => 'LOT-0001',
                 'jenis_kain'    => 'Katun',
-                'berat'         => 500,
+                'stok_roll'     => 100,
+                'berat'         => 25,
                 'warna'         => 'Black',
-            ],[
+            ], [
                 'uuid'          => Uuid::uuid4()->getHex(),
                 'kode_lot'      => 'LOT-0002',
                 'jenis_kain'    => 'Katun',
-                'berat'         => 500,
+                'stok_roll'     => 200,
+                'berat'         => 20,
                 'warna'         => 'White',
             ], [
                 'uuid'          => Uuid::uuid4()->getHex(),
                 'kode_lot'      => 'LOT-0003',
                 'jenis_kain'    => 'Katun',
-                'berat'         => 500,
+                'stok_roll'     => 50,
+                'berat'         => 23,
                 'warna'         => 'Green',
             ]
         ]);

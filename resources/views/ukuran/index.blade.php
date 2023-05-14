@@ -13,7 +13,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                             <li class="breadcrumb-item active">Ukuran</li>
                         </ol>
                     </div><!-- /.col -->
@@ -49,6 +49,7 @@
                                         <thead>
                                             <tr>
                                                 <th width="5%" style="text-align: center;">ID</th>
+                                                <th width="15%">Kode Ukuran</th>
                                                 <th>Ukuran</th>
                                                 <th width="10%">Aksi</th>
                                             </tr>
@@ -88,11 +89,20 @@
                         @csrf
                         <div class="row">
                             <div class="col-md-12">
+                                <label for="kode_ukuran">Kode ukuran</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="text" placeholder="Kode ukuran Ukuran (ex: L, XL)"
+                                            name="kode_ukuran" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
                                 <label for="ukuran">Ukuran</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="Ukuran Kain (ex: L, XL)" name="ukuran"
-                                            class="form-control">
+                                        <input type="text" placeholder="Ukuran Kain (ex: Large, Extra Large)"
+                                            name="ukuran" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -125,11 +135,20 @@
                         <input type="hidden" name="id">
                         <div class="row">
                             <div class="col-md-12">
+                                <label for="kode_ukuran">Kode ukuran</label>
+                                <div class="col-md-14 row">
+                                    <div class="col-md-12">
+                                        <input type="text" placeholder="Kode ukuran Ukuran (ex: L, XL)"
+                                            name="kode_ukuran" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-12">
                                 <label for="ukuran">Ukuran</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <input type="text" placeholder="Ukuran Kain (ex: L, XL)" name="ukuran"
-                                            class="form-control">
+                                        <input type="text" placeholder="Ukuran Kain (ex: Large, Extra Large)"
+                                            name="ukuran" class="form-control">
                                     </div>
                                 </div>
                             </div>
@@ -202,43 +221,44 @@
 
         function getUkuran() {
             var htmlview
-                $.ajax({
-                    @if(Auth::user()->role_id == 1)
+            $.ajax({
+                @if (Auth::user()->role_id == 1)
                     url: "{{ route('ukuran.data') }}",
-                    @else
+                @else
                     url: "{{ route('a.ukuran.data') }}",
-                    @endif
-                    type: 'GET',
-                    success: function(res) {
-                        $('tbody').html('')
-                        $.each(res, function(i, data) {
-                            htmlview += `<tr>
+                @endif
+                type: 'GET',
+                success: function(res) {
+                    $('tbody').html('')
+                    $.each(res, function(i, data) {
+                        htmlview += `<tr>
                             <td style="text-align: center;">` + data.id + `</td>
+                            <td>` + data.kode_ukuran + `</td>
                             <td>` + data.ukuran + `</td>
                             <td>
                             <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailUkuran('` + data
-                                .uuid + `')"> <i class="fas fa-pencil-alt"></i>
+                            .uuid + `')"> <i class="fas fa-pencil-alt"></i>
                             </button>
                             <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteUkuran('` + data
-                                .uuid + `')"> <i class="fas fa-trash"></i>
+                            .uuid + `')"> <i class="fas fa-trash"></i>
                             </button>
                             </td>
                         </tr>`
-                        });
+                    });
 
-                        $('tbody').html(htmlview)
-                        $("#tbl_ukuran").DataTable(dtTableOption).buttons().container().appendTo(
-                            '#tbl_ukuran_wrapper .col-md-6:eq(0)')
-                    }
-                })
+                    $('tbody').html(htmlview)
+                    $("#tbl_ukuran").DataTable(dtTableOption).buttons().container().appendTo(
+                        '#tbl_ukuran_wrapper .col-md-6:eq(0)')
+                }
+            })
         }
 
         function addUkuran() {
             $.ajax({
-                @if(Auth::user()->role_id == 1)
-                url: "{{ route('ukuran.add') }}",
+                @if (Auth::user()->role_id == 1)
+                    url: "{{ route('ukuran.add') }}",
                 @else
-                url: "{{ route('a.ukuran.add') }}",
+                    url: "{{ route('a.ukuran.add') }}",
                 @endif
                 type: "POST",
                 data: $('#formAddUkuran').serialize(),
@@ -256,13 +276,13 @@
                         getUkuran()
                     }
 
-                    if(res.code == 500){
+                    if (res.code == 500) {
                         Notif.fire({
                             icon: 'error',
                             title: 'Gagal Menyimpan Data Gaji',
                             text: 'Server Error!'
                         });
-                        
+
                     }
                 },
                 error: function(err) {
@@ -281,10 +301,10 @@
         }
 
         function detailUkuran(id) {
-            @if(Auth::user()->role_id == 1)
-            var _url = "{{ route('ukuran.edit', ':id') }}"
+            @if (Auth::user()->role_id == 1)
+                var _url = "{{ route('ukuran.edit', ':id') }}"
             @else
-            var _url = "{{ route('a.ukuran.edit', ':id') }}"
+                var _url = "{{ route('a.ukuran.edit', ':id') }}"
             @endif
             _url = _url.replace(':id', id)
 
@@ -304,11 +324,11 @@
 
         function updateUkuran() {
             var id = $('#formEditUkuran').data('id')
-            
-            @if(Auth::user()->role_id == 1)
-            var _url = "{{ route('ukuran.update', ':id') }}"
+
+            @if (Auth::user()->role_id == 1)
+                var _url = "{{ route('ukuran.update', ':id') }}"
             @else
-            var _url = "{{ route('a.ukuran.update', ':id') }}"
+                var _url = "{{ route('a.ukuran.update', ':id') }}"
             @endif
             _url = _url.replace(':id', id)
 
@@ -330,13 +350,13 @@
                         getUkuran()
                     }
 
-                    if(res.code == 500){
+                    if (res.code == 500) {
                         Notif.fire({
                             icon: 'error',
                             title: 'Gagal Menyimpan Data Gaji',
                             text: 'Server Error!'
                         });
-                        
+
                     }
                 },
                 error: function(err) {
@@ -378,10 +398,10 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        @if(Auth::user()->role_id == 1)
-                        var _url = "{{ route('ukuran.delete', ':id') }}";
+                        @if (Auth::user()->role_id == 1)
+                            var _url = "{{ route('ukuran.delete', ':id') }}";
                         @else
-                        var _url = "{{ route('a.ukuran.delete', ':id') }}";
+                            var _url = "{{ route('a.ukuran.delete', ':id') }}";
                         @endif
                         _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -399,13 +419,13 @@
                                 $("#tbl_ukuran").DataTable().destroy();
                                 getUkuran();
 
-                                if(res.code == 500){
+                                if (res.code == 500) {
                                     Notif.fire({
                                         icon: 'error',
                                         title: 'Gagal Menyimpan Data Gaji',
                                         text: 'Server Error!'
                                     });
-                                    
+
                                 }
                             },
                             error: function(err) {

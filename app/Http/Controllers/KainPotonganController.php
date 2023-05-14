@@ -14,14 +14,14 @@ class KainPotonganController extends Controller
     public function index()
     {
         $ukuran    = Ukuran::all();
-        $kain_roll = Kain_roll::select('id','kode_lot','jenis_kain')->get();
+        $kain_roll = Kain_roll::select('id', 'kode_lot', 'jenis_kain')->get();
         return view('kain_potongan.index', compact(['kain_roll', 'ukuran']));
     }
 
     public function indexData()
     {
         $data = DB::select("
-            SELECT CONCAT(kr.kode_lot, ' | ', kr.jenis_kain, ' | ',  kp.ukuran) as kain_roll, kr.warna, kp.stok, kp.uuid, kp.id
+            SELECT kr.kode_lot , kr.jenis_kain ,  kp.ukuran , kr.warna, kp.stok, kp.uuid, kp.id
             FROM m_kain_rolls kr, m_kain_potongans kp
             WHERE kr.id = kp.kain_roll_id
         ");
@@ -64,12 +64,12 @@ class KainPotonganController extends Controller
         ]);
 
         Kain_potongan::where('id', $request->id)
-        ->where('uuid', $uuid)
-        ->update([
-            'kain_roll_id'  => $request->kain_roll_id,
-            'ukuran'        => $request->ukuran,
-            'stok'        => $request->stok,
-        ]);
+            ->where('uuid', $uuid)
+            ->update([
+                'kain_roll_id'  => $request->kain_roll_id,
+                'ukuran'        => $request->ukuran,
+                'stok'        => $request->stok,
+            ]);
 
         return response()->json([
             'code'      => 200,
@@ -80,7 +80,7 @@ class KainPotonganController extends Controller
     public function delete($uuid)
     {
         $data = Kain_potongan::where('uuid', $uuid)->first();
-        if($data){
+        if ($data) {
             Kain_potongan::where('id', $data->id)->delete();
 
             return response()->json([
