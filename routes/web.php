@@ -139,7 +139,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // getArticle
             Route::get('artikel/{artikel}', [SPKController::class, 'getArtikel'])->name('spk.artikel');
             // get Hasil Potongan
-            Route::get('hasil-potongan/{kode_spp}/{ukuran}/{warna}', [SPKController::class, 'getHasilPotongan'])->name('spk.hasilPotongan');
+            Route::get('hasil-potongan/{kp_id}', [SPKController::class, 'getHasilPotongan'])->name('spk.hasilPotongan');
             // index
             Route::get('', [SPKController::class, 'index'])->name('spk');
             Route::get('data', [SPKController::class, 'indexData'])->name('spk.data');

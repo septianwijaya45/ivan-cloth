@@ -1,8 +1,13 @@
 @extends('layouts.app')
-@section('title', 'Surat Perintah Kain')
-
+@section('title', 'Surat Perintah Kerja')
 
 @section('content')
+    <style>
+        .middleText {
+            vertical-align: middle;
+            text-align: center;
+        }
+    </style>
     <!-- Content Wrapper. Contains page content -->
     <div class="content-wrapper">
         <!-- Content Header (Page header) -->
@@ -10,12 +15,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Tambah Surat Perintah Kain</h1>
+                        <h1 class="m-0">Tambah Surat Perintah Kerja</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                            <li class="breadcrumb-item">Surat Perintah Kain</li>
+                            <li class="breadcrumb-item">Surat Perintah Kerja</li>
                             <li class="breadcrumb-item active">Tambah SPK</li>
                         </ol>
                     </div><!-- /.col -->
@@ -43,7 +48,7 @@
                                     @endif
                                 </div>
                             </div>
-                            <form action="#" method="POST" enctype="multipart/form-data" id="formSPP">
+                            <form action="#" method="POST" enctype="multipart/form-data" id="formSPK">
                                 <div class="card-body">
                                     <div class="row">
                                         <div class="col-md-3">
@@ -64,17 +69,11 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-lg-3">
-                                            <label for="tanggal">Kode SPP</label>
+                                        <div class="col-md-3">
+                                            <label for="tanggal">Tanggal</label>
                                             <div class="col-md-12">
-                                                <select name="kode_spk" id="kode_spp" class="form-control">
-                                                    <option value="" selected disabled class="text-center">Pilih Kode
-                                                        SPP</option>
-                                                    @foreach ($spp as $dtSpp)
-                                                        <option value="{{ $dtSpp->kode_spp }}">{{ $dtSpp->kode_spp }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                                <input type="date" name="tanggal" id="tanggal" class="form-control"
+                                                    value="{{ $date }}">
                                             </div>
                                         </div>
                                         <div class="col-md-3">
@@ -83,111 +82,112 @@
                                                 <select name="ukuran" id="ukuran" class="form-control">
                                                     <option value="" selected disabled class="text-center">Pilih
                                                         Ukuran</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-3">
-                                            <label for="tanggal">Tanggal</label>
-                                            <div class="col-md-12">
-                                                <input type="date" name="tanggal" id="tanggal" class="form-control"
-                                                    value="{{ $date }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label for="warna">Warna</label>
-                                            <div class="col-md-12">
-                                                <select name="warna" id="warna" class="form-control">
-                                                    <option value="" selected disabled class="text-center">Pilih Warna
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label for="hasil_kain_potongan">Hasil Potongan</label>
-                                            <div class="col-md-12">
-                                                <input type="number" name="hasil_kain_potongan" id="hasil_kain_potongan"
-                                                    class="form-control" placeholder="Hasil Potongan" readonly>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label for="sisa_stok">Sisa Stok</label>
-                                            <div class="col-md-12">
-                                                <input type="number" name="sisa_stok" id="sisa_stok" class="form-control"
-                                                    placeholder="Sisa Stok" readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-3">
-                                            <label for="satuan">Satuan</label>
-                                            <div class="col-md-12">
-                                                <select name="satuan" id="satuan" class="form-control">
-                                                    <option value="" selected disabled class="text-center">Pilih
-                                                        Satuan</option>
-                                                    <option value="PCS">PCS</option>
-                                                    <option value="Kodi">Kodi</option>
-                                                    <option value="Lusin">Lusin</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label for="hasil">Kain Potongan Dipakai</label>
-                                            <div class="col-md-12">
-                                                <input type="number" name="kain_potongan_dipakai"
-                                                    id="kain_potongan_dipakai" class="form-control"
-                                                    placeholder="Kain Potongan Dipakai" value="0">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label for="hasil">Hasil</label>
-                                            <div class="col-md-12">
-                                                <input type="number" name="hasil" id="hasil" class="form-control"
-                                                    placeholder="Hasil" value="0">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label for="gaji">Gaji</label>
-                                            <div class="col-md-12">
-                                                <select name="gaji" id="gaji" class="form-control">
-                                                    <option value="" selected disabled class="text-center">Pilih
-                                                        Gaji</option>
-                                                    @foreach ($gaji as $dtGaji)
-                                                        <option value="{{ $dtGaji->gaji }}">{{ $dtGaji->gaji }}</option>
+                                                    @foreach ($ukuran as $data)
+                                                        <option value="{{ $data->kode_ukuran }}" class="text-center">
+                                                            {{ $data->kode_ukuran }} ({{ $data->ukuran }})</option>
                                                     @endforeach
                                                 </select>
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <label for="karyawan_1">Karyawan Sablon 1</label>
-                                            <div class="col-md-12">
-                                                <select name="karyawan_1" id="karyawan_1" class="form-control">
-                                                    <option value="" selected class="text-center">Pilih Karyawan 1
-                                                    </option>
-                                                    @foreach ($karyawan as $dtKaryawan)
-                                                        <option value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}">
-                                                            {{ $dtKaryawan->nama }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <label for="karyawan_2">Karyawan Sablon 2</label>
-                                            <div class="col-md-12">
-                                                <select name="karyawan_2" id="karyawan_2" class="form-control">
-                                                    <option value="" selected class="text-center">Pilih Karyawan 2
-                                                    </option>
-                                                    @foreach ($karyawan as $dtKaryawan)
-                                                        <option value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}">
-                                                            {{ $dtKaryawan->nama }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
+                                    <hr>
+                                    <div>
+                                        <div id="form_kain_potongan"
+                                            class="dataTables_wrapper dt-bootstrap4 table-responsive text-nowrap">
+                                            <table class="table table-hover table-bordered dataTable" id="tab_kp"
+                                                style="width: 100%;">
+                                                <thead>
+                                                    <tr>
+                                                        <th width='15%'> Kain Potongan </th>
+                                                        <th width='13%'> Sisa Stok</th>
+                                                        <th width='13%'> Quantity</th>
+                                                        <th width='10%'> Satuan</th>
+                                                        <th width='15%'> Karyawan 1</th>
+                                                        <th width='15%'> Karyawan 2</th>
+                                                        <th width='10%'> Gaji</th>
+                                                        <th width="3%"></th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody id="form_tbody">
+                                                    <tr id="kp_row_0">
+                                                        <td>
+                                                            <select name="kp_id[]" class="form-control kp_id">
+                                                                <option value="" selected disabled
+                                                                    class="text-center">
+                                                                    Kain Potongan
+                                                                </option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" name="sisa_stok[]"
+                                                                class="form-control sisa_stok" placeholder="Stok" readonly>
+                                                        </td>
+                                                        <td>
+                                                            <input type="number" name="kain_potongan_dipakai[]"
+                                                                class="form-control kain_potongan_dipakai"
+                                                                placeholder="Quantity Kain Potongan" value="0">
+                                                        </td>
+                                                        <td>
+                                                            <select name="satuan[]" class="form-control satuan">
+                                                                <option value="" selected disabled
+                                                                    class="text-center">
+                                                                    Satuan</option>
+                                                                <option value="PCS">PCS</option>
+                                                                <option value="Kodi">Kodi</option>
+                                                                <option value="Lusin">Lusin</option>
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select name="karyawan_1[]" class="form-control karyawan_1">
+                                                                <option value="" disabled selected
+                                                                    class="text-center">
+                                                                    Karyawan
+                                                                    1
+                                                                </option>
+                                                                @foreach ($karyawan as $dtKaryawan)
+                                                                    <option
+                                                                        value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}">
+                                                                        {{ $dtKaryawan->nama }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select name="karyawan_2[]" class="form-control karyawan_2">
+                                                                <option value="" disabled selected
+                                                                    class="text-center">
+                                                                    Karyawan
+                                                                    2
+                                                                </option>
+                                                                @foreach ($karyawan as $dtKaryawan)
+                                                                    <option
+                                                                        value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}">
+                                                                        {{ $dtKaryawan->nama }}</option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+                                                        <td>
+                                                            <select name="gaji[]" class="form-control gaji">
+                                                                <option value="" selected disabled
+                                                                    class="text-center">
+                                                                    Gaji</option>
+                                                                @foreach ($gaji as $dtGaji)
+                                                                    <option value="{{ $dtGaji->gaji }}">
+                                                                        {{ $dtGaji->gaji }}
+                                                                    </option>
+                                                                @endforeach
+                                                            </select>
+                                                        </td>
+
+                                                        <td>
+                                                            <!-- placeholder for remove button -->
+                                                        </td>
+                                                    </tr>
+                                                </tbody>
+                                            </table>
                                         </div>
                                     </div>
+                                    <button class="btn btn-info text-center container-fluid" id="add_kain_potongan">Tambah
+                                        Kain Potongan</button>
                                 </div>
                                 <div class="card-footer">
                                     <button type="button" id="btn-tambah"
@@ -213,18 +213,18 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Kode SPK</th>
-                                                        <th>Artikel</th>
                                                         <th>Tanggal</th>
-                                                        <th>Kode SPP</th>
-                                                        <th>Warna | Model/Ukuran</th>
-                                                        <th>Kain Potongan Dipakai</th>
-                                                        <th>Hasil | Satuan</th>
+                                                        <th>Artikel</th>
+                                                        <th>Ukuran</th>
+                                                        <th>Jenis Kain</th>
+                                                        <th>Warna</th>
+                                                        <th>Quantity | Satuan</th>
                                                         <th>Karyawan</th>
                                                         <th>Gaji</th>
                                                         <th width="10%">Aksi</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody style=" vertical-align: middle;">
                                                 </tbody>
                                             </table>
                                         </div>
@@ -303,65 +303,33 @@
             <!--/. container-fluid -->
         </section>
         <!-- /.content -->
-
-
-        <!-- edit form -->
-        <div class="modal fade" id="modalEditSPP" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog-scrollable modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Edit Data SPP</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body bg-light">
-                        <form enctype="multipart/form-data" autocomplete="off" id="formEditUkuran" data-id=""
-                            class="needs-validation" novalidate>
-                            @method('PUT')
-                            @csrf
-                            <input type="hidden" name="uuid" id="uuidMap">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label for="berat">Berat</label>
-                                    <div class="col-md-14 row">
-                                        <div class="col-md-12">
-                                            <input type="text" placeholder="Berat Kain" name="berat" id="beratMap"
-                                                class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <label for="hasil">Hasil</label>
-                                    <div class="col-md-14 row">
-                                        <div class="col-md-12">
-                                            <input type="text" placeholder="Hasil Kain" name="hasil"
-                                                class="form-control" id="hasilMap">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer container-fluid mt-4">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">Kembali</button>
-                                    <button type="button" id="simpanUbahData" class="btn btn-primary">Simpan
-                                        Data</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 @endsection
 
 @section('script')
     <script>
         $(document).ready(function() {
-            $("#ukuran, #kode_spp, #warna, #karyawan_1, #karyawan_2, #gaji, #satuan").select2({
-                theme: 'classic',
-            });
+
+            function refreshS2main() {
+                $("#ukuran, [name*='kp_id[]'],[name*='satuan[]'], [name*='karyawan_1[]'], [name*='karyawan_2[]'], [name*='gaji[]']")
+                    .select2({
+                        theme: 'classic',
+                        width: '100%',
+                    })
+            }
+
+            $("#tab_kp").DataTable({
+                "paging": false,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": false,
+                "info": false,
+                "autoWidth": true,
+                "responsive": true,
+                "stateSave": true
+            })
+
+            refreshS2main()
 
             $.ajaxSetup({
                 headers: {
@@ -369,43 +337,90 @@
                 }
             });
 
+            var kp_html = $('#form_kain_potongan').html();
+            $(document).on('click', '#add_kain_potongan', function(e) {
+                e.preventDefault()
 
-            $('#kode_spp').on('change', function(e) {
-                e.preventDefault();
-                let data = $(this).val();
-                $.ajax({
-                    @if (Auth::user()->role_id == 1)
-                        url: "{{ url('surat-perintah-potong/data') }}/" + data,
-                    @endif
-                    @if (Auth::user()->role_id == 3)
-                        url: "{{ url('warehouse/surat-perintah-potong/data') }}/" + data,
-                    @endif
-                    // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
-                    method: "GET",
-                    success: function(res) {
-                        $('#ukuran').empty();
-                        $('#warna').empty();
-                        $('#ukuran').append(
-                            '<option value="" selected disabled class="text-center">Pilih Ukuran</option>'
-                            );
-                        $('#warna').append(
-                            '<option value="" selected disabled class="text-center">Pilih Warna</option>'
-                            );
-                        res.forEach(element => {
-                            let ukuran = '<option value="' + element["ukuran"] + '">' +
-                                element["ukuran"] + '</option>'
-                            let warna = '<option value="' + element["warna"] + '">' +
-                                element["warna"] + '</option>'
-                            $('#ukuran').append(ukuran);
-                            $('#warna').append(warna);
-                        })
-                    }
-                })
-            });
+                var iRow = $('#form_tbody tr:last', tab_kp).index() + 1;
+                var add_kp_row = `<tr id="kp_row_` + iRow + `">
+                                    <td>
+                                        <select name="kp_id[]" class="form-control kp_id">
+                                            <option value="" selected disabled class="text-center">
+                                                Kain Potongan
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="sisa_stok[]" class="form-control sisa_stok" placeholder="Stok"
+                                            readonly>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="kain_potongan_dipakai[]" class="form-control kain_potongan_dipakai"
+                                            placeholder="Quantity Kain Potongan" value="0">
+                                    </td>
+                                    <td>
+                                        <select name="satuan[]" class="form-control satuan">
+                                            <option value="" selected disabled class="text-center">
+                                                Satuan</option>
+                                            <option value="PCS">PCS</option>
+                                            <option value="Kodi">Kodi</option>
+                                            <option value="Lusin">Lusin</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="karyawan_1[]" class="form-control karyawan_1">
+                                            <option value="" disabled selected class="text-center">
+                                                Karyawan
+                                                1
+                                            </option>
+                                            @foreach ($karyawan as $dtKaryawan)
+                                                <option value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}">
+                                                    {{ $dtKaryawan->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="karyawan_2[]" class="form-control karyawan_2">
+                                            <option value="" disabled selected class="text-center">
+                                                Karyawan
+                                                2
+                                            </option>
+                                            @foreach ($karyawan as $dtKaryawan)
+                                                <option value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}">
+                                                    {{ $dtKaryawan->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="gaji[]" class="form-control gaji">
+                                            <option value="" selected disabled class="text-center">
+                                                Gaji</option>
+                                            @foreach ($gaji as $dtGaji)
+                                                <option value="{{ $dtGaji->gaji }}">
+                                                    {{ $dtGaji->gaji }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
 
-            $('#ukuran').on('change', function(e) {
-                e.preventDefault();
-                let data = $(this).val();
+                                    <td>
+                                        <a class='btn btn-danger btn-sm del-row pull-right'>
+                                            <i class='fas fa-times'></i></a>
+                                    </td>
+                                </tr>`
+                $('#form_tbody', tab_kp).append(add_kp_row)
+                getUkuranLastRow($('#ukuran').val())
+                refreshS2main()
+            })
+
+            $(document).on('click', '.del-row', function(e) {
+                e.preventDefault()
+
+                $(this).closest('tr').remove()
+            })
+
+            function getUkuranLastRow(data) {
+                $('#add_kain_potongan').hide()
                 $.ajax({
                     @if (Auth::user()->role_id == 1)
                         url: "{{ url('surat-perintah-kain/artikel') }}/" + data,
@@ -416,28 +431,66 @@
                     // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
                     method: "GET",
                     success: function(res) {
-                        $('#artikel').val(res);
+
+                        let htmlView =
+                            '<option value="" selected disabled class="text-center">Kain Potongan</option>'
+
+                        $.each(res.kp, function(i, data) {
+                            htmlView += '<option value="' + data.id + '|' + data.jenis_kain +
+                                '|' + data.warna + '" class="text-center"> ' + data
+                                .jenis_kain + ' | ' + data.warna + ' </option>'
+                        })
+
+                        $('td [name*="kp_id[]"]:last').html(htmlView)
+                        $('#add_kain_potongan').show()
+                    }
+                })
+            }
+
+            $(document).on('change', '#ukuran', function(e) {
+                e.preventDefault();
+                let data = $('#ukuran').val();
+                $.ajax({
+                    @if (Auth::user()->role_id == 1)
+                        url: "{{ url('surat-perintah-kain/artikel') }}/" + data,
+                    @endif
+                    @if (Auth::user()->role_id == 3)
+                        url: "{{ url('warehouse/surat-perintah-kain/artikel') }}/" + data,
+                    @endif
+                    // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
+                    method: "GET",
+                    success: function(res) {
+
+                        $('#artikel').val(res.artikel);
+
+                        let htmlView =
+                            '<option value="" selected disabled class="text-center">Kain Potongan</option>'
+
+                        $.each(res.kp, function(i, data) {
+                            htmlView += '<option value="' + data.id + '|' + data
+                                .jenis_kain +
+                                '|' + data.warna + '" class="text-center"> ' + data
+                                .jenis_kain + ' | ' + data.warna + ' </option>'
+                        })
+
+                        $('td [name*="kp_id[]"]').html(htmlView)
                     }
                 })
             })
 
-            $('#warna, #kode_spp, #ukuran').on('change', function() {
-                let kode_spp = $('#kode_spp').val();
-                let ukuran = $('#ukuran').val();
-                let warna = $('#warna').val();
+            $(document).on('change', '.kp_id', function() {
+                let kp_id = $(this).val();
+                let $this = $(this).closest('tr')
                 $.ajax({
                     @if (Auth::user()->role_id == 1)
-                        url: "{{ url('surat-perintah-kain/hasil-potongan') }}/" + kode_spp + "/" +
-                            ukuran + "/" + warna,
+                        url: "{{ url('surat-perintah-kain/hasil-potongan') }}/" + kp_id,
                     @endif
                     @if (Auth::user()->role_id == 3)
-                        url: "{{ url('warehouse/surat-perintah-kain/hasil-potongan') }}/" +
-                            kode_spp + "/" + ukuran + "/" + warna,
+                        url: "{{ url('warehouse/surat-perintah-kain/hasil-potongan') }}/" + kp_id,
                     @endif
                     method: "GET",
                     success: function(res) {
-                        $('#hasil_kain_potongan').val(res.spp.hasilspp);
-                        $('#sisa_stok').val(res.hasil.stok)
+                        $this.find('td .sisa_stok').val(res.stok)
                     }
                 })
             })
@@ -484,51 +537,66 @@
             // Simpan
             $('#btn-tambah').on('click', function() {
                 let karyawan = [];
-                let k_id = [];
+                let spk_data = [];
                 let kode_spk = $('#kode_spk').val();
                 let artikel = $('#artikel').val();
-                let kode_spp = $('#kode_spp').val();
                 let ukuran = $('#ukuran').val();
                 let tanggal = $('#tanggal').val();
-                let warna = $('#warna').val();
-                let warnaUkuran = warna + " | " + ukuran;
-                let satuan = $('#satuan').val();
-                let kain_potongan_dipakai = $('#kain_potongan_dipakai').val();
-                let hasil = $('#hasil').val();
-                let hasilSatuan = hasil + " | " + satuan;
-                let k1 = $('#karyawan_1').val();
-                let k2 = $('#karyawan_2').val();
-                let namak1 = (k1 != null) ? k1.split('-')[1] : ''
-                let namak2 = (k2 != null) ? k2.split('-')[1] : ''
-                let u1 = (k1 != null) ? k1.split('-')[0] : ''
-                let u2 = (k2 != null) ? k2.split('-')[0] : ''
-                let gaji = $('#gaji').val();
-                (namak1 !== '' && namak2 !== '') ? karyawan.push(namak1, namak2): karyawan.push(namak1)
+                let kp_id = $('[name*="kp_id[]"]')
+                    .map(function() {
+                        return $(this).val();
+                    }).get();
+                // let warnaUkuran = warna + " | " + ukuran;
+
+                let satuan = $('[name*="satuan[]"]')
+                    .map(function() {
+                        return $(this).val();
+                    }).get();
+                let kain_potongan_dipakai = $('[name*="kain_potongan_dipakai[]"]')
+                    .map(function() {
+                        return $(this).val();
+                    }).get();
+                // let hasilSatuan = hasil + " | " + satuan;
+                let k1 = $('[name*="karyawan_1[]"]')
+                    .map(function() {
+                        return $(this).val();
+                    }).get();
+                let k2 = $('[name*="karyawan_2[]"]')
+                    .map(function() {
+                        return $(this).val();
+                    }).get();
+                let gaji = $('[name*="gaji[]"]')
+                    .map(function() {
+                        return $(this).val();
+                    }).get();
 
                 try {
-                    if (warna !== null && warna !== '' && satuan !== null && satuan !== '' && ukuran !==
+                    if (kp_id !== null && kp_id !== '' && satuan !== null && satuan !== '' && ukuran !==
                         null && ukuran !== '' && kode_spk !== null && kode_spk !== '' && k1 !== null &&
                         k1 !== '' && gaji !== null && gaji !== '' && k1 !== k2) {
-                        data.push({
-                            uuid: uuid(),
-                            kode_spk: kode_spk,
-                            artikel: artikel,
-                            kode_spp: kode_spp,
-                            ukuran: ukuran,
-                            tanggal: tanggal,
-                            warna: warna,
-                            satuan: satuan,
-                            kain_potongan_dipakai: kain_potongan_dipakai,
-                            hasil: hasil,
-                            k1: k1,
-                            k2: k2,
-                            u1: u1,
-                            u2: u2,
-                            karyawan: karyawan,
-                            gaji: gaji,
-                            warnaUkuran: warnaUkuran,
-                            hasilSatuan: hasilSatuan
-                        })
+                        let uuidmake = uuid();
+                        for (let i = 0; i < kp_id.length; i++) {
+                            data.push({
+                                "uuid": uuidmake,
+                                "kode_spk": kode_spk,
+                                "artikel": artikel,
+                                "ukuran": ukuran,
+                                "tanggal": tanggal,
+                                "kp_id": kp_id[i].split('|')[0],
+                                "jenis_kain": kp_id[i].split('|')[1],
+                                "warna": kp_id[i].split('|')[2],
+                                "quantity": kain_potongan_dipakai[i],
+                                "satuan": satuan[i],
+                                "quantity_satuan": kain_potongan_dipakai[i] + '|' + satuan[i],
+                                "karyawan": [k1[i].split('-')[0], k2[i].split('-')[0]],
+                                "nama_karyawan": [k1[i].split('-')[1], k2[i].split('-')[1]],
+                                "gaji": gaji[i]
+                            })
+                        }
+
+                        // data.push({
+                        //     spk_data: spk_data
+                        // })
                         console.log(data)
 
                         dataInsert(data);
@@ -540,7 +608,7 @@
                             'success'
                         )
                     } else {
-                        if (k1 === k2 && k1 !== null && k2 !== null) {
+                        if (k1 !== null && k2 !== null) {
                             Swal.fire(
                                 'GAGAL!',
                                 'Karyawan 1 dan Karyawan 2 Tidak Boleh Sama!',
@@ -558,45 +626,117 @@
                     Swal.fire(
                         'Gagal!',
                         'Error: ' + error,
-                        'success'
+                        'error'
                     )
                 }
             })
 
+            dataInsert([{
+                    "uuid": "41a22d71-16bd-25a7-5998-a2afc0338458",
+                    "kode_spk": "SPK|2023-05-22|1",
+                    "artikel": "M1243049318",
+                    "ukuran": "M",
+                    "tanggal": "2023-05-22",
+                    "kp_id": "1",
+                    "jenis_kain": "Katun",
+                    "warna": "Black",
+                    "quantity": "100",
+                    "satuan": "PCS",
+                    "quantity_satuan": "100|PCS",
+                    "karyawan": [
+                        "9b4c9c9cf8cf44d897daed8d5d5d5b08",
+                        "95a6d7ae9fc845888247f4bf3d9eb150"
+                    ],
+                    "nama_karyawan": [
+                        "Sablon 1",
+                        "Sablon 2"
+                    ],
+                    "gaji": "1000"
+                },
+                {
+                    "uuid": "41a22d71-16bd-25a7-5998-a2afc0338458",
+                    "kode_spk": "SPK|2023-05-22|1",
+                    "artikel": "M1243049318",
+                    "ukuran": "M",
+                    "tanggal": "2023-05-22",
+                    "kp_id": "2",
+                    "jenis_kain": "Katun",
+                    "warna": "White",
+                    "quantity": "400",
+                    "satuan": "PCS",
+                    "quantity_satuan": "400|PCS",
+                    "karyawan": [
+                        "9b4c9c9cf8cf44d897daed8d5d5d5b08",
+                        "95a6d7ae9fc845888247f4bf3d9eb150"
+                    ],
+                    "nama_karyawan": [
+                        "Sablon 1",
+                        "Sablon 2"
+                    ],
+                    "gaji": "1500"
+                },
+                {
+                    "uuid": "1523ee1b-4acb-ad31-78f1-c698b2c6fd18",
+                    "kode_spk": "SPK|2023-05-22|1",
+                    "artikel": "L2080070216",
+                    "ukuran": "L",
+                    "tanggal": "2023-05-22",
+                    "kp_id": "3",
+                    "jenis_kain": "Katun",
+                    "warna": "Green",
+                    "quantity": "80",
+                    "satuan": "PCS",
+                    "quantity_satuan": "80|PCS",
+                    "karyawan": [
+                        "9b4c9c9cf8cf44d897daed8d5d5d5b08",
+                        "95a6d7ae9fc845888247f4bf3d9eb150"
+                    ],
+                    "nama_karyawan": [
+                        "Sablon 1",
+                        "Sablon 2"
+                    ],
+                    "gaji": "1000"
+                }
+            ])
+
             function dataInsert(datas) {
                 extensionList = $('#tabel_insert').DataTable({
                     data: datas,
+                    columnDefs: [{
+                        targets: '_all',
+                        className: 'middleText'
+                    }],
                     columns: [{
                             data: 'kode_spk',
                             name: 'kode_spk'
-                        },
-                        {
-                            data: 'artikel',
-                            name: 'artikel'
                         },
                         {
                             data: 'tanggal',
                             name: 'tanggal'
                         },
                         {
-                            data: 'kode_spp',
-                            name: 'kode_spp'
+                            data: 'artikel',
+                            name: 'artikel'
                         },
                         {
-                            data: 'warnaUkuran',
-                            name: 'warnaUkuran',
+                            data: 'ukuran',
+                            name: 'ukuran'
                         },
                         {
-                            data: 'kain_potongan_dipakai',
-                            name: 'kain_potongan_dipakai',
+                            data: 'jenis_kain',
+                            name: 'jenis_kain',
                         },
                         {
-                            data: 'hasilSatuan',
-                            name: 'hasilSatuan',
+                            data: 'warna',
+                            name: 'warna',
                         },
                         {
-                            data: 'karyawan',
-                            name: 'karyawan',
+                            data: 'quantity_satuan',
+                            name: 'quantity_satuan',
+                        },
+                        {
+                            data: 'nama_karyawan',
+                            name: 'nama_karyawan',
                         },
                         {
                             data: 'gaji',
@@ -622,6 +762,41 @@
                     bDestroy: true,
                     order: [],
                 })
+                MergeGridCells()
+            }
+
+            function MergeGridCells() {
+                var dimension_cells = new Array();
+                var dimension_col = null;
+                var columnCount = $("#tabel_insert tr:first th").length;
+                for (dimension_col = 0; dimension_col <= columnCount; dimension_col++) {
+                    // first_instance holds the first instance of identical td
+                    var first_instance = null;
+                    var rowspan = 1;
+                    // iterate through rows
+                    $("#tabel_insert").find('tr').each(function() {
+
+                        // find the td of the correct column (determined by the dimension_col set above)
+                        var dimension_td = $(this).find('td:nth-child(' + dimension_col + ')');
+
+                        if (first_instance === null) {
+                            // must be the first row
+                            first_instance = dimension_td;
+                        } else if (dimension_td.text() === first_instance.text() && dimension_col < 5) {
+                            // the current td is identical to the previous
+                            // remove the current td
+                            // dimension_td.remove();
+                            dimension_td.attr('hidden', true);
+                            ++rowspan;
+                            // increment the rowspan attribute of the first instance
+                            first_instance.attr('rowspan', rowspan);
+                        } else {
+                            // this cell is different from the last
+                            first_instance = dimension_td;
+                            rowspan = 1;
+                        }
+                    });
+                }
             }
 
             // Hapus List
@@ -654,18 +829,14 @@
             // clear input
             function clearForm() {
                 $('[name="ukuran"]').val('').trigger('change.select2');
-                $('#kode_spp').val('').trigger('change.select2');
-                $('[name="ukuran" ]').val('').trigger('change.select2');
-                $('[name="warna" ]').val('').trigger('change.select2');
-                $('[name="satuan" ]').val('').trigger('change.select2');
-                $('[name="hasil_kain_potongan"]').val('');
-                $('[name="sisa_stok"]').val('');
-                $('[name="kain_potongan_dipakai"]').val('0');
-                $('[name="hasil"]').val('0');
-                $('[name="hasil"]').val('0');
-                $('[name="karyawan_1"]').val('').trigger('change.select2');
-                $('[name="karyawan_2"]').val('').trigger('change.select2');
-                $('[name="gaji"]').val('').trigger('change.select2');
+                $('[name="artikel"]').val('');
+                $('[name*="kp_id" ]').val('').trigger('change.select2');
+                $('[name*="satuan" ]').val('').trigger('change.select2');
+                $('[name*="sisa_stok"]').val('');
+                $('[name*="kain_potongan_dipakai"]').val('0');
+                $('[name*="karyawan_1"]').val('').trigger('change.select2');
+                $('[name*="karyawan_2"]').val('').trigger('change.select2');
+                $('[name*="gaji"]').val('').trigger('change.select2');
             }
 
             // edit data table
@@ -703,7 +874,8 @@
                         if (result.isConfirmed) {
                             $.ajaxSetup({
                                 headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                        'content')
                                 }
                             });
 
@@ -733,7 +905,7 @@
                                     if (res.code === 400) {
                                         Swal.fire(
                                             'Gagal!',
-                                            res.message + ' LOT: ' + res.kode_lot,
+                                            res.message + ' ID: ' + res.ID,
                                             'error'
                                         )
                                     }
@@ -785,7 +957,8 @@
 
                             $.ajaxSetup({
                                 headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                        'content')
                                 }
                             });
 

@@ -279,6 +279,7 @@
             $("#ukuran, #kode_lot, #karyawan_1, #karyawan_2, #gaji, #ukuran_kain_potong, #kode_lot_potongan")
                 .select2({
                     theme: 'classic',
+                    width: '100%',
                 });
 
             $('#ukuran_kain_potong_visibility').hide()
