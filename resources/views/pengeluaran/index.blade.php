@@ -34,29 +34,19 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="fromDate">Dari Tanggal</label>
                                             <input type="date" class="form-control" placeholder="Tanggal" id="fromDate" name="fromDate" value="{{$date}}">
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
+                                    <div class="col-md-4">
                                         <div class="form-group">
                                             <label for="fromDate">Ke Tanggal</label>
                                             <input type="date" class="form-control" placeholder="Tanggal" id="toDate" name="toDate" value="{{$date}}">
                                         </div>
                                     </div>
-                                    <div class="col-md-3">
-                                        <div class="form-group">
-                                            <label for="">Jenis Pengeluaran</label>
-                                            <select name="pengeluaran" id="pengeluaran" class="form-control">
-                                                <option value="" class="text-center">Pilih Pengeluaran</option>
-                                                <option value="pengeluaran">Pengeluaran</option>
-                                                <option value="gaji">Gaji</option>
-                                            </select>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-1">
+                                    <div class="col-md-2">
                                         <div class="form-group text-center align-item-center mt-4">
                                             <button type="button" id="searchData" class="btn btn-sm btn-primary">Cari Data</button>
                                         </div>

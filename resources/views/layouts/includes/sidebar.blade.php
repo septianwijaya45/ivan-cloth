@@ -78,7 +78,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('filmSablon') }}" class="nav-link">
                         <i class="nav-icon fas fa-film"></i>
                         <p>
                             Film Sablon
@@ -137,7 +137,7 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('jahit') }}" class="nav-link">
                         <i class="nav-icon fas fa-layer-group"></i>
                         <p>
                             Jahit
@@ -166,6 +166,14 @@
                         <i class="nav-icon fas fa-receipt"></i>
                         <p>
                             Pengeluaran
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('tgaji') }}" class="nav-link">
+                        <i class="nav-icon fas fa-money-bill"></i>
+                        <p>
+                            Pengeluaran Gaji
                         </p>
                     </a>
                 </li>

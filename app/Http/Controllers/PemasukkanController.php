@@ -41,10 +41,10 @@ class PemasukkanController extends Controller
                     })
                     ->addColumn('Status', function($data){
                         if($data->status == 'Belum Konfirmasi'){
-                            return '<button class="btn btn-danger btn-sm" title="Confirm Data!" onClick="confirmPemasukkan()"> Belum Konfirmasi </button>';
+                            return '<button class="btn btn-danger btn-sm" title="Confirm Data!" onClick="confirmPemasukkan(`'.$data->kode_pemasukan.'`)"> Belum Konfirmasi </button>';
                         }
-                        if($data->status == 'Selesai Dikerjakan'){
-                            return '<span class="bg-success p-2">Selesai Dikerjakan</span>';
+                        if($data->status == 'Terkonfirmasi'){
+                            return '<span class="bg-success p-2">Terkonfirmasi</span>';
                         }
                     })
                     ->rawColumns(['Action', 'Status'])
@@ -66,10 +66,8 @@ class PemasukkanController extends Controller
                 Pemasukkan::insert([
                     'uuid'              => Uuid::uuid4()->getHex(),
                     'kode_pemasukan'    => $dt['kode_pemasukan'],
-                    'jenis_penjualan'   => $dt['jenis_penjualan'],
-                    'pemasukkan'        => $dt['pemasukkan'],
+                    'metode_pembayaran'   => $dt['metode_pembayaran'],
                     'total_uang'        => $dt['total_uang'],
-                    'keterangan'        => $dt['keterangan'],
                     'tanggal'           => $dt['tanggal'],
                     'status'            => 'Belum Konfirmasi',
                     'created_at'        => Carbon::now(),
@@ -114,20 +112,16 @@ class PemasukkanController extends Controller
                         ->where('kode_pemasukan', $dt['kode_pemasukan'])
                         ->update([
                             'kode_pemasukan'    => $dt['kode_pemasukan'],
-                            'jenis_penjualan'   => $dt['jenis_penjualan'],
-                            'pemasukkan'        => $dt['pemasukkan'],
+                            'metode_pembayaran'   => $dt['metode_pembayaran'],
                             'total_uang'        => $dt['total_uang'],
-                            'keterangan'        => $dt['keterangan'],
                             'tanggal'           => $dt['tanggal'],
                         ]);
                 }else{
                     Pemasukkan::insert([
                         'uuid'              => Uuid::uuid4()->getHex(),
                         'kode_pemasukan'    => $dt['kode_pemasukan'],
-                        'jenis_penjualan'   => $dt['jenis_penjualan'],
-                        'pemasukkan'        => $dt['pemasukkan'],
+                        'metode_pembayaran'   => $dt['metode_pembayaran'],
                         'total_uang'        => $dt['total_uang'],
-                        'keterangan'        => $dt['keterangan'],
                         'tanggal'           => $dt['tanggal'],
                         'status'            => 'Belum Konfirmasi',
                         'created_at'        => Carbon::now(),
@@ -149,6 +143,29 @@ class PemasukkanController extends Controller
         }
     }
 
+    public function confirmData($kode_pemasukkan)
+    {
+        try {
+            $pemasukkan = Pemasukkan::where('kode_pemasukan', $kode_pemasukkan);
+            if($pemasukkan){
+                $pemasukkan->update([
+                    'status'    => 'Terkonfirmasi'
+                ]);
+                
+                return response()->json([
+                    'code'      => 200,
+                    'message'   => 'Berhasil Konfirmasi Data Pemasukkan',
+                ]);
+            }
+        } catch (\Exception $th) {
+            return response()->json([
+                'code'      => 500,
+                'message'   => 'Gagal Konfirmasi Data Pemasukkan!',
+                'error'     => $th
+            ]);
+        }
+    }
+
     public function destroy($uuid)
     {
         try {
@@ -164,7 +181,7 @@ class PemasukkanController extends Controller
                     'message'   => 'Berhasil Hapus data detail pemasukkan',
                 ]);
             }
-        } catch (\Throwable $th) {
+        } catch (\Exception $th) {
             return response()->json([
                 'code'      => 500,
                 'message'   => 'Gagal Hapus data pemasukkan!',
@@ -186,7 +203,7 @@ class PemasukkanController extends Controller
                     'message'   => 'Berhasil Hapus data detail pemasukkan',
                 ]);
             }
-        } catch (\Throwable $th) {
+        } catch (\Exception $th) {
             return response()->json([
                 'code'      => 500,
                 'message'   => 'Gagal Hapus data pemasukkan!',

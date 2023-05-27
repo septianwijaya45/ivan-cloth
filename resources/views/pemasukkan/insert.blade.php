@@ -54,32 +54,21 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-4">
-                                            <label for="jenis_penjualan">Jenis Penjualan</label>
-                                            <div class="col-md-14 row">
-                                                <div class="col-md-12">
-                                                    <input type="text" name="jenis_penjualan" id="jenis_penjualan" class="form-control" value="" >
-                                                </div>
-                                            </div>
-                                        </div>
                                         <div class="col-lg-4">
                                             <label for="tanggal">Tanggal</label>
                                             <div class="col-md-12">
                                                 <input type="date" name="tanggal" id="tanggal" class="form-control" value="{{$date}}">
                                             </div>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <label for="tanggal">Pemasukkan</label>
-                                            <div class="col-md-12">
-                                                <textarea name="pemasukkan" id="pemasukkan" cols="30" rows="5" class="form-control"></textarea>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <label for="keterangan">Keterangan</label>
-                                            <div class="col-md-12">
-                                                <textarea name="keterangan" id="keterangan" cols="30" rows="5" class="form-control"></textarea>
+                                        <div class="col-md-4">
+                                            <label for="metode_pembayaran">Metode Pembayaran</label>
+                                            <div class="col-md-14 row">
+                                                <select name="metode_pembayaran" id="metode_pembayaran" class="form-control">
+                                                    <option value="" selected disabled class="text-center">Pilih Metode Pembayaran</option>
+                                                    <option value="Transfer">Transfer</option>
+                                                    <option value="Tunai/Cash">Tunai/Cash</option>
+                                                    <option value="Setor Tunai">Setor Tunai</option>
+                                                </select>
                                             </div>
                                         </div>
                                     </div>
@@ -120,10 +109,8 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Kode Pemasukkan</th>
-                                                        <th>Jenis Pemasukkan</th>
                                                         <th>Tanggal</th>
-                                                        <th>Pemasukkan</th>
-                                                        <th>Keterangan</th>
+                                                        <th>Metode Pembayaran</th>
                                                         <th>Total Uang</th>
                                                         <th width="10%">Aksi</th>
                                                     </tr>
@@ -218,24 +205,19 @@
         // Simpan
         $('#btn-tambah').on('click', function(){
             let kode_pemasukan = $('#kode_pemasukkan').val()
-            let jenis_penjualan = $('#jenis_penjualan').val()
+            let metode_pembayaran = $('#metode_pembayaran').val()
             let tanggal = $('#tanggal').val()
-            let pemasukkan = $('#pemasukkan').val()
-            let keterangan = $('#keterangan').val()
             let total_uang = $('#total_uang').val()
 
                 try {
-                    if(kode_pemasukan !== null && kode_pemasukan !== '' && jenis_penjualan !== null && jenis_penjualan !== '' && tanggal !== null && tanggal !== '' && pemasukkan !== null && pemasukkan !== '' && keterangan !== null && keterangan !== '' && total_uang !== null && total_uang !== ''){
+                    if(kode_pemasukan !== null && kode_pemasukan !== '' && metode_pembayaran !== null && metode_pembayaran !== '' && tanggal !== null && tanggal !== '' &&  total_uang !== null && total_uang !== ''){
                         data.push({
                             uuid            : uuid(),
                             kode_pemasukan  : kode_pemasukan,
-                            jenis_penjualan : jenis_penjualan,
+                            metode_pembayaran : metode_pembayaran,
                             tanggal         : tanggal,
-                            pemasukkan      : pemasukkan,
-                            keterangan      : keterangan,
                             total_uang      : total_uang
                         })
-                        console.log(data)
     
                         dataInsert(data);
                         clearForm()
@@ -270,20 +252,12 @@
                         name: 'kode_pemasukan'
                     },
                     {
-                        data: 'jenis_penjualan',
-                        name: 'jenis_penjualan'
-                    },
-                    {
                         data: 'tanggal',
                         name: 'tanggal'
                     },
                     {
-                        data: 'pemasukkan',
-                        name: 'pemasukkan'
-                    },
-                    {
-                        data: 'keterangan',
-                        name: 'keterangan',
+                        data: 'metode_pembayaran',
+                        name: 'metode_pembayaran'
                     },
                     {
                         data: 'total_uang',
@@ -312,9 +286,7 @@
 
         // clear input
         function clearForm(){
-            $('[name="jenis_penjualan"]').val('')
-            $('[name="pemasukkan"]').val('')
-            $('[name="keterangan"]').val('')
+            $('[name="metode_pembayaran"]').val('')
             $('[name="total_uang"]').val('')
         }
 
@@ -323,10 +295,8 @@
             let uuid = $(this).data('uuid');
             let dt_detail = data.find(dt => dt.uuid === uuid)
             $('#kode_pemasukkan').val(dt_detail.kode_pemasukan);
-            $('#jenis_penjualan').val(dt_detail.jenis_penjualan);
+            $('#metode_pembayaran').val(dt_detail.metode_pembayaran);
             $('#tanggal').val(dt_detail.tanggal);
-            $('#pemasukkan').val(dt_detail.pemasukkan);
-            $('#keterangan').val(dt_detail.keterangan);
             $('#total_uang').val(dt_detail.total_uang);
 
             let check = data.findIndex(e => e['uuid'] === uuid)

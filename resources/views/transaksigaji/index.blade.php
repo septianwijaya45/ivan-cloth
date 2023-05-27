@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Pemasukkan')
+@section('title', 'Pengeluaran Gaji')
 
 @section('content')
     <!-- Content Wrapper. Contains page content -->
@@ -9,12 +9,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Data Pemasukkan</h1>
+                        <h1 class="m-0">Data Pengeluaran Gaji</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="#">Home</a></li>
-                            <li class="breadcrumb-item active">Pemasukkan</li>
+                            <li class="breadcrumb-item active">Pengeluaran Gaji</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -65,7 +65,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title">Data Pemasukkan</h5>
+                                <h5 class="card-title">Data Pengeluaran Gaji</h5>
                                 <div class="card-tools">
                                     <a href="{{ route('pemasukkan.insert') }}" class="btn btn-success btn-sm">
                                         <i class="fas fa-plus"></i> Tambah Data
@@ -81,11 +81,9 @@
                                         <thead>
                                             <tr>
                                                 <th width="5%" style="text-align: center;">ID</th>
-                                                <th>Kode Pemasukkan</th>
-                                                <th>Total</th>
-                                                <th>Tanggal</th>
-                                                <th>Status</th>
-                                                <th width="10%">Aksi</th>
+                                                <th>Kode Transaksi</th>
+                                                <th>Nama Karyawan</th>
+                                                <th>Total Gaji</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -122,86 +120,9 @@
             timer: 2000,
             timerProgressBar: true,
         })
-
-        function deleteData(id) {
-            Swal.fire({
-                    title: "Apakah anda yakin hapus data ini?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Ya, Hapus!",
-                    cancelButtonText: "Tidak",
-                })
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        @if(Auth::user()->role_id == 1)
-                        var _url = "{{ route('pemasukkan.delete', ':id') }}";
-                        @else
-                        var _url = "{{ route('pemasukkan.delete', ':id') }}";
-                        @endif
-                        _url = _url.replace(':id', id)
-                        var _token = $('meta[name="csrf-token"]').attr('content');
-                        $.ajax({
-                            url: _url,
-                            type: 'DELETE',
-                            data: {
-                                _token: _token
-                            },
-                            success: function(res) {
-                                Notif.fire({
-                                    icon: 'success',
-                                    title: res.message,
-                                })
-                                $("#tbl_pemasukkan").DataTable().destroy();
-                                getPerlengkapan();
-                            },
-                            error: function(err) {
-                                console.log(err);
-                            }
-                        })
-                    }
-                });
-        }
-
-        function confirmPemasukkan(kode_pemasukkan) {
-            Swal.fire({
-                    title: "Apakah anda yakin konfirmasi data ini?",
-                    icon: "warning",
-                    showCancelButton: true,
-                    confirmButtonText: "Ya, Konfirmasi!",
-                    cancelButtonText: "Tidak",
-                })
-                .then((result) => {
-                    if (result.isConfirmed) {
-                        @if(Auth::user()->role_id == 1)
-                        var _url = "{{ route('pemasukkan.konfirmasi', ':kode_pemasukkan') }}";
-                        @else
-                        var _url = "{{ route('pemasukkan.konfirmasi', ':kode_pemasukkan') }}";
-                        @endif
-                        _url = _url.replace(':kode_pemasukkan', kode_pemasukkan)
-                        var _token = $('meta[name="csrf-token"]').attr('content');
-                        $.ajax({
-                            url: _url,
-                            type: 'PUT',
-                            data: {
-                                _token: _token
-                            },
-                            success: function(res) {
-                                Notif.fire({
-                                    icon: 'success',
-                                    title: res.message,
-                                })
-                                $("#tbl_pemasukkan").DataTable().destroy();
-                                getPerlengkapan();
-                            },
-                            error: function(err) {
-                                console.log(err);
-                            }
-                        })
-                    }
-                });
-        }
-        
-        function getPerlengkapan() {
+    </script>
+    <script>
+        $(document).ready(function(){
             $('#tbl_pemasukkan').DataTable({
                 processing      : true,
                 serverSide      : true,
@@ -210,23 +131,16 @@
                 pageLength      : 10,
                 "order"         : [[0, "desc"]],
                 ajax            : {
-                        url         : "{{route('pemasukkan.data')}}",
+                        url         : "{{route('tgaji.data')}}",
                         method      : "GET"
                 },
                 columns         : [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                    {data: 'kode_pemasukan', name: 'kode_pemasukan'},
-                    {data: 'total', name: 'total', render: function(data){ return data+' Pembayaran' }},
-                    {data: 'tanggal', name: 'tanggal'},
-                    {data: 'Status', name: 'Status'},
-                    {data: 'Action', name: 'Action', orderable:'false', searchable: 'false', sClass:'text-center'}
+                    {data: 'kode_transaksi', name: 'kode_transaksi'},
+                    {data: 'total', name: 'total', render: function(data){ return 'Rp '+data}},
+                    {data: 'nama', name: 'nama'},
                 ]
             });
-        }
-    </script>
-    <script>
-        $(document).ready(function(){
-            getPerlengkapan()
 
             
             let fromDate, toDate, htmlview
@@ -248,17 +162,15 @@
                     pageLength      : 10,
                     "order"         : [[0, "desc"]],
                     ajax            : {
-                            url         : "{{route('pemasukkan.searchData')}}",
+                            url         : "{{route('tgaji.searchData')}}",
                             method      : "POST",
                             data: {'fromDate': fromDate, 'toDate': toDate},
                     },
                     columns         : [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
-                        {data: 'kode_pemasukan', name: 'kode_pemasukan'},
-                        {data: 'total', name: 'total', render: function(data){ return data+' Pembayaran' }},
-                        {data: 'tanggal', name: 'tanggal'},
-                        {data: 'Status', name: 'Status'},
-                        {data: 'Action', name: 'Action', orderable:'false', searchable: 'false', sClass:'text-center'}
+                        {data: 'kode_transaksi', name: 'kode_transaksi'},
+                        {data: 'total', name: 'total', render: function(data){ return 'Rp '+data}},
+                        {data: 'nama', name: 'nama'},
                     ]
                 });
                 setInterval(function () {
@@ -269,7 +181,24 @@
             $('#clearData').on('click', function(){
                 $('#fromDate').val('{{$date}}')
                 $('#toDate').val('{{$date}}')
-                getPerlengkapan();
+                $('#tbl_pemasukkan').DataTable({
+                    processing      : true,
+                    serverSide      : true,
+                    autoWidth       : true,
+                    destroy         : true,
+                    pageLength      : 10,
+                    "order"         : [[0, "desc"]],
+                    ajax            : {
+                            url         : "{{route('tgaji.data')}}",
+                            method      : "GET"
+                    },
+                    columns         : [
+                        {data: 'DT_RowIndex', name: 'DT_RowIndex'},
+                        {data: 'kode_transaksi', name: 'kode_transaksi'},
+                        {data: 'total', name: 'total', render: function(data){ return 'Rp '+data}},
+                        {data: 'nama', name: 'nama'},
+                    ]
+                });
             });
         })
     </script>

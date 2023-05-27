@@ -10,6 +10,7 @@ use App\Models\Kain_roll;
 use App\Models\Kain_tersablon;
 use App\Models\Karyawan;
 use App\Models\SPK;
+use App\Models\SPKDetail;
 use App\Models\SPP;
 use File;
 use App\Models\Ukuran;
@@ -75,7 +76,7 @@ class SPKController extends Controller
     {
         $req_data   = $request->data;
         $note       = $request->notes;
-        $insertdb   = [];
+
         foreach ($req_data as $dt) {
             $quantity = ($dt['quantity'] == 0) ? 1 : $dt['quantity'];
             $kp = Kain_potongan::where('id', $dt['kp_id'])->first();
@@ -91,49 +92,49 @@ class SPKController extends Controller
             ]);
 
             $k_id = [$dt['karyawan'][0], $dt['karyawan'][1]];
-
+            
             $k1 = Karyawan::where('uuid', $dt['karyawan'][0])->first();
             $k2 = Karyawan::where('uuid', $dt['karyawan'][1])->first();
+            
 
-            $lngthinsert = count($insertdb);
+            $checkSpk = SPK::where('kode_spk', $dt['kode_spk'])->where('artikel', $dt['artikel'])->first();
 
-            if ($lngthinsert == 0) {
-                $insertdb[] = [
-                    'kode_spk'   => $dt['kode_spk'],
-                    'artikel'   => $dt['artikel'],
-                    'tanggal'   => $dt['tanggal'],
-                    'ukuran'    => $dt['ukuran'],
-                    'kain_potongan_id'   => $dt['kp_id'],
-                    'quantity'      => $dt['quantity'],
-                    'satuan'        => $dt['satuan'],
-                    'karyawan_id'   => [$k_id],
-                    'karyawan'      => [[$k1->nama, $k2->nama]],
-                    'gaji'          => $dt['gaji'],
-                ];
-            } else if ($dt['artikel'] == $insertdb[$lngthinsert - 1]['artikel']) {
-                $recvInsert = [
-                    'kain_potongan_id'   => $dt['kp_id'],
-                    'quantity'      => $dt['quantity'],
-                    'satuan'        => $dt['satuan'],
-                    'karyawan_id'   => [$k_id],
-                    'karyawan'      => [[$k1->nama, $k2->nama]],
-                    'gaji'          => $dt['gaji'],
-                ];
-                $insertdb[$lngthinsert - 1] = array_merge_recursive($insertdb[$lngthinsert - 1], $recvInsert);
-            } else {
-                array_push($insertdb, [
-                    'kode_spk'  => $dt['kode_spk'],
-                    'artikel'   => $dt['artikel'],
-                    'tanggal'   => $dt['tanggal'],
-                    'ukuran'    => $dt['ukuran'],
-                    'kain_potongan_id'   => $dt['kp_id'],
-                    'quantity'      => $dt['quantity'],
-                    'satuan'        => $dt['satuan'],
-                    'karyawan_id'   => [$k_id],
-                    'karyawan'      => [[$k1->nama, $k2->nama]],
-                    'gaji'          => $dt['gaji'],
+            if(!$checkSpk){
+                $spk = new SPK();
+                $spk->uuid          = Uuid::uuid4()->getHex();
+                $spk->kode_spk      = $dt['kode_spk'];
+                $spk->artikel       = $dt['artikel'];
+                $spk->tanggal       = $dt['tanggal'];
+                $spk->ukuran        = $dt['ukuran'];
+                $spk->note          = $note;
+                $spk->status        = 'Belum Konfirmasi';
+                $spk->created_at    = Carbon::now();
+                $spk->updated_at    = Carbon::now();
+                $spk->save();
+
+                SPKDetail::insert([
+                    't_spk_id'              => $spk->id,
+                    'kode_spk'              => $dt['kode_spk'],
+                    'kain_potongan_id'      => $dt['kp_id'],
+                    'quantity'              => $dt['quantity'],
+                    'satuan'                => $dt['satuan'],
+                    'karyawan_id'           => json_encode($k_id),
+                    'karyawan'              => json_encode($dt['nama_karyawan']),
+                    'gaji'                  => $dt['gaji']
+                ]);
+            }else{
+                SPKDetail::insert([
+                    't_spk_id'              => $checkSpk->id,
+                    'kode_spk'              => $dt['kode_spk'],
+                    'kain_potongan_id'      => $dt['kp_id'],
+                    'quantity'              => $dt['quantity'],
+                    'satuan'                => $dt['satuan'],
+                    'karyawan_id'           => json_encode($k_id),
+                    'karyawan'              => json_encode($dt['nama_karyawan']),
+                    'gaji'                  => $dt['gaji']
                 ]);
             }
+
 
             // gaji
             if (!empty($k1)) {
@@ -156,46 +157,6 @@ class SPKController extends Controller
                         'created_at'        => Carbon::now(),
                         'updated_at'        => Carbon::now()
                     ]
-                ]);
-            }
-        }
-
-        foreach ($insertdb as $data) {
-            if (is_array($data['kain_potongan_id'])) {
-                SPK::insert([
-                    'uuid'              => Uuid::uuid4()->getHex(),
-                    'kode_spk'  => $data['kode_spk'],
-                    'artikel'   => $data['artikel'],
-                    'tanggal'   => $data['tanggal'],
-                    'ukuran'    => $data['ukuran'],
-                    'kain_potongan_id'   => json_encode($data['kain_potongan_id']),
-                    'quantity'      => json_encode($data['quantity']),
-                    'satuan'        => json_encode($data['satuan']),
-                    'karyawan_id'   => json_encode($data['karyawan_id']),
-                    'karyawan'      => json_encode($data['karyawan']),
-                    'gaji'          => json_encode($data['gaji']),
-                    'note'              => $note,
-                    'status'            => 'Belum Konfirmasi',
-                    'created_at'        => Carbon::now(),
-                    'updated_at'        => Carbon::now()
-                ]);
-            } else {
-                SPK::insert([
-                    'uuid'              => Uuid::uuid4()->getHex(),
-                    'kode_spk'  => $data['kode_spk'],
-                    'artikel'   => $data['artikel'],
-                    'tanggal'   => $data['tanggal'],
-                    'ukuran'    => $data['ukuran'],
-                    'kain_potongan_id'   => json_encode([$data['kain_potongan_id']]),
-                    'quantity'      => json_encode([$data['quantity']]),
-                    'satuan'        => json_encode([$data['satuan']]),
-                    'karyawan_id'   => json_encode($data['karyawan_id']),
-                    'karyawan'      => json_encode($data['karyawan']),
-                    'gaji'          => json_encode([$data['gaji']]),
-                    'note'              => $note,
-                    'status'            => 'Belum Konfirmasi',
-                    'created_at'        => Carbon::now(),
-                    'updated_at'        => Carbon::now()
                 ]);
             }
         }
@@ -245,21 +206,20 @@ class SPKController extends Controller
     public function edit($uuid)
     {
         $spk = SPK::where('uuid', $uuid)->first();
-        $spp = SPP::all();
         $kainroll   = Kain_roll::all();
         $karyawan   = Karyawan::where('posisi', 'sablon')->get();
         $gaji       = GajiMaster::all();
         $ukuran     = Ukuran::all();
 
-        $spk_all = DB::select("
-            SELECT ts.*, concat(kr.warna, ' | ', ts.ukuran) as warnaUkuran, concat(ts.jumlah_kain, ' ', ts.satuan) as hasilSatuan, kr.warna, tss.hasil_potongan, kp.stok
-            FROM t_spks ts, m_kain_potongans kp, m_kain_rolls kr, t_spps tss
-            WHERE kode_spk = '$spk->kode_spk' AND ts.kain_potongan_id = kp.id AND kp.kain_roll_id = kr.id AND ts.kode_spp = tss.kode_spp AND ts.ukuran = tss.ukuran
-        ");
+        $spkDetail = SPKDetail::select('t_spk_details.*', 'm_kain_potongans.id as id_kp', DB::raw('CONCAT(m_kain_rolls.jenis_kain, " | ", m_kain_rolls.warna) as nama_kain_roll'), 'm_kain_rolls.stok_roll')
+                    ->join('m_kain_potongans', 'm_kain_potongans.id', '=', 't_spk_details.kain_potongan_id')
+                    ->join('m_kain_rolls', 'm_kain_rolls.id', '=', 'm_kain_potongans.kain_roll_id')
+                    ->where('kode_spk', $spk->kode_spk)
+                    ->get();
 
         $gambarSpk = FileSPK::where('kode_spk', $spk->kode_spk)->get();
 
-        return view('spk.update', compact(['spp', 'spk', 'spk_all', 'kainroll', 'karyawan', 'gaji', 'ukuran', 'gambarSpk']));
+        return view('spk.update', compact(['spk', 'spkDetail', 'kainroll', 'karyawan', 'gaji', 'ukuran', 'gambarSpk']));
     }
 
     public function update(Request $request)
@@ -441,6 +401,73 @@ class SPKController extends Controller
         // }
     }
 
+    public function updateDetail(Request $request)
+    {
+        try {
+            $reqData    = $request->data;
+            $note       = $request->notes;
+
+            foreach($reqData as $dt){
+                $kp = Kain_potongan::where('kain_roll_id', $dt['kp_ide'])->first();
+                $kr = Kain_roll::where('id', $kp->kain_roll_id)->first();
+
+                $splitK1 = explode('-', $dt['k1e']);
+                $splitK2 = explode('-', $dt['k2e']);
+
+                $k_id = [$splitK1[0], $splitK2[0]];
+                $k_nama = [$splitK1[1], $splitK2[1]];
+
+                $checkQuantity = SPKDetail::where('id', $dt['ide'])->first();
+
+                if ($kp->ukuran < $dt['quantitye']) {
+                    return response()->json([
+                        'code'      => 400,
+                        'kode_lot'    => $kr->kode_lot,
+                        'message'   => 'Gagal Menyimpan Data! Stok kurang!',
+                    ]);
+                }
+
+                if($dt['quantitye'] !== $checkQuantity->quantity){
+                    if($dt['quantitye'] < $checkQuantity->quantity){
+                        $stok = $checkQuantity->quantity - $dt['quantitye'];
+                        Kain_potongan::where('kain_roll_id', $dt['kp_ide'])->update([
+                            'stok'    => $kp->stok + $stok
+                        ]);
+                    }
+
+                    if($dt['quantitye'] > $checkQuantity->quantity){
+                        $stok =$dt['quantitye'] - $checkQuantity->quantity;
+                        Kain_potongan::where('kain_roll_id', $dt['kp_ide'])->update([
+                            'stok'    => $kp->stok + $stok
+                        ]);
+                    }
+                }
+
+                SPK::where('kode_spk', $checkQuantity->kode_spk)->update([
+                    'note'  => $note
+                ]);
+
+                SPKDetail::where('id', $dt['ide'])->update([
+                    'kain_potongan_id'      => $dt['kp_ide'],
+                    'quantity'              => $dt['quantitye'],
+                    'satuan'                => $dt['satuane'],
+                    'karyawan_id'           => json_encode($k_id),
+                    'karyawan'              => json_encode($k_nama)
+                ]);
+            }
+            return response()->json([
+                'code'      => 200,
+                'message'   => 'Berhasil Menyimpan Data!!',
+            ]);
+        } catch (\Exception $th) {
+            return response()->json([
+                'code'      => 500,
+                'message'   => 'Error Server!',
+                'error'     => $th
+            ]);
+        }
+    }
+
     public function confirm($kode_spk)
     {
         try {
@@ -537,10 +564,10 @@ class SPKController extends Controller
         }
     }
 
-    public function destroyDetail($uuid)
+    public function destroyDetail($id)
     {
         try {
-            $spk = SPK::where('uuid', $uuid);
+            $spk = SPKDetail::where('id', $id);
             $m_kainpotongan = Kain_potongan::where('id', $spk->value('kain_potongan_id'))->first();
 
             if ($spk !== null & $m_kainpotongan !== null) {
@@ -548,7 +575,7 @@ class SPKController extends Controller
 
                 //  update stok kain potongan
                 Kain_potongan::where('kain_roll_id', $dt_spk->kain_roll_id)->update([
-                    'stok'    => $m_kainpotongan->stok + $dt_spk->kain_potongan_dipakai
+                    'stok'    => $m_kainpotongan->stok + $dt_spk->quantity
                 ]);
 
                 Gaji::where('kode_transaksi', $dt_spk->kode_spp)->delete();

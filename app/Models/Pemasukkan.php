@@ -12,6 +12,6 @@ class Pemasukkan extends Model
     protected $table = 't_pemasukans';
 
     protected $fillable = [
-        'uuid', 'kode_pemasukkan', 'jenis_penjualan', 'pemasukkan', 'total_uang', 'keterangan', 'tanggal', 'status'
+        'uuid', 'kode_pemasukkan', 'metode_pembayaran', 'total_uang', 'tanggal', 'status'
     ];
 }

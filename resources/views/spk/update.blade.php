@@ -38,159 +38,273 @@
                                     <a href="{{ route('spk') }}" class="btn btn-warning btn-sm">Kembali</a>
                                 </div>
                             </div>
-                            <form action="#" method="POST" enctype="multipart/form-data" id="formSPP">
-                                <div class="card-body">
-                                    <div class="row">
-                                        <div class="col-md-3">
-                                            <label for="kode_spp">Kode SPK</label>
-                                            <div class="col-md-14 row">
-                                                <div class="col-md-12">
-                                                    <input type="number" name="id" id="id-data" value=""
-                                                        class="form-control" hidden readonly>
-                                                    <input type="text" name="kode_spk" id="kode_spk"
-                                                        class="form-control" value="{{ $spk->kode_spk }}" readonly>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <form action="#" method="POST" enctype="multipart/form-data" id="formDataDetailSPK">
+                                        <div class="card-body">
+                                            <div>
+                                                <h5>Detail Edit Data SPK</h5>
+                                                <div id="form_edit_kain_potongan"
+                                                    class="dataTables_wrapper dt-bootstrap4 table-responsive text-nowrap">
+                                                    <table class="table table-hover table-bordered dataTable"
+                                                        style="width: 100%;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width='15%'> Kain Potongan </th>
+                                                                <th width='13%'> Sisa Stok</th>
+                                                                <th width='13%'> Quantity</th>
+                                                                <th width='10%'> Satuan</th>
+                                                                <th width='15%'> Karyawan 1</th>
+                                                                <th width='15%'> Karyawan 2</th>
+                                                                <th width='10%'> Gaji</th>
+                                                                <th width="3%"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody>
+                                                            @foreach($spkDetail as $dt)
+                                                            <?php $karyawanDetail = json_decode($dt->karyawan);?>
+                                                            
+                                                            <tr>
+                                                                <td hidden><input type="number" class="form-control" name="idDetail[]" value="{{$dt->id}}" hidden></td>
+                                                                <td>
+                                                                    <select name="kp_ide[]" class="form-control kp_id">
+                                                                        <option value="" disabled class="text-center"> Kain Potongan </option>
+                                                                        <option value="{{ $dt->id_kp }}" selected>{{$dt->nama_kain_roll}}</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" name="sisa_stoke[]"
+                                                                        class="form-control sisa_stok" placeholder="Stok" value="{{ $dt->stok_roll }}" readonly>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" name="kain_potongan_dipakaie[]"
+                                                                        class="form-control kain_potongan_dipakai"
+                                                                        placeholder="Quantity Kain Potongan" value="{{ $dt->quantity }}">
+                                                                </td>
+                                                                <td>
+                                                                    <select name="satuane[]" class="form-control satuan">
+                                                                        <option value="" selected disabled
+                                                                            class="text-center">
+                                                                            Satuan</option>
+                                                                        <option value="PCS" @if($dt->satuan == "PCS") selected @endif>PCS</option>
+                                                                        <option value="Kodi" @if($dt->satuan == "Kodi") selected @endif>Kodi</option>
+                                                                        <option value="Lusin" @if($dt->satuan == "Lusin") selected @endif>Lusin</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <select name="karyawan_1e[]" class="form-control karyawan_1">
+                                                                        <option value="" disabled selected
+                                                                            class="text-center">
+                                                                            Karyawan
+                                                                            1
+                                                                        </option>
+                                                                        @foreach ($karyawan as $dtKaryawan)
+                                                                            <option
+                                                                                value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}" @if($karyawanDetail[0] == $dtKaryawan->nama) selected @endif>
+                                                                                {{ $dtKaryawan->nama }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <select name="karyawan_2e[]" class="form-control karyawan_2">
+                                                                        <option value="" disabled selected
+                                                                            class="text-center">
+                                                                            Karyawan
+                                                                            2
+                                                                        </option>
+                                                                        @foreach ($karyawan as $dtKaryawan)
+                                                                            <option
+                                                                                value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}" @if($karyawanDetail[1] == $dtKaryawan->nama) selected @endif>
+                                                                                {{ $dtKaryawan->nama }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <select name="gajie[]" class="form-control gaji">
+                                                                        <option value="" selected disabled
+                                                                            class="text-center">
+                                                                            Gaji</option>
+                                                                        @foreach ($gaji as $dtGaji)
+                                                                            <option value="{{ $dtGaji->gaji }}" @if($dt->gaji == $dtGaji->gaji) selected @endif>
+                                                                                {{ $dtGaji->gaji }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+        
+                                                                <td>
+                                                                    <a onclick="deleteData({{$dt->id}})" class='btn btn-danger btn-sm pull-right'><i class='fas fa-trash'></i></a>
+                                                                </td>
+                                                            </tr>
+                                                            @endforeach
+                                                        </tbody>
+                                                    </table>
                                                 </div>
                                             </div>
+                                            <div class="col-lg-12">
+                                                <label for="note">Notes</label>
+                                                <textarea name="note" id="note" cols="30" rows="2" placeholder="Keterangan"
+                                                    class="form-control">{{$spk->note}}</textarea>
+                                            </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label for="artikel">Artikel</label>
-                                            <div class="col-md-14 row">
-                                                <div class="col-md-12">
-                                                    <input type="text" name="artikel" id="artikel" class="form-control"
-                                                        value="" readonly>
+                                        <div class="card-footer">
+                                            <button type="button" id="btn-simpan-edit"
+                                                class="btn btn-success float-right">Simpan Perubahan</button>
+                                        </div>
+                                    </form>
+                                    <hr>
+                                    <br>
+                                </div>
+                                <div class="col-md-12">
+                                    <form action="#" method="POST" enctype="multipart/form-data" id="formSPK">
+                                        <div class="card-body">
+                                            <h5>Detail Form Tambah Data SPK</h5>
+                                            <div class="row">
+                                                <div class="col-md-3">
+                                                    <label for="kode_spp">Kode SPK</label>
+                                                    <div class="col-md-14 row">
+                                                        <div class="col-md-12">
+                                                            <input type="text" name="kode_spk" id="kode_spk"
+                                                                class="form-control" value="{{ $spk->kode_spk }}" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="artikel">Artikel</label>
+                                                    <div class="col-md-14 row">
+                                                        <div class="col-md-12">
+                                                            <input type="text" name="artikel" id="artikel" class="form-control"
+                                                                value="" readonly>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="tanggal">Tanggal</label>
+                                                    <div class="col-md-12">
+                                                        <input type="date" name="tanggal" id="tanggal" class="form-control"
+                                                            value="{{ $spk->tanggal }}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-3">
+                                                    <label for="ukuran">Model / Ukuran</label>
+                                                    <div class="col-md-12">
+                                                        <select name="ukuran" id="ukuran" class="form-control">
+                                                            <option value="" selected disabled class="text-center">Pilih
+                                                                Ukuran</option>
+                                                            @foreach ($ukuran as $data)
+                                                                <option value="{{ $data->kode_ukuran }}" class="text-center">
+                                                                    {{ $data->kode_ukuran }} ({{ $data->ukuran }})</option>
+                                                            @endforeach
+                                                        </select>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label for="tanggal">Kode SPP</label>
-                                            <div class="col-md-12">
-                                                <select name="kode_spk" id="kode_spp" class="form-control">
-                                                    <option value="" selected disabled class="text-center">Pilih Kode
-                                                        SPP</option>
-                                                    @foreach ($spp as $dtSpp)
-                                                        <option value="{{ $dtSpp->kode_spp }}">{{ $dtSpp->kode_spp }}
-                                                        </option>
-                                                    @endforeach
-                                                </select>
+                                            <hr>
+                                            <div>
+                                                <div id="form_kain_potongan"
+                                                    class="dataTables_wrapper dt-bootstrap4 table-responsive text-nowrap">
+                                                    <table class="table table-hover table-bordered dataTable" id="tab_kp"
+                                                        style="width: 100%;">
+                                                        <thead>
+                                                            <tr>
+                                                                <th width='15%'> Kain Potongan </th>
+                                                                <th width='13%'> Sisa Stok</th>
+                                                                <th width='13%'> Quantity</th>
+                                                                <th width='10%'> Satuan</th>
+                                                                <th width='15%'> Karyawan 1</th>
+                                                                <th width='15%'> Karyawan 2</th>
+                                                                <th width='10%'> Gaji</th>
+                                                                <th width="3%"></th>
+                                                            </tr>
+                                                        </thead>
+                                                        <tbody id="form_tbody">
+                                                            <tr id="kp_row_0">
+                                                                <td>
+                                                                    <select name="kp_id[]" class="form-control kp_id">
+                                                                        <option value="" selected disabled
+                                                                            class="text-center">
+                                                                            Kain Potongan
+                                                                        </option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" name="sisa_stok[]"
+                                                                        class="form-control sisa_stok" placeholder="Stok" readonly>
+                                                                </td>
+                                                                <td>
+                                                                    <input type="number" name="kain_potongan_dipakai[]"
+                                                                        class="form-control kain_potongan_dipakai"
+                                                                        placeholder="Quantity Kain Potongan" value="0">
+                                                                </td>
+                                                                <td>
+                                                                    <select name="satuan[]" class="form-control satuan">
+                                                                        <option value="" selected disabled
+                                                                            class="text-center">
+                                                                            Satuan</option>
+                                                                        <option value="PCS">PCS</option>
+                                                                        <option value="Kodi">Kodi</option>
+                                                                        <option value="Lusin">Lusin</option>
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <select name="karyawan_1[]" class="form-control karyawan_1">
+                                                                        <option value="" disabled selected
+                                                                            class="text-center">
+                                                                            Karyawan
+                                                                            1
+                                                                        </option>
+                                                                        @foreach ($karyawan as $dtKaryawan)
+                                                                            <option
+                                                                                value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}">
+                                                                                {{ $dtKaryawan->nama }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <select name="karyawan_2[]" class="form-control karyawan_2">
+                                                                        <option value="" disabled selected
+                                                                            class="text-center">
+                                                                            Karyawan
+                                                                            2
+                                                                        </option>
+                                                                        @foreach ($karyawan as $dtKaryawan)
+                                                                            <option
+                                                                                value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}">
+                                                                                {{ $dtKaryawan->nama }}</option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+                                                                <td>
+                                                                    <select name="gaji[]" class="form-control gaji">
+                                                                        <option value="" selected disabled
+                                                                            class="text-center">
+                                                                            Gaji</option>
+                                                                        @foreach ($gaji as $dtGaji)
+                                                                            <option value="{{ $dtGaji->gaji }}">
+                                                                                {{ $dtGaji->gaji }}
+                                                                            </option>
+                                                                        @endforeach
+                                                                    </select>
+                                                                </td>
+        
+                                                                <td>
+                                                                    <!-- placeholder for remove button -->
+                                                                </td>
+                                                            </tr>
+                                                        </tbody>
+                                                    </table>
+                                                </div>
                                             </div>
+                                            <button class="btn btn-info text-center container-fluid" id="add_kain_potongan">Tambah
+                                                Kain Potongan</button>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label for="ukuran">Model / Ukuran</label>
-                                            <div class="col-md-12">
-                                                <select name="ukuran" id="ukuran" class="form-control">
-                                                    <option value="" selected disabled class="text-center">Pilih
-                                                        Ukuran</option>
-                                                </select>
-                                            </div>
+                                        <div class="card-footer">
+                                            <button type="button" id="btn-tambah"
+                                                class="btn btn-success float-right">Tambahkan</button>
                                         </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-3">
-                                            <label for="tanggal">Tanggal</label>
-                                            <div class="col-md-12">
-                                                <input type="date" name="tanggal" id="tanggal" class="form-control"
-                                                    value="{{ $spk->tanggal }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label for="warna">Warna</label>
-                                            <div class="col-md-12">
-                                                <select name="warna" id="warna" class="form-control">
-                                                    <option value="" selected disabled class="text-center">Pilih Warna
-                                                    </option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label for="hasil_kain_potongan">Hasil Potongan</label>
-                                            <div class="col-md-12">
-                                                <input type="number" name="hasil_kain_potongan" id="hasil_kain_potongan"
-                                                    class="form-control" placeholder="Hasil Potongan" readonly>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label for="sisa_stok">Sisa Stok</label>
-                                            <div class="col-md-12">
-                                                <input type="number" name="sisa_stok" id="sisa_stok" class="form-control"
-                                                    placeholder="Sisa Stok" readonly>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-3">
-                                            <label for="satuan">Satuan</label>
-                                            <div class="col-md-12">
-                                                <select name="satuan" id="satuan" class="form-control">
-                                                    <option value="" selected disabled class="text-center">Pilih
-                                                        Satuan</option>
-                                                    <option value="PCS">PCS</option>
-                                                    <option value="Kodi">Kodi</option>
-                                                    <option value="Lusin">Lusin</option>
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label for="hasil">Kain Potongan Dipakai</label>
-                                            <div class="col-md-12">
-                                                <input type="number" name="kain_potongan_dipakai"
-                                                    id="kain_potongan_dipakai" class="form-control"
-                                                    placeholder="Kain Potongan Dipakai" value="0">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label for="hasil">Hasil</label>
-                                            <div class="col-md-12">
-                                                <input type="number" name="hasil" id="hasil" class="form-control"
-                                                    placeholder="Hasil" value="0">
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-3">
-                                            <label for="gaji">Gaji</label>
-                                            <div class="col-md-12">
-                                                <select name="gaji" id="gaji" class="form-control">
-                                                    <option value="" selected disabled class="text-center">Pilih
-                                                        Gaji</option>
-                                                    @foreach ($gaji as $dtGaji)
-                                                        <option value="{{ $dtGaji->gaji }}">{{ $dtGaji->gaji }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-lg-6">
-                                            <label for="karyawan_1">Karyawan Sablon 1</label>
-                                            <div class="col-md-12">
-                                                <select name="karyawan_1" id="karyawan_1" class="form-control">
-                                                    <option value="" selected class="text-center">Pilih Karyawan 1
-                                                    </option>
-                                                    @foreach ($karyawan as $dtKaryawan)
-                                                        <option value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}">
-                                                            {{ $dtKaryawan->nama }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                        <div class="col-lg-6">
-                                            <label for="karyawan_2">Karyawan Sablon 2</label>
-                                            <div class="col-md-12">
-                                                <select name="karyawan_2" id="karyawan_2" class="form-control">
-                                                    <option value="" selected class="text-center">Pilih Karyawan 2
-                                                    </option>
-                                                    @foreach ($karyawan as $dtKaryawan)
-                                                        <option value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}">
-                                                            {{ $dtKaryawan->nama }}</option>
-                                                    @endforeach
-                                                </select>
-                                            </div>
-                                        </div>
-                                    </div>
+                                    </form>
                                 </div>
-                                <div class="card-footer">
-                                    <button type="button" id="btn-tambah"
-                                        class="btn btn-success float-right">Tambahkan</button>
-                                </div>
-                            </form>
+                            </div>
                         </div>
                         <!-- /.card -->
                     </div>
@@ -224,11 +338,6 @@
                                                 <tbody>
                                                 </tbody>
                                             </table>
-                                        </div>
-                                        <div class="col-lg-12">
-                                            <label for="note">Notes</label>
-                                            <textarea name="note" id="note" cols="30" rows="2" placeholder="Keterangan"
-                                                class="form-control"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-3 mt-2 offset-md-9">
@@ -314,65 +423,34 @@
             <!--/. container-fluid -->
         </section>
         <!-- /.content -->
-
-
-        <!-- edit form -->
-        <div class="modal fade" id="modalEditSPP" tabindex="-1" role="dialog"
-            aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-            <div class="modal-dialog-scrollable modal-dialog modal-dialog-centered" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="exampleModalLongTitle">Edit Data SPP</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body bg-light">
-                        <form enctype="multipart/form-data" autocomplete="off" id="formEditUkuran" data-id=""
-                            class="needs-validation" novalidate>
-                            @method('PUT')
-                            @csrf
-                            <input type="hidden" name="uuid" id="uuidMap">
-                            <div class="row">
-                                <div class="col-md-12">
-                                    <label for="berat">Berat</label>
-                                    <div class="col-md-14 row">
-                                        <div class="col-md-12">
-                                            <input type="text" placeholder="Berat Kain" name="berat" id="beratMap"
-                                                class="form-control">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-12">
-                                    <label for="hasil">Hasil</label>
-                                    <div class="col-md-14 row">
-                                        <div class="col-md-12">
-                                            <input type="text" placeholder="Hasil Kain" name="hasil"
-                                                class="form-control" id="hasilMap">
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer container-fluid mt-4">
-                                    <button type="button" class="btn btn-secondary"
-                                        data-dismiss="modal">Kembali</button>
-                                    <button type="button" id="simpanUbahData" class="btn btn-primary">Simpan
-                                        Data</button>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
 @endsection
+
 
 @section('script')
     <script>
         $(document).ready(function() {
-            $("#ukuran, #kode_spp, #warna, #karyawan_1, #karyawan_2, #gaji, #satuan").select2({
-                theme: 'classic',
-            });
+
+            function refreshS2main() {
+                $("#ukuran, [name*='kp_id[]'],[name*='satuan[]'], [name*='karyawan_1[]'], [name*='karyawan_2[]'], [name*='gaji[]']")
+                    .select2({
+                        theme: 'classic',
+                        width: '100%',
+                    })
+            }
+
+            $("#tab_kp").DataTable({
+                "paging": false,
+                "lengthChange": false,
+                "searching": false,
+                "ordering": false,
+                "info": false,
+                "autoWidth": true,
+                "responsive": true,
+                "stateSave": true
+            })
+
+            refreshS2main()
 
             $.ajaxSetup({
                 headers: {
@@ -380,62 +458,160 @@
                 }
             });
 
-            $('#kode_spp').on('change', function(e) {
-                e.preventDefault();
-                let data = $(this).val();
+            var kp_html = $('#form_kain_potongan').html();
+            $(document).on('click', '#add_kain_potongan', function(e) {
+                e.preventDefault()
+
+                var iRow = $('#form_tbody tr:last', tab_kp).index() + 1;
+                var add_kp_row = `<tr id="kp_row_` + iRow + `">
+                                    <td>
+                                        <select name="kp_id[]" class="form-control kp_id">
+                                            <option value="" selected disabled class="text-center">
+                                                Kain Potongan
+                                            </option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="sisa_stok[]" class="form-control sisa_stok" placeholder="Stok"
+                                            readonly>
+                                    </td>
+                                    <td>
+                                        <input type="number" name="kain_potongan_dipakai[]" class="form-control kain_potongan_dipakai"
+                                            placeholder="Quantity Kain Potongan" value="0">
+                                    </td>
+                                    <td>
+                                        <select name="satuan[]" class="form-control satuan">
+                                            <option value="" selected disabled class="text-center">
+                                                Satuan</option>
+                                            <option value="PCS">PCS</option>
+                                            <option value="Kodi">Kodi</option>
+                                            <option value="Lusin">Lusin</option>
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="karyawan_1[]" class="form-control karyawan_1">
+                                            <option value="" disabled selected class="text-center">
+                                                Karyawan
+                                                1
+                                            </option>
+                                            @foreach ($karyawan as $dtKaryawan)
+                                                <option value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}">
+                                                    {{ $dtKaryawan->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="karyawan_2[]" class="form-control karyawan_2">
+                                            <option value="" disabled selected class="text-center">
+                                                Karyawan
+                                                2
+                                            </option>
+                                            @foreach ($karyawan as $dtKaryawan)
+                                                <option value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}">
+                                                    {{ $dtKaryawan->nama }}</option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+                                    <td>
+                                        <select name="gaji[]" class="form-control gaji">
+                                            <option value="" selected disabled class="text-center">
+                                                Gaji</option>
+                                            @foreach ($gaji as $dtGaji)
+                                                <option value="{{ $dtGaji->gaji }}">
+                                                    {{ $dtGaji->gaji }}
+                                                </option>
+                                            @endforeach
+                                        </select>
+                                    </td>
+
+                                    <td>
+                                        <a class='btn btn-danger btn-sm del-row pull-right'>
+                                            <i class='fas fa-times'></i></a>
+                                    </td>
+                                </tr>`
+                $('#form_tbody', tab_kp).append(add_kp_row)
+                getUkuranLastRow($('#ukuran').val())
+                refreshS2main()
+            })
+
+            $(document).on('click', '.del-row', function(e) {
+                e.preventDefault()
+
+                $(this).closest('tr').remove()
+            })
+
+            function getUkuranLastRow(data) {
+                $('#add_kain_potongan').hide()
                 $.ajax({
-                    url: "{{ url('surat-perintah-potong/data') }}/" + data,
+                    @if (Auth::user()->role_id == 1)
+                        url: "{{ url('surat-perintah-kain/artikel') }}/" + data,
+                    @endif
+                    @if (Auth::user()->role_id == 3)
+                        url: "{{ url('warehouse/surat-perintah-kain/artikel') }}/" + data,
+                    @endif
                     // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
                     method: "GET",
                     success: function(res) {
-                        $('#ukuran').empty();
-                        $('#warna').empty();
-                        $('#ukuran').append(
-                            '<option value="" selected disabled class="text-center">Pilih Ukuran</option>'
-                        );
-                        $('#warna').append(
-                            '<option value="" selected disabled class="text-center">Pilih Warna</option>'
-                        );
-                        res.forEach(element => {
-                            let ukuran = '<option value="' + element["ukuran"] + '">' +
-                                element["ukuran"] + '</option>'
-                            let warna = '<option value="' + element["warna"] + '">' +
-                                element["warna"] + '</option>'
-                            $('#ukuran').append(ukuran);
-                            $('#warna').append(warna);
+
+                        let htmlView =
+                            '<option value="" selected disabled class="text-center">Kain Potongan</option>'
+
+                        $.each(res.kp, function(i, data) {
+                            htmlView += '<option value="' + data.id + '|' + data.jenis_kain +
+                                '|' + data.warna + '" class="text-center"> ' + data
+                                .jenis_kain + ' | ' + data.warna + ' </option>'
                         })
+
+                        $('td [name*="kp_id[]"]:last').html(htmlView)
+                        $('#add_kain_potongan').show()
                     }
                 })
-            });
+            }
 
-            $('#ukuran').on('change', function(e) {
+            $(document).on('change', '#ukuran', function(e) {
                 e.preventDefault();
-                let data = $(this).val();
-                let getArtikel = $('#artikel').val();
-
-                if (getArtikel == '') {
-                    $.ajax({
-                        url: "{{ url('surat-perintah-kain/artikel') }}/" + data,
-                        // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
-                        method: "GET",
-                        success: function(res) {
-                            $('#artikel').val(res);
-                        }
-                    })
-                }
-            })
-
-            $('#warna, #kode_spp, #ukuran').on('change', function() {
-                let kode_spp = $('#kode_spp').val();
-                let ukuran = $('#ukuran').val();
-                let warna = $('#warna').val();
+                let data = $('#ukuran').val();
                 $.ajax({
-                    url: "{{ url('surat-perintah-kain/hasil-potongan') }}/" + kode_spp + "/" +
-                        ukuran + "/" + warna,
+                    @if (Auth::user()->role_id == 1)
+                        url: "{{ url('surat-perintah-kain/artikel') }}/" + data,
+                    @endif
+                    @if (Auth::user()->role_id == 3)
+                        url: "{{ url('warehouse/surat-perintah-kain/artikel') }}/" + data,
+                    @endif
+                    // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
                     method: "GET",
                     success: function(res) {
-                        $('#hasil_kain_potongan').val(res.spp.hasilspp);
-                        $('#sisa_stok').val(res.hasil.stok)
+
+                        $('#artikel').val(res.artikel);
+
+                        let htmlView =
+                            '<option value="" selected disabled class="text-center">Kain Potongan</option>'
+
+                        $.each(res.kp, function(i, data) {
+                            htmlView += '<option value="' + data.id + '|' + data
+                                .jenis_kain +
+                                '|' + data.warna + '" class="text-center"> ' + data
+                                .jenis_kain + ' | ' + data.warna + ' </option>'
+                        })
+
+                        $('td [name*="kp_id[]"]').html(htmlView)
+                    }
+                })
+            })
+
+            $(document).on('change', '.kp_id', function() {
+                let kp_id = $(this).val();
+                let $this = $(this).closest('tr')
+                $.ajax({
+                    @if (Auth::user()->role_id == 1)
+                        url: "{{ url('surat-perintah-kain/hasil-potongan') }}/" + kp_id,
+                    @endif
+                    @if (Auth::user()->role_id == 3)
+                        url: "{{ url('warehouse/surat-perintah-kain/hasil-potongan') }}/" + kp_id,
+                    @endif
+                    method: "GET",
+                    success: function(res) {
+                        $this.find('td .sisa_stok').val(res.stok)
                     }
                 })
             })
@@ -443,7 +619,7 @@
             $('#gambar').change(event => {
                 if (event.target.files) {
                     let filesAmount = event.target.files.length;
-                    $('.upload-img2').html("");
+                    $('.upload-img').html("");
 
                     for (let i = 0; i < filesAmount; i++) {
                         let reader = new FileReader();
@@ -453,7 +629,7 @@
                                     <img src = "${event.target.result}" width="600" class="text-center">
                                 </div>
                             `;
-                            $(".upload-img2").append(html);
+                            $(".upload-img").append(html);
                         }
                         reader.readAsDataURL(event.target.files[i]);
                     }
@@ -463,6 +639,55 @@
                 }
             });
         });
+        
+        var Notif = Swal.mixin({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 2000,
+            timerProgressBar: true,
+        })
+
+        // hapus detail data
+        function deleteData(id) {
+            Swal.fire({
+                title: "Apakah anda yakin hapus detail data ini?",
+                icon: "warning",
+                showCancelButton: true,
+                confirmButtonText: "Ya, Hapus!",
+                cancelButtonText: "Tidak",
+            })
+            .then((result) => {
+                if (result.isConfirmed) {
+                    @if(Auth::user()->role_id == 1)
+                    var _url = "{{ route('spk.deleteDetail', ':id') }}";
+                    @else
+                    var _url = "{{ route('spk.deleteDetail', ':id') }}";
+                    @endif
+                    _url = _url.replace(':id', id)
+                    var _token = $('meta[name="csrf-token"]').attr('content');
+                    $.ajax({
+                        url: _url,
+                        type: 'DELETE',
+                        data: {
+                            _token: _token
+                        },
+                        success: function(res) {
+                            Notif.fire({
+                                icon: 'success',
+                                title: res.message,
+                            })
+                            setTimeout(() => {
+                                window.location.reload()
+                            }, 500);
+                        },
+                        error: function(err) {
+                            console.log(err);
+                        }
+                    })
+                }
+            });
+        }
     </script>
     <script>
         $(document).ready(function() {
@@ -477,67 +702,71 @@
                 "stateSave": true
             };
 
-            var data = @json($spk_all);
-            dataInsert(data);
+            var data = [];
 
             // Simpan
             $('#btn-tambah').on('click', function() {
                 let karyawan = [];
-                let karyawan_id = [];
-                let id = $('#id-data').val();
+                let spk_data = [];
                 let kode_spk = $('#kode_spk').val();
-                let hasil_potongan = $('#hasil_kain_potongan').val();
-                let stok = $('#sisa_stok').val();
-                let jumlah_kain = $('#hasil').val();
                 let artikel = $('#artikel').val();
-                let kode_spp = $('#kode_spp').val();
                 let ukuran = $('#ukuran').val();
                 let tanggal = $('#tanggal').val();
-                let warna = $('#warna').val();
-                let warnaUkuran = warna + " | " + ukuran;
-                let satuan = $('#satuan').val();
-                let kain_potongan_dipakai = $('#kain_potongan_dipakai').val();
-                let hasil = $('#hasil').val();
-                let hasilSatuan = hasil + " | " + satuan;
-                let k1 = $('#karyawan_1').val();
-                let k2 = $('#karyawan_2').val();
-                let namak1 = (k1 != null) ? k1.split('-')[1] : ''
-                let namak2 = (k2 != null) ? k2.split('-')[1] : ''
-                let u1 = (k1 != null) ? k1.split('-')[0] : ''
-                let u2 = (k2 != null) ? k2.split('-')[0] : ''
-                let gaji = $('#gaji').val();
-                (namak1 !== '' && namak2 !== '') ? karyawan.push(namak1, namak2): karyawan.push(namak1)
-                karyawan_id = [u1, u2];
+                let kp_id = $('[name*="kp_id[]"]')
+                    .map(function() {
+                        return $(this).val();
+                    }).get();
+                // let warnaUkuran = warna + " | " + ukuran;
+
+                let satuan = $('[name*="satuan[]"]')
+                    .map(function() {
+                        return $(this).val();
+                    }).get();
+                let kain_potongan_dipakai = $('[name*="kain_potongan_dipakai[]"]')
+                    .map(function() {
+                        return $(this).val();
+                    }).get();
+                // let hasilSatuan = hasil + " | " + satuan;
+                let k1 = $('[name*="karyawan_1[]"]')
+                    .map(function() {
+                        return $(this).val();
+                    }).get();
+                let k2 = $('[name*="karyawan_2[]"]')
+                    .map(function() {
+                        return $(this).val();
+                    }).get();
+                let gaji = $('[name*="gaji[]"]')
+                    .map(function() {
+                        return $(this).val();
+                    }).get();
 
                 try {
-                    if (warna !== null && warna !== '' && satuan !== null && satuan !== '' && ukuran !==
+                    if (kp_id !== null && kp_id !== '' && satuan !== null && satuan !== '' && ukuran !==
                         null && ukuran !== '' && kode_spk !== null && kode_spk !== '' && k1 !== null &&
                         k1 !== '' && gaji !== null && gaji !== '' && k1 !== k2) {
-                        data.push({
-                            uuid: uuid(),
-                            id: id,
-                            kode_spk: kode_spk,
-                            hasil_potongan: hasil_potongan,
-                            stok: stok,
-                            jumlah_kain: jumlah_kain,
-                            artikel: artikel,
-                            kode_spp: kode_spp,
-                            ukuran: ukuran,
-                            tanggal: tanggal,
-                            warna: warna,
-                            satuan: satuan,
-                            kain_potongan_dipakai: kain_potongan_dipakai,
-                            hasil: hasil,
-                            k1: k1,
-                            k2: k2,
-                            u1: u1,
-                            u2: u2,
-                            karyawan: karyawan,
-                            karyawan_id: karyawan_id,
-                            gaji: gaji,
-                            warnaUkuran: warnaUkuran,
-                            hasilSatuan: hasilSatuan
-                        })
+                        let uuidmake = uuid();
+                        for (let i = 0; i < kp_id.length; i++) {
+                            data.push({
+                                "uuid": uuidmake,
+                                "kode_spk": kode_spk,
+                                "artikel": artikel,
+                                "ukuran": ukuran,
+                                "tanggal": tanggal,
+                                "kp_id": kp_id[i].split('|')[0],
+                                "jenis_kain": kp_id[i].split('|')[1],
+                                "warna": kp_id[i].split('|')[2],
+                                "quantity": kain_potongan_dipakai[i],
+                                "satuan": satuan[i],
+                                "quantity_satuan": kain_potongan_dipakai[i] + '|' + satuan[i],
+                                "karyawan": [k1[i].split('-')[0], k2[i].split('-')[0]],
+                                "nama_karyawan": [k1[i].split('-')[1], k2[i].split('-')[1]],
+                                "gaji": gaji[i]
+                            })
+                        }
+
+                        // data.push({
+                        //     spk_data: spk_data
+                        // })
                         console.log(data)
 
                         dataInsert(data);
@@ -549,7 +778,7 @@
                             'success'
                         )
                     } else {
-                        if (k1 === k2 && k1 !== null && k2 !== null) {
+                        if (k1 !== null && k2 !== null) {
                             Swal.fire(
                                 'GAGAL!',
                                 'Karyawan 1 dan Karyawan 2 Tidak Boleh Sama!',
@@ -567,60 +796,49 @@
                     Swal.fire(
                         'Gagal!',
                         'Error: ' + error,
-                        'success'
+                        'error'
                     )
                 }
-
             })
 
             function dataInsert(datas) {
                 extensionList = $('#tabel_insert').DataTable({
                     data: datas,
+                    columnDefs: [{
+                        targets: '_all',
+                        className: 'middleText'
+                    }],
                     columns: [{
                             data: 'kode_spk',
                             name: 'kode_spk'
-                        },
-                        {
-                            data: 'artikel',
-                            name: 'artikel'
                         },
                         {
                             data: 'tanggal',
                             name: 'tanggal'
                         },
                         {
-                            data: 'kode_spp',
-                            name: 'kode_spp'
+                            data: 'artikel',
+                            name: 'artikel'
                         },
                         {
-                            data: 'warnaUkuran',
-                            name: 'warnaUkuran',
+                            data: 'ukuran',
+                            name: 'ukuran'
                         },
                         {
-                            data: 'kain_potongan_dipakai',
-                            name: 'kain_potongan_dipakai',
+                            data: 'jenis_kain',
+                            name: 'jenis_kain',
                         },
                         {
-                            data: 'hasilSatuan',
-                            name: 'hasilSatuan',
+                            data: 'warna',
+                            name: 'warna',
                         },
                         {
-                            data: 'karyawan',
-                            name: 'karyawan',
-                            render: function(data) {
-                                if (data.includes('[')) {
-                                    data = data.replace('[', '')
-                                    data = data.replace('"', '')
-                                    data = data.replace('"', '')
-                                    data = data.replace(', ', ',')
-                                    data = data.replace('"', '')
-                                    data = data.replace('"', '')
-                                    data = data.replace(']', '')
-                                    return data
-                                } else {
-                                    return data
-                                }
-                            }
+                            data: 'quantity_satuan',
+                            name: 'quantity_satuan',
+                        },
+                        {
+                            data: 'nama_karyawan',
+                            name: 'nama_karyawan',
                         },
                         {
                             data: 'gaji',
@@ -646,6 +864,41 @@
                     bDestroy: true,
                     order: [],
                 })
+                MergeGridCells()
+            }
+
+            function MergeGridCells() {
+                var dimension_cells = new Array();
+                var dimension_col = null;
+                var columnCount = $("#tabel_insert tr:first th").length;
+                for (dimension_col = 0; dimension_col <= columnCount; dimension_col++) {
+                    // first_instance holds the first instance of identical td
+                    var first_instance = null;
+                    var rowspan = 1;
+                    // iterate through rows
+                    $("#tabel_insert").find('tr').each(function() {
+
+                        // find the td of the correct column (determined by the dimension_col set above)
+                        var dimension_td = $(this).find('td:nth-child(' + dimension_col + ')');
+
+                        if (first_instance === null) {
+                            // must be the first row
+                            first_instance = dimension_td;
+                        } else if (dimension_td.text() === first_instance.text() && dimension_col < 5) {
+                            // the current td is identical to the previous
+                            // remove the current td
+                            // dimension_td.remove();
+                            dimension_td.attr('hidden', true);
+                            ++rowspan;
+                            // increment the rowspan attribute of the first instance
+                            first_instance.attr('rowspan', rowspan);
+                        } else {
+                            // this cell is different from the last
+                            first_instance = dimension_td;
+                            rowspan = 1;
+                        }
+                    });
+                }
             }
 
             // Hapus List
@@ -660,70 +913,17 @@
                     })
                     .then((result) => {
                         if (result.isConfirmed) {
-                            var _url = "{{ route('spk.deleteDetail', 'uuid') }}";
-                            _url = _url.replace('uuid', uuid)
-                            var _token = $('meta[name="csrf-token"]').attr('content');
-                            $.ajax({
-                                url: _url,
-                                type: 'DELETE',
-                                data: {
-                                    _token: _token
-                                },
-                                success: function(res) {
-                                    if (res.code == 200) {
-                                        check = data.findIndex(e => e['uuid'] === uuid)
-                                        if (check !== -1) {
-                                            data.splice(check, 1)
-                                            dataInsert(data);
-                                            Notif.fire({
-                                                icon: 'success',
-                                                title: res.message,
-                                            })
-                                        }
-                                    }
-
-
-
-                                    if (res.code == 500) {
-                                        check = data.findIndex(e => e['uuid'] === uuid)
-                                        if (check !== -1) {
-                                            data.splice(check, 1)
-                                            dataInsert(data);
-                                            Swal.fire(
-                                                'Berhasil!',
-                                                'Berhasil Hapus Data!',
-                                                'warning'
-                                            )
-                                        } else {
-                                            Notif.fire({
-                                                icon: 'error',
-                                                title: 'Gagal Menyimpan Data Gaji',
-                                                text: 'Server Error!'
-                                            });
-                                        }
-
-                                    }
-                                },
-                                error: function(err) {
-                                    check = data.findIndex(e => e['uuid'] === uuid)
-                                    if (check !== -1) {
-                                        data.splice(check, 1)
-                                        dataInsert(data);
-                                        Swal.fire(
-                                            'Berhasil!',
-                                            'Berhasil Hapus Data!',
-                                            'warning'
-                                        )
-                                    } else {
-                                        Notif.fire({
-                                            icon: 'error',
-                                            title: 'Gagal Menyimpan Data Gaji',
-                                            text: 'Server Error!'
-                                        });
-                                    }
-                                }
-                            })
-
+                            check = data.findIndex(e => e['uuid'] === uuid)
+                            console.log(check)
+                            if (check !== -1) {
+                                data.splice(check, 1)
+                            }
+                            dataInsert(data);
+                            Swal.fire(
+                                'Berhasil!',
+                                'Berhasil Hapus Data!',
+                                'warning'
+                            )
                         }
                     });
             })
@@ -731,80 +931,34 @@
             // clear input
             function clearForm() {
                 $('[name="ukuran"]').val('').trigger('change.select2');
-                $('#kode_spp').val('').trigger('change.select2');
-                $('[name="ukuran" ]').val('').trigger('change.select2');
-                $('[name="warna" ]').val('').trigger('change.select2');
-                $('[name="satuan" ]').val('').trigger('change.select2');
-                $('[name="hasil_kain_potongan"]').val('');
                 $('[name="artikel"]').val('');
-                $('[name="sisa_stok"]').val('');
-                $('[name="kain_potongan_dipakai"]').val('0');
-                $('[name="hasil"]').val('0');
-                $('[name="hasil"]').val('0');
-                $('[name="karyawan_1"]').val('').trigger('change.select2');
-                $('[name="karyawan_2"]').val('').trigger('change.select2');
-                $('[name="gaji"]').val('').trigger('change.select2');
+                $('[name*="kp_id" ]').val('').trigger('change.select2');
+                $('[name*="satuan" ]').val('').trigger('change.select2');
+                $('[name*="sisa_stok"]').val('');
+                $('[name*="kain_potongan_dipakai"]').val('0');
+                $('[name*="karyawan_1"]').val('').trigger('change.select2');
+                $('[name*="karyawan_2"]').val('').trigger('change.select2');
+                $('[name*="gaji"]').val('').trigger('change.select2');
             }
 
             // edit data table
             $('#tabel_insert').on('click', '#edit-data', function() {
                 let uuid = $(this).data('uuid');
                 let dt_detail = data.find(dt => dt.uuid === uuid)
-                console.log(dt_detail);
-
-                $('#id-data').val(dt_detail.id);
-                $('#artikel').val(dt_detail.artikel);
-                $('#kode_spp').val(dt_detail.kode_spp).change();
+                $('#ukuran').val(dt_detail.ukuran).change();
                 $('#tanggal').val(dt_detail.tanggal);
-                $('#sisa_stok').val(dt_detail.stok);
-                $('#hasil_kain_potongan').val(dt_detail.hasil_potongan);
-                $('#kain_potongan_dipakai').val(dt_detail.kain_potongan_dipakai);
-                $('#hasil').val(dt_detail.jumlah_kain);
+                $('#kode_lot').val(dt_detail.kode_lot).change();
+                $('#warna').val(dt_detail.warna);
+                $('#berat').val(dt_detail.berat);
+                $('#hasil').val(dt_detail.hasil);
                 $('#gaji').val(dt_detail.gaji).change();
-                $('#satuan').val(dt_detail.satuan).change();
-
-                try {
-                    let karyawan = JSON.parse(dt_detail.karyawan)
-                    let k_id = JSON.parse(dt_detail.karyawan_id)
-                    // console.log(k_id)
-                    $('#karyawan_1').val(k_id[0] + '-' + karyawan[0]).change();
-                    $('#karyawan_2').val(k_id[1] + '-' + karyawan[1]).change();
-                } catch (error) {
-                    $('#karyawan_1').val(dt_detail.k1).change();
-                    $('#karyawan_2').val(dt_detail.k2).change();
-                }
+                $('#karyawan_1').val(dt_detail.k1).change();
+                $('#karyawan_2').val(dt_detail.k2).change();
 
                 let check = data.findIndex(e => e['uuid'] === uuid)
                 if (check !== -1) {
                     data.splice(check, 1)
                 }
-
-                $.ajax({
-                    url: "{{ url('surat-perintah-potong/data') }}/" + dt_detail.kode_spp,
-                    // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
-                    method: "GET",
-                    success: function(res) {
-                        $('#ukuran').empty();
-                        $('#warna').empty();
-                        $('#ukuran').append(
-                            '<option value="" selected disabled class="text-center">Pilih Ukuran</option>'
-                        );
-                        $('#warna').append(
-                            '<option value="" selected disabled class="text-center">Pilih Warna</option>'
-                        );
-                        res.forEach(element => {
-                            let ukuran = '<option value="' + element["ukuran"] + '">' +
-                                element["ukuran"] + '</option>'
-                            let warna = '<option value="' + element["warna"] + '">' +
-                                element["warna"] + '</option>'
-                            $('#ukuran').append(ukuran);
-                            $('#warna').append(warna);
-                        })
-                        $('#ukuran').val(dt_detail.ukuran).change();
-                        $('#warna').val(dt_detail.warna).change();
-                    }
-                })
-
                 dataInsert(data);
             })
 
@@ -822,12 +976,18 @@
                         if (result.isConfirmed) {
                             $.ajaxSetup({
                                 headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                        'content')
                                 }
                             });
 
                             $.ajax({
-                                url: "{{ route('spk.update') }}",
+                                @if (Auth::user()->role_id == 1)
+                                    url: "{{ route('spk.store') }}",
+                                @endif
+                                @if (Auth::user()->role_id == 3)
+                                    url: "{{ route('w.spk.store') }}",
+                                @endif
                                 method: "POST",
                                 data: {
                                     'data': data,
@@ -841,11 +1001,13 @@
                                             'success'
                                         )
                                         data = [];
+                                        $('#btn-tambah').attr('disabled', true);
+                                        $('#btn-save-data').attr('disabled', true);
                                     }
                                     if (res.code === 400) {
                                         Swal.fire(
                                             'Gagal!',
-                                            res.message + ' LOT: ' + res.kode_lot,
+                                            res.message + ' ID: ' + res.ID,
                                             'error'
                                         )
                                     }
@@ -897,12 +1059,18 @@
 
                             $.ajaxSetup({
                                 headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                        'content')
                                 }
                             });
 
                             $.ajax({
-                                url: "{{ route('spk.storeGambar') }}",
+                                @if (Auth::user()->role_id == 1)
+                                    url: "{{ route('spk.storeGambar') }}",
+                                @endif
+                                @if (Auth::user()->role_id == 3)
+                                    url: "{{ route('w.spk.storeGambar') }}",
+                                @endif
                                 method: "POST",
                                 data: formData,
                                 processData: false,
@@ -924,11 +1092,12 @@
                                     if (res.code === 400) {
                                         Swal.fire(
                                             'Gagal!',
-                                            'Gambar Harus Diisi!',
+                                            res.message + ' LOT: ' + res.kode_lot,
                                             'error'
                                         )
                                     }
                                     if (res.code === 500) {
+                                        console.log(res.error)
                                         Swal.fire(
                                             'Gagal!',
                                             'Server Error!',
@@ -937,6 +1106,7 @@
                                     }
                                 },
                                 error: function(err) {
+                                    console.log(err);
                                     Swal.fire(
                                         'Gagal!',
                                         'Server Error!',
@@ -946,6 +1116,109 @@
                             })
                         }
                     })
+            })
+
+            // simpan detail data
+            $('#btn-simpan-edit').on('click', function(){
+                Swal.fire({
+                        title: "Apakah anda yakin untuk simpan detail data ini?",
+                        icon: "warning",
+                        showCancelButton: true,
+                        confirmButtonText: "Ya, Simpan!",
+                        cancelButtonText: "Tidak",
+                    })
+                .then((result) => {
+                    let ide = $('[name*="idDetail[]"]').map(function() {
+                            return $(this).val();
+                        }).get();
+                    let kp_ide = $('[name*="kp_ide[]"]').map(function() {
+                            return $(this).val();
+                        }).get();
+                    let quantitye = $('[name*="kain_potongan_dipakaie[]"]').map(function() {
+                            return $(this).val();
+                        }).get();
+                    let satuane = $('[name*="satuane[]"]').map(function() {
+                            return $(this).val();
+                        }).get();
+                    let k1e = $('[name*="karyawan_1e[]"]').map(function() {
+                            return $(this).val();
+                        }).get();
+                    let k2e = $('[name*="karyawan_2e[]"]').map(function() {
+                            return $(this).val();
+                        }).get();
+                    let gajie = $('[name*="gajie[]"]').map(function() {
+                            return $(this).val();
+                        }).get();
+
+                    let dataEdit = [];
+
+                    for (let j = 0; j < ide.length; j++) {
+                        dataEdit.push({
+                            "ide": ide[j],
+                            "kp_ide": kp_ide[j],
+                            "quantitye": quantitye[j],
+                            "satuane": satuane[j],
+                            "k1e": k1e[j],
+                            "k2e": k2e[j],
+                            "gajie": gajie[j]
+                        })
+                    }
+
+                    if (result.isConfirmed) {
+                        $.ajaxSetup({
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                    'content')
+                            }
+                        });
+
+                        $.ajax({
+                            @if (Auth::user()->role_id == 1)
+                                url: "{{ route('spk.updateDetail') }}",
+                            @endif
+                            @if (Auth::user()->role_id == 3)
+                                url: "{{ route('w.spk.updateDetail') }}",
+                            @endif
+                            method: "POST",
+                            data: {
+                                'data': dataEdit,
+                                'notes': $('#note').val()
+                            },
+                            success: function(res) {
+                                if (res.code === 200) {
+                                    Swal.fire(
+                                        'Berhasil!',
+                                        'Berhasil Simpan Data! Silahkan Upload Gambar/Tambah Data!',
+                                        'success'
+                                    )
+                                }
+                                if (res.code === 400) {
+                                    Swal.fire(
+                                        'Gagal!',
+                                        res.message + ' ID: ' + res.ID,
+                                        'error'
+                                    )
+                                }
+                                if (res.code === 500) {
+                                    console.log(res.error)
+                                    Swal.fire(
+                                        'Gagal!',
+                                        'Server Error!',
+                                        'error'
+                                    )
+                                }
+                            },
+                            error: function(err) {
+                                console.log(err);
+                                Swal.fire(
+                                    'Gagal!',
+                                    'Server Error!',
+                                    'error'
+                                )
+                            }
+                        })
+                    }
+                });
             })
 
             // hapus gambar

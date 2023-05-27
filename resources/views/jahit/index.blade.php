@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Surat Perintah Kain')
+@section('title', 'Jahit')
 
 @section('content')
     <!-- Content Wrapper. Contains page content -->
@@ -9,12 +9,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Surat Perintah Kain</h1>
+                        <h1 class="m-0">Surat Jahit</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Home</a></li>
-                            <li class="breadcrumb-item active">Surat Perintah Kain</li>
+                            <li class="breadcrumb-item active">Surat Jahit</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -31,14 +31,14 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title">Data Surat Perintah Kain</h5>
+                                <h5 class="card-title">Data Surat Jahit</h5>
 
                                 <div class="card-tools">
                                     @if(Auth::user()->role_id == 1)
-                                    <a href="{{ route('spk.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
+                                    <a href="{{ route('jahit.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
                                     @endif
                                     @if(Auth::user()->role_id == 3)
-                                    <a href="{{ route('w.spk.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
+                                    <a href="{{ route('w.jahit.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
                                     @endif
                                 </div>
                             </div>
@@ -51,8 +51,8 @@
                                         <thead>
                                             <tr>
                                                 <th width="5%" style="text-align: center;">ID</th>
-                                                <th>Kode SPK</th>
-                                                <th>Total Perintah Potongan</th>
+                                                <th>Kode Jahit</th>
+                                                <th>Total Perintah Jahit</th>
                                                 <th>Tanggal</th>
                                                 <th>Status Surat</th>
                                                 <th width="10%">Aksi</th>
@@ -114,11 +114,6 @@
                     className: "btn btn-outline-primary",
                     extend: 'print'
                 },
-                // {
-                //     text: "<i class='fas fa-cog' title='Coloum Visible Option'></i>",
-                //     className: "btn btn-outline-info",
-                //     extend: 'colvis'
-                // }
             ]
         };
 
@@ -136,10 +131,10 @@
             var htmlview
             $.ajax({
                 @if(Auth::user()->role_id == 1)
-                url: "{{ route('spk.data') }}",
+                url: "{{ route('jahit.data') }}",
                 @endif
                 @if(Auth::user()->role_id == 3)
-                url: "{{ route('w.spk.data') }}",
+                url: "{{ route('w.jahit.data') }}",
                 @endif
                 type: 'GET',
                 success: function(res) {
@@ -148,20 +143,20 @@
                     $.each(res, function(i, data) {
                         htmlview += `<tr>
                         <td style="text-align: center;">` + (no = no+1) + `</td>
-                        <td>` + data.kode_spk + `</td>
+                        <td>` + data.kode_jahit + `</td>
                         <td>` + data.total + `</td>
                         <td>` + data.tanggal + `</td>
                         `;
                         if(data.status == 'Belum Konfirmasi'){
                             htmlview += `<td>
-                                <button class="btn btn-danger btn-sm" title="Confirm Data!" onClick="confirmSPK('` + data
-                                .kode_spk + `')"> Belum Konfirmasi </button></td>
+                                <button class="btn btn-danger btn-sm" title="Confirm Data!" onClick="confirmJahit('` + data
+                                .kode_jahit + `')"> Belum Konfirmasi </button></td>
                             `;
                         }
                         if(data.status == 'Sedang Dikerjakan'){
                             htmlview += `<td>
-                                <button class="btn btn-warning btn-sm" title="Finish Data!" onClick="finishedSPK('` + data
-                                .kode_spk + `')"> Sedang Dikerjakan </button></td>
+                                <button class="btn btn-warning btn-sm" title="Finish Data!" onClick="finishedJahit('` + data
+                                .kode_jahit + `')"> Sedang Dikerjakan </button></td>
                             `;
                         }
                         if(data.status == 'Selesai Dikerjakan'){
@@ -172,8 +167,8 @@
                         htmlview +=`<td>
                           <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-kain/edit-data/`+data.uuid+`"> <i class="fas fa-pencil-alt"></i>
                           </a>
-                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPK('` + data
-                            .kode_spk + `')"> <i class="fas fa-trash"></i>
+                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteJahit('` + data
+                            .kode_jahit + `')"> <i class="fas fa-trash"></i>
                           </button>
                         </td>
                        </tr>`
@@ -186,7 +181,7 @@
             })
         }
 
-        function deleteSPK(kode_spk) {
+        function deleteSPK(kode_jahit) {
             Swal.fire({
                     title: "Apakah anda yakin hapus data ini?",
                     icon: "warning",
@@ -197,12 +192,12 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         @if(Auth::user()->role_id == 1)
-                        var _url = "{{ route('spk.delete', 'kode_spk') }}";
+                        var _url = "{{ route('jahit.delete', 'kode_jahit') }}";
                         @endif
                         @if(Auth::user()->role_id == 3)
-                        var _url = "{{ route('w.spk.delete', 'kode_spk') }}";
+                        var _url = "{{ route('w.jahit.delete', 'kode_jahit') }}";
                         @endif
-                        _url = _url.replace('kode_spk', kode_spk)
+                        _url = _url.replace('kode_jahit', kode_jahit)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,
@@ -235,7 +230,7 @@
                 });
         }
 
-        function confirmSPK(kode_spk) {
+        function confirmSPK(kode_jahit) {
             Swal.fire({
                     title: "Apakah anda yakin konfirmasi data ini?",
                     icon: "warning",
@@ -246,12 +241,12 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         @if(Auth::user()->role_id == 1)
-                        var _url = "{{ route('spk.confirm', 'kode_spk') }}";
+                        var _url = "{{ route('jahit.confirm', 'kode_jahit') }}";
                         @endif
                         @if(Auth::user()->role_id == 3)
-                        var _url = "{{ route('w.spk.confirm', 'kode_spk') }}";
+                        var _url = "{{ route('w.jahit.confirm', 'kode_jahit') }}";
                         @endif
-                        _url = _url.replace('kode_spk', kode_spk)
+                        _url = _url.replace('kode_jahit', kode_jahit)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,
@@ -284,7 +279,7 @@
                 });
         }
 
-        function finishedSPK(kode_spk) {
+        function finishedSPK(kode_jahit) {
             Swal.fire({
                     title: "Apakah anda yakin konfirmasi selesai data ini?",
                     icon: "warning",
@@ -295,12 +290,12 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         @if(Auth::user()->role_id == 1)
-                        var _url = "{{ route('spk.finished', 'kode_spk') }}";
+                        var _url = "{{ route('jahit.finished', 'kode_jahit') }}";
                         @endif
                         @if(Auth::user()->role_id == 3)
-                        var _url = "{{ route('w.spk.finished', 'kode_spk') }}";
+                        var _url = "{{ route('w.jahit.finished', 'kode_jahit') }}";
                         @endif
-                        _url = _url.replace('kode_spk', kode_spk)
+                        _url = _url.replace('kode_jahit', kode_jahit)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,

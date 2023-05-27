@@ -10,7 +10,7 @@ class SPK extends Model
     use HasFactory;
     protected $table = 't_spks';
     protected $fillable = [
-        'uuid', 'spp_id', 'kode_spk', 'kain_potongan_id', 'artikel', 'karyawan_id', 'karyawan', 'jumlah_kain', 'satuan', 'ukuran', 'gaji', 'status', 'note'
+        'uuid', 'id','kode_spk', 'artikel', 'tanggal', 'status', 'note'
     ];
 
     public function karyawans()
@@ -26,5 +26,10 @@ class SPK extends Model
     public function spp()
     {
         return $this->belongsToMany(SPP::class, 'karyawan_id');
+    }
+
+    public function spk_detail()
+    {
+        return $this->belongsTo(SPKDetail::class, 't_spk_id');
     }
 }

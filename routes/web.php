@@ -6,12 +6,15 @@ use App\Http\Controllers\KainPotonganController;
 use App\Http\Controllers\KainRollController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\FilmSablonController;
 use App\Http\Controllers\GajiController;
+use App\Http\Controllers\JahitController;
 use App\Http\Controllers\PemasukkanController;
 use App\Http\Controllers\PengeluaranController;
 use App\Http\Controllers\PerlengkapanController;
 use App\Http\Controllers\SPKController;
 use App\Http\Controllers\SPPController;
+use App\Http\Controllers\TransaksiGajiController;
 use App\Http\Controllers\UkuranController;
 use Illuminate\Support\Facades\Route;
 
@@ -110,6 +113,12 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::delete('{uuid}', [AsetController::class, 'deleteData'])->name('aset.delete');
         });
 
+        // Route Film Sablon
+        Route::group(['prefix' => 'Film-Sablon'], function(){
+            Route::get('/', [FilmSablonController::class, 'index'])->name('filmSablon');
+            Route::get('/get-data', [FilmSablonController::class, 'indexData'])->name('filmSablon.Data');
+        });
+
         // Route SPP
         Route::group(['prefix' => 'surat-perintah-potong'], function () {
             Route::get('', [SPPController::class, 'index'])->name('spp');
@@ -152,6 +161,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // edit
             Route::get('edit-data/{uuid}', [SPKController::class, 'edit'])->name('spk.edit');
             Route::post('edit-data', [SPKController::class, 'update'])->name('spk.update');
+            Route::post('edit-detail', [SPKController::class, 'updateDetail'])->name('spk.updateDetail');
             // delete detail
             Route::delete('detail-data/delete/{id}', [SPKController::class, 'deleteInsertorEdit'])->name('spk.deleteInsertEdit');
             // delete spk
@@ -159,11 +169,35 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // delete gambar
             Route::delete('delete-gambar-spk/{uuid}', [SPKController::class, 'destroyImage'])->name('spk.deleteImage');
             // delete detail SPK
-            Route::delete('delete-detail-spk/{uuid}', [SPKController::class, 'destroyDetail'])->name('spk.deleteDetail');
+            Route::delete('delete-detail-spk/{id}', [SPKController::class, 'destroyDetail'])->name('spk.deleteDetail');
 
             // Confirm & Finishing
             Route::put('confirm-work/{kode_spk}', [SPKController::class, 'confirm'])->name('spk.confirm');
             Route::put('finished-work/{kode_spk}', [SPKController::class, 'finished'])->name('spk.finished');
+        });
+
+        // Route Jahit
+        Route::group(['prefix' => 'Jahit'], function(){
+            // get artikel spk
+            Route::get('getArtikelFromSPK/{kode_spk}', [JahitController::class, 'getArtikelFromSPK'])->name('getArtikelSpk');
+            Route::get('getQuantityArtikel/{id}', [JahitController::class, 'getQuantityArtikel'])->name('getQuantityArtikel');
+            // index
+            Route::get('', [JahitController::class, 'index'])->name('jahit');
+            Route::get('data', [JahitController::class, 'indexData'])->name('jahit.data');
+            // create
+            Route::get('tambah-data', [JahitController::class, 'insert'])->name('jahit.insert');
+            Route::post('tambah-data', [JahitController::class, 'store'])->name('jahit.store');
+            // edit
+            Route::get('edit-data/{uuid}', [JahitController::class, 'edit'])->name('jahit.edit');
+            Route::post('edit-data', [JahitController::class, 'update'])->name('jahit.update');
+            Route::post('edit-detail', [JahitController::class, 'updateDetail'])->name('jahit.updateDetail');
+            // delete detail
+            Route::delete('detail-data/delete/{id}', [JahitController::class, 'deleteInsertorEdit'])->name('jahit.deleteInsertEdit');
+            // delete jahit
+            Route::delete('delete/{kode_jahit}', [JahitController::class, 'destroy'])->name('jahit.delete'); 
+            // Confirm & Finishing
+            Route::put('confirm-work/{kode_jahit}', [JahitController::class, 'confirm'])->name('jahit.confirm');
+            Route::put('finished-work/{kode_jahit}', [JahitController::class, 'finished'])->name('jahit.finished');
         });
 
         // Route Pemasukkan
@@ -178,6 +212,8 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // edit
             Route::get('edit-data/{uuid}',  [PemasukkanController::class, 'edit'])->name('pemasukkan.edit');
             Route::post('edit-data',  [PemasukkanController::class, 'update'])->name('pemasukkan.update');
+            // confirm
+            Route::put('konfirmasi-data/{kode_pemasukkan}',  [PemasukkanController::class, 'confirmData'])->name('pemasukkan.konfirmasi');
             // delete
             Route::delete('delete/{uuid}', [PemasukkanController::class, 'destroy'])->name('pemasukkan.delete');
             Route::delete('delete-detail/{uuid}', [PemasukkanController::class, 'destroyDetail'])->name('pemasukkan.deleteDetail');
@@ -198,6 +234,13 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // delete
             Route::delete('delete/{uuid}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.delete');
             Route::delete('delete-detail/{uuid}', [PengeluaranController::class, 'destroyDetail'])->name('pengeluaran.deleteDetail');
+        });
+
+        // Route Transaksi Gaji
+        Route::group(['prefix' => 'pengeluaran-gaji'], function(){
+            Route::get('', [TransaksiGajiController::class, 'index'])->name('tgaji');
+            Route::get('data', [TransaksiGajiController::class, 'indexData'])->name('tgaji.data');
+            Route::post('', [TransaksiGajiController::class, 'indexData'])->name('tgaji.searchData');
         });
     });
 
@@ -315,6 +358,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // edit
             Route::get('edit-data/{uuid}', [SPKController::class, 'edit'])->name('w.spk.edit');
             Route::post('edit-data', [SPKController::class, 'update'])->name('w.spk.update');
+            Route::post('edit-detail', [SPKController::class, 'updateDetail'])->name('w.spk.updateDetail');
             // delete detail
             Route::delete('detail-data/delete/{id}', [SPKController::class, 'deleteInsertorEdit'])->name('w.spk.deleteInsertEdit');
             // delete spk
@@ -322,7 +366,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // delete gambar
             Route::delete('delete-gambar-spk/{uuid}', [SPKController::class, 'destroyImage'])->name('w.spk.deleteImage');
             // delete detail SPK
-            Route::delete('delete-detail-spk/{uuid}', [SPKController::class, 'destroyDetail'])->name('w.spk.deleteDetail');
+            Route::delete('delete-detail-spk/{id}', [SPKController::class, 'destroyDetail'])->name('w.spk.deleteDetail');
 
             // Confirm & Finishing
             Route::put('confirm-work/{kode_spk}', [SPKController::class, 'confirm'])->name('w.spk.confirm');
