@@ -40,7 +40,8 @@
                             </div>
                             <div class="row">
                                 <div class="col-md-12">
-                                    <form action="#" method="POST" enctype="multipart/form-data" id="formDataDetailSPK">
+                                    <form action="#" method="POST" enctype="multipart/form-data"
+                                        id="formDataDetailSPK">
                                         <div class="card-body">
                                             <div>
                                                 <h5>Detail Edit Data SPK</h5>
@@ -61,81 +62,103 @@
                                                             </tr>
                                                         </thead>
                                                         <tbody>
-                                                            @foreach($spkDetail as $dt)
-                                                            <?php $karyawanDetail = json_decode($dt->karyawan);?>
-                                                            
-                                                            <tr>
-                                                                <td hidden><input type="number" class="form-control" name="idDetail[]" value="{{$dt->id}}" hidden></td>
-                                                                <td>
-                                                                    <select name="kp_ide[]" class="form-control kp_id">
-                                                                        <option value="" disabled class="text-center"> Kain Potongan </option>
-                                                                        <option value="{{ $dt->id_kp }}" selected>{{$dt->nama_kain_roll}}</option>
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" name="sisa_stoke[]"
-                                                                        class="form-control sisa_stok" placeholder="Stok" value="{{ $dt->stok_roll }}" readonly>
-                                                                </td>
-                                                                <td>
-                                                                    <input type="number" name="kain_potongan_dipakaie[]"
-                                                                        class="form-control kain_potongan_dipakai"
-                                                                        placeholder="Quantity Kain Potongan" value="{{ $dt->quantity }}">
-                                                                </td>
-                                                                <td>
-                                                                    <select name="satuane[]" class="form-control satuan">
-                                                                        <option value="" selected disabled
-                                                                            class="text-center">
-                                                                            Satuan</option>
-                                                                        <option value="PCS" @if($dt->satuan == "PCS") selected @endif>PCS</option>
-                                                                        <option value="Kodi" @if($dt->satuan == "Kodi") selected @endif>Kodi</option>
-                                                                        <option value="Lusin" @if($dt->satuan == "Lusin") selected @endif>Lusin</option>
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <select name="karyawan_1e[]" class="form-control karyawan_1">
-                                                                        <option value="" disabled selected
-                                                                            class="text-center">
-                                                                            Karyawan
-                                                                            1
-                                                                        </option>
-                                                                        @foreach ($karyawan as $dtKaryawan)
-                                                                            <option
-                                                                                value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}" @if($karyawanDetail[0] == $dtKaryawan->nama) selected @endif>
-                                                                                {{ $dtKaryawan->nama }}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <select name="karyawan_2e[]" class="form-control karyawan_2">
-                                                                        <option value="" disabled selected
-                                                                            class="text-center">
-                                                                            Karyawan
-                                                                            2
-                                                                        </option>
-                                                                        @foreach ($karyawan as $dtKaryawan)
-                                                                            <option
-                                                                                value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}" @if($karyawanDetail[1] == $dtKaryawan->nama) selected @endif>
-                                                                                {{ $dtKaryawan->nama }}</option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </td>
-                                                                <td>
-                                                                    <select name="gajie[]" class="form-control gaji">
-                                                                        <option value="" selected disabled
-                                                                            class="text-center">
-                                                                            Gaji</option>
-                                                                        @foreach ($gaji as $dtGaji)
-                                                                            <option value="{{ $dtGaji->gaji }}" @if($dt->gaji == $dtGaji->gaji) selected @endif>
-                                                                                {{ $dtGaji->gaji }}
+                                                            @foreach ($spkDetail as $dt)
+                                                                <?php $karyawanDetail = json_decode($dt->karyawan); ?>
+
+                                                                <tr>
+                                                                    <td hidden><input type="number" class="form-control"
+                                                                            name="idDetail[]" value="{{ $dt->id }}"
+                                                                            hidden></td>
+                                                                    <td>
+                                                                        <select name="kp_ide[]" class="form-control kp_id">
+                                                                            <option value="" disabled
+                                                                                class="text-center"> Kain Potongan </option>
+                                                                            <option value="{{ $dt->id_kp }}" selected>
+                                                                                {{ $dt->nama_kain_roll }}</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="number" name="sisa_stoke[]"
+                                                                            class="form-control sisa_stok"
+                                                                            placeholder="Stok" value="{{ $dt->stok_roll }}"
+                                                                            readonly>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="number"
+                                                                            name="kain_potongan_dipakaie[]"
+                                                                            class="form-control kain_potongan_dipakai"
+                                                                            placeholder="Quantity Kain Potongan"
+                                                                            value="{{ $dt->quantity }}">
+                                                                    </td>
+                                                                    <td>
+                                                                        <select name="satuane[]"
+                                                                            class="form-control satuan">
+                                                                            <option value="" selected disabled
+                                                                                class="text-center">
+                                                                                Satuan</option>
+                                                                            <option value="PCS"
+                                                                                @if ($dt->satuan == 'PCS') selected @endif>
+                                                                                PCS</option>
+                                                                            <option value="Kodi"
+                                                                                @if ($dt->satuan == 'Kodi') selected @endif>
+                                                                                Kodi</option>
+                                                                            <option value="Lusin"
+                                                                                @if ($dt->satuan == 'Lusin') selected @endif>
+                                                                                Lusin</option>
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <select name="karyawan_1e[]"
+                                                                            class="form-control karyawan_1">
+                                                                            <option value="" disabled selected
+                                                                                class="text-center">
+                                                                                Karyawan
+                                                                                1
                                                                             </option>
-                                                                        @endforeach
-                                                                    </select>
-                                                                </td>
-        
-                                                                <td>
-                                                                    <a onclick="deleteData({{$dt->id}})" class='btn btn-danger btn-sm pull-right'><i class='fas fa-trash'></i></a>
-                                                                </td>
-                                                            </tr>
+                                                                            @foreach ($karyawan as $dtKaryawan)
+                                                                                <option
+                                                                                    value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}"
+                                                                                    @if ($karyawanDetail[0] == $dtKaryawan->nama) selected @endif>
+                                                                                    {{ $dtKaryawan->nama }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <select name="karyawan_2e[]"
+                                                                            class="form-control karyawan_2">
+                                                                            <option value="" disabled selected
+                                                                                class="text-center">
+                                                                                Karyawan
+                                                                                2
+                                                                            </option>
+                                                                            @foreach ($karyawan as $dtKaryawan)
+                                                                                <option
+                                                                                    value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}"
+                                                                                    @if ($karyawanDetail[1] == $dtKaryawan->nama) selected @endif>
+                                                                                    {{ $dtKaryawan->nama }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </td>
+                                                                    <td>
+                                                                        <select name="gajie[]" class="form-control gaji">
+                                                                            <option value="" selected disabled
+                                                                                class="text-center">
+                                                                                Gaji</option>
+                                                                            @foreach ($gaji as $dtGaji)
+                                                                                <option value="{{ $dtGaji->gaji }}"
+                                                                                    @if ($dt->gaji == $dtGaji->gaji) selected @endif>
+                                                                                    {{ $dtGaji->gaji }}
+                                                                                </option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </td>
+
+                                                                    <td>
+                                                                        <a onclick="deleteData({{ $dt->id }})"
+                                                                            class='btn btn-danger btn-sm pull-right'><i
+                                                                                class='fas fa-trash'></i></a>
+                                                                    </td>
+                                                                </tr>
                                                             @endforeach
                                                         </tbody>
                                                     </table>
@@ -143,8 +166,7 @@
                                             </div>
                                             <div class="col-lg-12">
                                                 <label for="note">Notes</label>
-                                                <textarea name="note" id="note" cols="30" rows="2" placeholder="Keterangan"
-                                                    class="form-control">{{$spk->note}}</textarea>
+                                                <textarea name="note" id="note" cols="30" rows="2" placeholder="Keterangan" class="form-control">{{ $spk->note }}</textarea>
                                             </div>
                                         </div>
                                         <div class="card-footer">
@@ -165,7 +187,8 @@
                                                     <div class="col-md-14 row">
                                                         <div class="col-md-12">
                                                             <input type="text" name="kode_spk" id="kode_spk"
-                                                                class="form-control" value="{{ $spk->kode_spk }}" readonly>
+                                                                class="form-control" value="{{ $spk->kode_spk }}"
+                                                                readonly>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -173,27 +196,30 @@
                                                     <label for="artikel">Artikel</label>
                                                     <div class="col-md-14 row">
                                                         <div class="col-md-12">
-                                                            <input type="text" name="artikel" id="artikel" class="form-control"
-                                                                value="" readonly>
+                                                            <input type="text" name="artikel" id="artikel"
+                                                                class="form-control" value="" readonly>
                                                         </div>
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label for="tanggal">Tanggal</label>
                                                     <div class="col-md-12">
-                                                        <input type="date" name="tanggal" id="tanggal" class="form-control"
-                                                            value="{{ $spk->tanggal }}">
+                                                        <input type="date" name="tanggal" id="tanggal"
+                                                            class="form-control" value="{{ $spk->tanggal }}">
                                                     </div>
                                                 </div>
                                                 <div class="col-md-3">
                                                     <label for="ukuran">Model / Ukuran</label>
                                                     <div class="col-md-12">
                                                         <select name="ukuran" id="ukuran" class="form-control">
-                                                            <option value="" selected disabled class="text-center">Pilih
+                                                            <option value="" selected disabled class="text-center">
+                                                                Pilih
                                                                 Ukuran</option>
                                                             @foreach ($ukuran as $data)
-                                                                <option value="{{ $data->kode_ukuran }}" class="text-center">
-                                                                    {{ $data->kode_ukuran }} ({{ $data->ukuran }})</option>
+                                                                <option value="{{ $data->kode_ukuran }}"
+                                                                    class="text-center">
+                                                                    {{ $data->kode_ukuran }} ({{ $data->ukuran }})
+                                                                </option>
                                                             @endforeach
                                                         </select>
                                                     </div>
@@ -203,8 +229,8 @@
                                             <div>
                                                 <div id="form_kain_potongan"
                                                     class="dataTables_wrapper dt-bootstrap4 table-responsive text-nowrap">
-                                                    <table class="table table-hover table-bordered dataTable" id="tab_kp"
-                                                        style="width: 100%;">
+                                                    <table class="table table-hover table-bordered dataTable"
+                                                        id="tab_kp" style="width: 100%;">
                                                         <thead>
                                                             <tr>
                                                                 <th width='15%'> Kain Potongan </th>
@@ -229,12 +255,14 @@
                                                                 </td>
                                                                 <td>
                                                                     <input type="number" name="sisa_stok[]"
-                                                                        class="form-control sisa_stok" placeholder="Stok" readonly>
+                                                                        class="form-control sisa_stok" placeholder="Stok"
+                                                                        readonly>
                                                                 </td>
                                                                 <td>
                                                                     <input type="number" name="kain_potongan_dipakai[]"
                                                                         class="form-control kain_potongan_dipakai"
-                                                                        placeholder="Quantity Kain Potongan" value="0">
+                                                                        placeholder="Quantity Kain Potongan"
+                                                                        value="0">
                                                                 </td>
                                                                 <td>
                                                                     <select name="satuan[]" class="form-control satuan">
@@ -247,7 +275,8 @@
                                                                     </select>
                                                                 </td>
                                                                 <td>
-                                                                    <select name="karyawan_1[]" class="form-control karyawan_1">
+                                                                    <select name="karyawan_1[]"
+                                                                        class="form-control karyawan_1">
                                                                         <option value="" disabled selected
                                                                             class="text-center">
                                                                             Karyawan
@@ -261,7 +290,8 @@
                                                                     </select>
                                                                 </td>
                                                                 <td>
-                                                                    <select name="karyawan_2[]" class="form-control karyawan_2">
+                                                                    <select name="karyawan_2[]"
+                                                                        class="form-control karyawan_2">
                                                                         <option value="" disabled selected
                                                                             class="text-center">
                                                                             Karyawan
@@ -286,7 +316,7 @@
                                                                         @endforeach
                                                                     </select>
                                                                 </td>
-        
+
                                                                 <td>
                                                                     <!-- placeholder for remove button -->
                                                                 </td>
@@ -295,7 +325,8 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <button class="btn btn-info text-center container-fluid" id="add_kain_potongan">Tambah
+                                            <button class="btn btn-info text-center container-fluid"
+                                                id="add_kain_potongan">Tambah
                                                 Kain Potongan</button>
                                         </div>
                                         <div class="card-footer">
@@ -639,7 +670,7 @@
                 }
             });
         });
-        
+
         var Notif = Swal.mixin({
             toast: true,
             position: 'top-end',
@@ -651,42 +682,42 @@
         // hapus detail data
         function deleteData(id) {
             Swal.fire({
-                title: "Apakah anda yakin hapus detail data ini?",
-                icon: "warning",
-                showCancelButton: true,
-                confirmButtonText: "Ya, Hapus!",
-                cancelButtonText: "Tidak",
-            })
-            .then((result) => {
-                if (result.isConfirmed) {
-                    @if(Auth::user()->role_id == 1)
-                    var _url = "{{ route('spk.deleteDetail', ':id') }}";
-                    @else
-                    var _url = "{{ route('spk.deleteDetail', ':id') }}";
-                    @endif
-                    _url = _url.replace(':id', id)
-                    var _token = $('meta[name="csrf-token"]').attr('content');
-                    $.ajax({
-                        url: _url,
-                        type: 'DELETE',
-                        data: {
-                            _token: _token
-                        },
-                        success: function(res) {
-                            Notif.fire({
-                                icon: 'success',
-                                title: res.message,
-                            })
-                            setTimeout(() => {
-                                window.location.reload()
-                            }, 500);
-                        },
-                        error: function(err) {
-                            console.log(err);
-                        }
-                    })
-                }
-            });
+                    title: "Apakah anda yakin hapus detail data ini?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Hapus!",
+                    cancelButtonText: "Tidak",
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        @if (Auth::user()->role_id == 1)
+                            var _url = "{{ route('spk.deleteDetail', ':id') }}";
+                        @else
+                            var _url = "{{ route('spk.deleteDetail', ':id') }}";
+                        @endif
+                        _url = _url.replace(':id', id)
+                        var _token = $('meta[name="csrf-token"]').attr('content');
+                        $.ajax({
+                            url: _url,
+                            type: 'DELETE',
+                            data: {
+                                _token: _token
+                            },
+                            success: function(res) {
+                                Notif.fire({
+                                    icon: 'success',
+                                    title: res.message,
+                                })
+                                setTimeout(() => {
+                                    window.location.reload()
+                                }, 500);
+                            },
+                            error: function(err) {
+                                console.log(err);
+                            }
+                        })
+                    }
+                });
         }
     </script>
     <script>
@@ -1066,10 +1097,10 @@
 
                             $.ajax({
                                 @if (Auth::user()->role_id == 1)
-                                    url: "{{ route('spk.storeGambar') }}",
+                                    url: "{{ route('spk.storeGambarEdit') }}",
                                 @endif
                                 @if (Auth::user()->role_id == 3)
-                                    url: "{{ route('w.spk.storeGambar') }}",
+                                    url: "{{ route('w.spk.storeGambarEdit') }}",
                                 @endif
                                 method: "POST",
                                 data: formData,
@@ -1119,7 +1150,7 @@
             })
 
             // simpan detail data
-            $('#btn-simpan-edit').on('click', function(){
+            $('#btn-simpan-edit').on('click', function() {
                 Swal.fire({
                         title: "Apakah anda yakin untuk simpan detail data ini?",
                         icon: "warning",
@@ -1127,98 +1158,98 @@
                         confirmButtonText: "Ya, Simpan!",
                         cancelButtonText: "Tidak",
                     })
-                .then((result) => {
-                    let ide = $('[name*="idDetail[]"]').map(function() {
+                    .then((result) => {
+                        let ide = $('[name*="idDetail[]"]').map(function() {
                             return $(this).val();
                         }).get();
-                    let kp_ide = $('[name*="kp_ide[]"]').map(function() {
+                        let kp_ide = $('[name*="kp_ide[]"]').map(function() {
                             return $(this).val();
                         }).get();
-                    let quantitye = $('[name*="kain_potongan_dipakaie[]"]').map(function() {
+                        let quantitye = $('[name*="kain_potongan_dipakaie[]"]').map(function() {
                             return $(this).val();
                         }).get();
-                    let satuane = $('[name*="satuane[]"]').map(function() {
+                        let satuane = $('[name*="satuane[]"]').map(function() {
                             return $(this).val();
                         }).get();
-                    let k1e = $('[name*="karyawan_1e[]"]').map(function() {
+                        let k1e = $('[name*="karyawan_1e[]"]').map(function() {
                             return $(this).val();
                         }).get();
-                    let k2e = $('[name*="karyawan_2e[]"]').map(function() {
+                        let k2e = $('[name*="karyawan_2e[]"]').map(function() {
                             return $(this).val();
                         }).get();
-                    let gajie = $('[name*="gajie[]"]').map(function() {
+                        let gajie = $('[name*="gajie[]"]').map(function() {
                             return $(this).val();
                         }).get();
 
-                    let dataEdit = [];
+                        let dataEdit = [];
 
-                    for (let j = 0; j < ide.length; j++) {
-                        dataEdit.push({
-                            "ide": ide[j],
-                            "kp_ide": kp_ide[j],
-                            "quantitye": quantitye[j],
-                            "satuane": satuane[j],
-                            "k1e": k1e[j],
-                            "k2e": k2e[j],
-                            "gajie": gajie[j]
-                        })
-                    }
+                        for (let j = 0; j < ide.length; j++) {
+                            dataEdit.push({
+                                "ide": ide[j],
+                                "kp_ide": kp_ide[j],
+                                "quantitye": quantitye[j],
+                                "satuane": satuane[j],
+                                "k1e": k1e[j],
+                                "k2e": k2e[j],
+                                "gajie": gajie[j]
+                            })
+                        }
 
-                    if (result.isConfirmed) {
-                        $.ajaxSetup({
-                            headers: {
-                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                    'content')
-                            }
-                        });
-
-                        $.ajax({
-                            @if (Auth::user()->role_id == 1)
-                                url: "{{ route('spk.updateDetail') }}",
-                            @endif
-                            @if (Auth::user()->role_id == 3)
-                                url: "{{ route('w.spk.updateDetail') }}",
-                            @endif
-                            method: "POST",
-                            data: {
-                                'data': dataEdit,
-                                'notes': $('#note').val()
-                            },
-                            success: function(res) {
-                                if (res.code === 200) {
-                                    Swal.fire(
-                                        'Berhasil!',
-                                        'Berhasil Simpan Data! Silahkan Upload Gambar/Tambah Data!',
-                                        'success'
-                                    )
+                        if (result.isConfirmed) {
+                            $.ajaxSetup({
+                                headers: {
+                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                                        'content')
                                 }
-                                if (res.code === 400) {
-                                    Swal.fire(
-                                        'Gagal!',
-                                        res.message + ' ID: ' + res.ID,
-                                        'error'
-                                    )
-                                }
-                                if (res.code === 500) {
-                                    console.log(res.error)
+                            });
+
+                            $.ajax({
+                                @if (Auth::user()->role_id == 1)
+                                    url: "{{ route('spk.updateDetail') }}",
+                                @endif
+                                @if (Auth::user()->role_id == 3)
+                                    url: "{{ route('w.spk.updateDetail') }}",
+                                @endif
+                                method: "POST",
+                                data: {
+                                    'data': dataEdit,
+                                    'notes': $('#note').val()
+                                },
+                                success: function(res) {
+                                    if (res.code === 200) {
+                                        Swal.fire(
+                                            'Berhasil!',
+                                            'Berhasil Simpan Data! Silahkan Upload Gambar/Tambah Data!',
+                                            'success'
+                                        )
+                                    }
+                                    if (res.code === 400) {
+                                        Swal.fire(
+                                            'Gagal!',
+                                            res.message + ' ID: ' + res.ID,
+                                            'error'
+                                        )
+                                    }
+                                    if (res.code === 500) {
+                                        console.log(res.error)
+                                        Swal.fire(
+                                            'Gagal!',
+                                            'Server Error!',
+                                            'error'
+                                        )
+                                    }
+                                },
+                                error: function(err) {
+                                    console.log(err);
                                     Swal.fire(
                                         'Gagal!',
                                         'Server Error!',
                                         'error'
                                     )
                                 }
-                            },
-                            error: function(err) {
-                                console.log(err);
-                                Swal.fire(
-                                    'Gagal!',
-                                    'Server Error!',
-                                    'error'
-                                )
-                            }
-                        })
-                    }
-                });
+                            })
+                        }
+                    });
             })
 
             // hapus gambar
@@ -1248,7 +1279,7 @@
                                 success: function(res) {
                                     Swal.fire(
                                         'Berhasil!',
-                                        'Berhasil Simpan Data! Silahkan Upload Gambar!',
+                                        'Berhasil Delete Gambar!',
                                         'success'
                                     )
 

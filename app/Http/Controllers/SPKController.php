@@ -23,12 +23,12 @@ class SPKController extends Controller
 {
     public function getArtikel($model)
     {
-        $randNum = rand();
+        $randNum = rand(00000, 99999);
         $artikel = $model . '' . $randNum;
 
         $checkArticel = SPK::where('artikel', $artikel)->first();
         while ($checkArticel) {
-            $randNum = rand();
+            $randNum = rand(00000, 99999);
             $artikel = $model . '' . $randNum;
         }
 
@@ -92,14 +92,14 @@ class SPKController extends Controller
             ]);
 
             $k_id = [$dt['karyawan'][0], $dt['karyawan'][1]];
-            
+
             $k1 = Karyawan::where('uuid', $dt['karyawan'][0])->first();
             $k2 = Karyawan::where('uuid', $dt['karyawan'][1])->first();
-            
+
 
             $checkSpk = SPK::where('kode_spk', $dt['kode_spk'])->where('artikel', $dt['artikel'])->first();
 
-            if(!$checkSpk){
+            if (!$checkSpk) {
                 $spk = new SPK();
                 $spk->uuid          = Uuid::uuid4()->getHex();
                 $spk->kode_spk      = $dt['kode_spk'];
@@ -122,7 +122,7 @@ class SPKController extends Controller
                     'karyawan'              => json_encode($dt['nama_karyawan']),
                     'gaji'                  => $dt['gaji']
                 ]);
-            }else{
+            } else {
                 SPKDetail::insert([
                     't_spk_id'              => $checkSpk->id,
                     'kode_spk'              => $dt['kode_spk'],
@@ -203,6 +203,42 @@ class SPKController extends Controller
         ]);
     }
 
+    public function storeGambarEdit(Request $request)
+    {
+        $validate = $request->validate([
+            'gambar' => 'required',
+            'gambar.*' => 'mimes:jpeg,png,jpg,gif,svg|max:2048'
+        ]);
+
+        if (!$validate) {
+            return response()->json([
+                'code'      => 400,
+                'title'     => 'Gagal Menyimpan Gambar!',
+                'message'   => 'Gambar Harus Kurang dari 2 MB atau tipe gambar harus jpeg,png,jpg,gif,svg'
+            ]);
+        }
+
+        if ($request->hasfile('gambar')) {
+            foreach ($request->gambar as $image) {
+                $name = time() . rand(1, 100) . '.' . $image->extension();
+                if ($image->move(public_path('img/gambar/'), $name)) {
+                    FileSPK::create([
+                        'uuid'      => Uuid::uuid4()->getHex(),
+                        'kode_spk'  => $request->kode_spk,
+                        'nama_foto' => $name,
+                        'created_at' => Carbon::now(),
+                        'updated_at' => Carbon::now()
+                    ]);
+                }
+            }
+        }
+
+        return response()->json([
+            'code'      => 200,
+            'message'   => 'Berhasil Menyimpan Data!!',
+        ]);
+    }
+
     public function edit($uuid)
     {
         $spk = SPK::where('uuid', $uuid)->first();
@@ -212,10 +248,10 @@ class SPKController extends Controller
         $ukuran     = Ukuran::all();
 
         $spkDetail = SPKDetail::select('t_spk_details.*', 'm_kain_potongans.id as id_kp', DB::raw('CONCAT(m_kain_rolls.jenis_kain, " | ", m_kain_rolls.warna) as nama_kain_roll'), 'm_kain_rolls.stok_roll')
-                    ->join('m_kain_potongans', 'm_kain_potongans.id', '=', 't_spk_details.kain_potongan_id')
-                    ->join('m_kain_rolls', 'm_kain_rolls.id', '=', 'm_kain_potongans.kain_roll_id')
-                    ->where('kode_spk', $spk->kode_spk)
-                    ->get();
+            ->join('m_kain_potongans', 'm_kain_potongans.id', '=', 't_spk_details.kain_potongan_id')
+            ->join('m_kain_rolls', 'm_kain_rolls.id', '=', 'm_kain_potongans.kain_roll_id')
+            ->where('kode_spk', $spk->kode_spk)
+            ->get();
 
         $gambarSpk = FileSPK::where('kode_spk', $spk->kode_spk)->get();
 
@@ -407,7 +443,7 @@ class SPKController extends Controller
             $reqData    = $request->data;
             $note       = $request->notes;
 
-            foreach($reqData as $dt){
+            foreach ($reqData as $dt) {
                 $kp = Kain_potongan::where('kain_roll_id', $dt['kp_ide'])->first();
                 $kr = Kain_roll::where('id', $kp->kain_roll_id)->first();
 
@@ -427,16 +463,16 @@ class SPKController extends Controller
                     ]);
                 }
 
-                if($dt['quantitye'] !== $checkQuantity->quantity){
-                    if($dt['quantitye'] < $checkQuantity->quantity){
+                if ($dt['quantitye'] !== $checkQuantity->quantity) {
+                    if ($dt['quantitye'] < $checkQuantity->quantity) {
                         $stok = $checkQuantity->quantity - $dt['quantitye'];
                         Kain_potongan::where('kain_roll_id', $dt['kp_ide'])->update([
                             'stok'    => $kp->stok + $stok
                         ]);
                     }
 
-                    if($dt['quantitye'] > $checkQuantity->quantity){
-                        $stok =$dt['quantitye'] - $checkQuantity->quantity;
+                    if ($dt['quantitye'] > $checkQuantity->quantity) {
+                        $stok = $dt['quantitye'] - $checkQuantity->quantity;
                         Kain_potongan::where('kain_roll_id', $dt['kp_ide'])->update([
                             'stok'    => $kp->stok + $stok
                         ]);
@@ -516,25 +552,26 @@ class SPKController extends Controller
 
         if ($spk !== null) {
             $dt_spk = $spk->first();
+            $dt_detail_spk = SPKDetail::where('kode_spk', $kode_spk)->get();
 
-            //  update stok kain potongan
-            $kain_potongan_id = json_decode($dt_spk->kain_potongan_id);
-            $quantity = json_decode($dt_spk->quantity);
-            for ($i = 0; $i < count($kain_potongan_id); $i++) {
-                $m_kainpotongan = Kain_potongan::where('id', $kain_potongan_id[$i])->first();
+            foreach ($dt_detail_spk as $dt) {
+                //  update stok kain potongan
+                $kain_potongan_id = $dt->kain_potongan_id;
+                $quantity = $dt->quantity;
+                $m_kainpotongan = Kain_potongan::where('id', $kain_potongan_id)->first();
 
-                Kain_potongan::where('id', $kain_potongan_id[$i])->update([
-                    'stok'    => $m_kainpotongan->stok + $quantity[$i]
+                Kain_potongan::where('id', $kain_potongan_id)->update([
+                    'stok'    => $m_kainpotongan->stok + $quantity
                 ]);
             }
 
-            Gaji::where('kode_transaksi', $dt_spk->kode_spp)->delete();
-            $spk->delete();
+            Gaji::where('kode_transaksi', $dt_spk->kode_spk)->delete();
 
             $image = FileSPK::where('kode_spk', $kode_spk)->value('nama_foto');
             File::delete('img/gambar/' . $image);
             FileSPK::where('kode_spk', $kode_spk)->delete();
-
+            SPKDetail::where('kode_spk', $kode_spk)->delete();
+            $spk->delete();
             return response()->json([
                 'code'      => 200,
                 'message'   => 'Berhasil Hapus data SPK',

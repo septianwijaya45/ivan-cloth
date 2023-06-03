@@ -51,47 +51,81 @@
                             <form action="#" method="POST" enctype="multipart/form-data" id="formSPK">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-3">
-                                            <label for="kode_spp">Kode SPK</label>
-                                            <div class="col-md-14 row">
+                                        <div class="col-md-6 row align-items-start">
+                                            <div class="col-md-6">
+                                                <label for="kode_spp">Kode SPK</label>
+                                                <div class="col-md-14 row">
+                                                    <div class="col-md-12">
+                                                        <input type="text" name="kode_spk" id="kode_spk"
+                                                            class="form-control" value="{{ kodeSPK() }}" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="artikel">Artikel</label>
+                                                <div class="col-md-14 row">
+                                                    <div class="col-md-12">
+                                                        <input type="text" name="artikel" id="artikel"
+                                                            class="form-control" value="" readonly>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="tanggal">Tanggal</label>
                                                 <div class="col-md-12">
-                                                    <input type="text" name="kode_spk" id="kode_spk"
-                                                        class="form-control" value="{{ kodeSPK() }}" readonly>
+                                                    <input type="date" name="tanggal" id="tanggal" class="form-control"
+                                                        value="{{ $date }}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <label for="ukuran">Model / Ukuran</label>
+                                                <div class="col-md-12">
+                                                    <select name="ukuran" id="ukuran" class="form-control">
+                                                        <option value="" selected disabled class="text-center">Pilih
+                                                            Ukuran</option>
+                                                        @foreach ($ukuran as $data)
+                                                            <option value="{{ $data->kode_ukuran }}" class="text-center">
+                                                                {{ $data->kode_ukuran }} ({{ $data->ukuran }})</option>
+                                                        @endforeach
+                                                    </select>
                                                 </div>
                                             </div>
                                         </div>
-                                        <div class="col-md-3">
-                                            <label for="artikel">Artikel</label>
-                                            <div class="col-md-14 row">
-                                                <div class="col-md-12">
-                                                    <input type="text" name="artikel" id="artikel" class="form-control"
-                                                        value="" readonly>
+                                        <div class="col-md-6">
+                                            <div class="col-md-12">
+                                                <form action="" method="POST" id="form-data-gambar">
+                                                    <label for="">Tambahkan Gambar</label>
+                                                    <input type="file" name="gambar[]" id="gambar"
+                                                        placeholder="Tambahkan Gambar" class="form-control" multiple>
+                                                </form>
+                                            </div>
+                                            <br>
+                                            <div class="col-md-12">
+                                                <div class="card collapsed-card">
+                                                    <div class="card-header bg-primary">
+                                                        <h3 class="card-title">Preview Gambar</h3>
+
+                                                        <div class="card-tools">
+                                                            <button type="button" class="btn btn-tool"
+                                                                data-card-widget="collapse">
+                                                                <i class="fas fa-plus"></i>
+                                                            </button>
+                                                        </div>
+                                                    </div>
+                                                    <!-- /.card-header -->
+                                                    <div class="card-body" style="display: none;">
+                                                        <div class="row">
+                                                            <div class="upload-img container-fluid p-0">
+                                                                <!-- image here -->
+                                                            </div>
+                                                        </div>
+                                                    </div>
                                                 </div>
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label for="tanggal">Tanggal</label>
-                                            <div class="col-md-12">
-                                                <input type="date" name="tanggal" id="tanggal" class="form-control"
-                                                    value="{{ $date }}">
-                                            </div>
-                                        </div>
-                                        <div class="col-md-3">
-                                            <label for="ukuran">Model / Ukuran</label>
-                                            <div class="col-md-12">
-                                                <select name="ukuran" id="ukuran" class="form-control">
-                                                    <option value="" selected disabled class="text-center">Pilih
-                                                        Ukuran</option>
-                                                    @foreach ($ukuran as $data)
-                                                        <option value="{{ $data->kode_ukuran }}" class="text-center">
-                                                            {{ $data->kode_ukuran }} ({{ $data->ukuran }})</option>
-                                                    @endforeach
-                                                </select>
                                             </div>
                                         </div>
                                     </div>
                                     <hr>
-                                    <div>
+                                    <div class="">
                                         <div id="form_kain_potongan"
                                             class="dataTables_wrapper dt-bootstrap4 table-responsive text-nowrap">
                                             <table class="table table-hover table-bordered dataTable" id="tab_kp"
@@ -100,11 +134,11 @@
                                                     <tr>
                                                         <th width='15%'> Kain Potongan </th>
                                                         <th width='13%'> Sisa Stok</th>
-                                                        <th width='13%'> Quantity</th>
+                                                        <th width='10%'> Quantity</th>
                                                         <th width='10%'> Satuan</th>
                                                         <th width='15%'> Karyawan 1</th>
                                                         <th width='15%'> Karyawan 2</th>
-                                                        <th width='10%'> Gaji</th>
+                                                        <th width='13%'> Gaji</th>
                                                         <th width="3%"></th>
                                                     </tr>
                                                 </thead>
@@ -120,7 +154,8 @@
                                                         </td>
                                                         <td>
                                                             <input type="number" name="sisa_stok[]"
-                                                                class="form-control sisa_stok" placeholder="Stok" readonly>
+                                                                class="form-control sisa_stok" placeholder="Stok"
+                                                                readonly>
                                                         </td>
                                                         <td>
                                                             <input type="number" name="kain_potongan_dipakai[]"
@@ -197,6 +232,7 @@
                         </div>
                         <!-- /.card -->
                     </div>
+
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
@@ -236,59 +272,6 @@
                                     </div>
                                     <div class="col-md-3 mt-2 offset-md-9">
                                         <button type="button" id="btn-save-data" type="button"
-                                            class="btn btn-success btn-block">
-                                            <i class="fa fa-save" aria-hidden="true"> </i> Save
-                                        </button>
-                                    </div>
-                                </form>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-12">
-                        <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title">Tambahkan Gambar Surat Perintah Kain</h5>
-                            </div>
-
-                            <div class="card-body">
-                                <form action="" method="POST" id="form-data-gambar">
-                                    <div id="tbl_ukuran_wrapper"
-                                        class="dataTables_wrapper dt-bootstrap4 table-responsive text-nowrap">
-                                        <div class="col-lg-12">
-                                            <label for="">Tambahkan Gambar</label>
-                                            <input type="file" name="gambar[]" id="gambar"
-                                                placeholder="Tambahkan Gambar" class="form-control" multiple>
-                                        </div>
-                                        <br>
-                                        <div class="col-lg-12">
-                                            <div class="card collapsed-card">
-                                                <div class="card-header bg-primary">
-                                                    <h3 class="card-title">Preview Gambar</h3>
-
-                                                    <div class="card-tools">
-                                                        <button type="button" class="btn btn-tool"
-                                                            data-card-widget="collapse">
-                                                            <i class="fas fa-plus"></i>
-                                                        </button>
-                                                        <button type="button" class="btn btn-tool"
-                                                            data-card-widget="remove">
-                                                            <i class="fas fa-times"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <!-- /.card-header -->
-                                                <div class="card-body" style="display: none;">
-                                                    <div class="row">
-                                                        <div class="upload-img">
-                                                            <!-- image here -->
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 mt-2 offset-md-9">
-                                        <button type="button" id="btn-save-gambar" type="button"
                                             class="btn btn-success btn-block">
                                             <i class="fa fa-save" aria-hidden="true"> </i> Save
                                         </button>
@@ -504,8 +487,8 @@
                         let reader = new FileReader();
                         reader.onload = function(event) {
                             let html = `
-                                <div class = "uploaded-img">
-                                    <img src = "${event.target.result}" width="600" class="text-center">
+                                <div class = "uploaded-img p-0">
+                                    <img src = "${event.target.result}" width="100%" class="p-0">
                                 </div>
                             `;
                             $(".upload-img").append(html);
@@ -514,7 +497,7 @@
                     }
 
                     $('.upload-info-value').text(filesAmount);
-                    $('.upload-img').css('padding', "20px");
+                    $('.upload-img').css('padding', "0px");
                 }
             });
         });
@@ -760,8 +743,6 @@
 
             // clear input
             function clearForm() {
-                $('[name="ukuran"]').val('').trigger('change.select2');
-                $('[name="artikel"]').val('');
                 $('[name*="kp_id" ]').val('').trigger('change.select2');
                 $('[name*="satuan" ]').val('').trigger('change.select2');
                 $('[name*="sisa_stok"]').val('');
@@ -827,12 +808,13 @@
                                     if (res.code === 200) {
                                         Swal.fire(
                                             'Berhasil!',
-                                            'Berhasil Simpan Data! Silahkan Upload Gambar!',
+                                            'Berhasil Simpan Data!',
                                             'success'
                                         )
                                         data = [];
                                         $('#btn-tambah').attr('disabled', true);
                                         $('#btn-save-data').attr('disabled', true);
+                                        saveGambar();
                                     }
                                     if (res.code === 400) {
                                         Swal.fire(
@@ -864,89 +846,71 @@
             })
 
             // simpan gambar
-            $('#btn-save-gambar').on('click', function(e) {
-                Swal.fire({
-                        title: "Apakah anda yakin untuk simpan semua data ini?",
-                        icon: "warning",
-                        showCancelButton: true,
-                        confirmButtonText: "Ya, Simpan!",
-                        cancelButtonText: "Tidak",
-                    })
-                    .then((result) => {
-                        if (result.isConfirmed) {
-                            e.preventDefault();
-                            let kode_spk = $('#kode_spk').val()
-                            let form = document.getElementById('form-data-gambar');
-                            let formData = new FormData(form)
-                            const totalGambar = $('#gambar')[0].files.length;
-                            let gambar = $('#gambar')[0];
+            function saveGambar() {
+                let kode_spk = $('#kode_spk').val()
+                let form = document.getElementById('form-data-gambar');
+                let formData = new FormData(form)
+                const totalGambar = $('#gambar')[0].files.length;
+                let gambar = $('#gambar')[0];
 
-                            for (let i = 0; i < totalGambar; i++) {
-                                formData.append('gambar' + i, gambar.files[i])
-                            }
-                            formData.append('totalGambar', totalGambar)
-                            formData.append('kode_spk', kode_spk)
+                for (let i = 0; i < totalGambar; i++) {
+                    formData.append('gambar' + i, gambar.files[i])
+                }
+                formData.append('totalGambar', totalGambar)
+                formData.append('kode_spk', kode_spk)
 
-                            $.ajaxSetup({
-                                headers: {
-                                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                                        'content')
-                                }
-                            });
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                            'content')
+                    }
+                });
 
-                            $.ajax({
-                                @if (Auth::user()->role_id == 1)
-                                    url: "{{ route('spk.storeGambar') }}",
-                                @endif
-                                @if (Auth::user()->role_id == 3)
-                                    url: "{{ route('w.spk.storeGambar') }}",
-                                @endif
-                                method: "POST",
-                                data: formData,
-                                processData: false,
-                                cache: false,
-                                contentType: false,
-                                success: function(res) {
-                                    if (res.code === 200) {
-                                        Swal.fire(
-                                            'Berhasil!',
-                                            'Berhasil Simpan Data! Silahkan Upload Gambar!',
-                                            'success'
-                                        )
-
-                                        setTimeout(() => {
-                                            window.location.href =
-                                                "{{ route('spk') }}"
-                                        }, 1500);
-                                    }
-                                    if (res.code === 400) {
-                                        Swal.fire(
-                                            'Gagal!',
-                                            res.message + ' LOT: ' + res.kode_lot,
-                                            'error'
-                                        )
-                                    }
-                                    if (res.code === 500) {
-                                        console.log(res.error)
-                                        Swal.fire(
-                                            'Gagal!',
-                                            'Server Error!',
-                                            'error'
-                                        )
-                                    }
-                                },
-                                error: function(err) {
-                                    console.log(err);
-                                    Swal.fire(
-                                        'Gagal!',
-                                        'Server Error!',
-                                        'error'
-                                    )
-                                }
-                            })
+                $.ajax({
+                    @if (Auth::user()->role_id == 1)
+                        url: "{{ route('spk.storeGambar') }}",
+                    @endif
+                    @if (Auth::user()->role_id == 3)
+                        url: "{{ route('w.spk.storeGambar') }}",
+                    @endif
+                    method: "POST",
+                    data: formData,
+                    processData: false,
+                    cache: false,
+                    contentType: false,
+                    success: function(res) {
+                        if (res.code === 200) {
+                            setTimeout(() => {
+                                window.location.href =
+                                    "{{ route('spk') }}"
+                            }, 1500);
                         }
-                    })
-            })
+                        if (res.code === 400) {
+                            Swal.fire(
+                                'Gagal!',
+                                res.message + ' LOT: ' + res.kode_lot,
+                                'error'
+                            )
+                        }
+                        if (res.code === 500) {
+                            console.log(res.error)
+                            Swal.fire(
+                                'Gagal!',
+                                'Server Error!',
+                                'error'
+                            )
+                        }
+                    },
+                    error: function(err) {
+                        console.log(err);
+                        Swal.fire(
+                            'Gagal!',
+                            'Server Error!',
+                            'error'
+                        )
+                    }
+                })
+            }
         });
     </script>
 @endsection

@@ -114,7 +114,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
         });
 
         // Route Film Sablon
-        Route::group(['prefix' => 'Film-Sablon'], function(){
+        Route::group(['prefix' => 'Film-Sablon'], function () {
             Route::get('/', [FilmSablonController::class, 'index'])->name('filmSablon');
             Route::get('/get-data', [FilmSablonController::class, 'indexData'])->name('filmSablon.Data');
         });
@@ -157,6 +157,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::post('tambah-data', [SPKController::class, 'store'])->name('spk.store');
             // save image
             Route::post('tambah-gambar', [SPKController::class, 'storeGambar'])->name('spk.storeGambar');
+            Route::post('tambah-gambar-edit', [SPKController::class, 'storeGambarEdit'])->name('spk.storeGambarEdit');
 
             // edit
             Route::get('edit-data/{uuid}', [SPKController::class, 'edit'])->name('spk.edit');
@@ -177,7 +178,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
         });
 
         // Route Jahit
-        Route::group(['prefix' => 'Jahit'], function(){
+        Route::group(['prefix' => 'Jahit'], function () {
             // get artikel spk
             Route::get('getArtikelFromSPK/{kode_spk}', [JahitController::class, 'getArtikelFromSPK'])->name('getArtikelSpk');
             Route::get('getQuantityArtikel/{id}', [JahitController::class, 'getQuantityArtikel'])->name('getQuantityArtikel');
@@ -194,7 +195,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // delete detail
             Route::delete('detail-data/delete/{id}', [JahitController::class, 'deleteInsertorEdit'])->name('jahit.deleteInsertEdit');
             // delete jahit
-            Route::delete('delete/{kode_jahit}', [JahitController::class, 'destroy'])->name('jahit.delete'); 
+            Route::delete('delete/{kode_jahit}', [JahitController::class, 'destroy'])->name('jahit.delete');
             // Confirm & Finishing
             Route::put('confirm-work/{kode_jahit}', [JahitController::class, 'confirm'])->name('jahit.confirm');
             Route::put('finished-work/{kode_jahit}', [JahitController::class, 'finished'])->name('jahit.finished');
@@ -237,7 +238,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
         });
 
         // Route Transaksi Gaji
-        Route::group(['prefix' => 'pengeluaran-gaji'], function(){
+        Route::group(['prefix' => 'pengeluaran-gaji'], function () {
             Route::get('', [TransaksiGajiController::class, 'index'])->name('tgaji');
             Route::get('data', [TransaksiGajiController::class, 'indexData'])->name('tgaji.data');
             Route::post('', [TransaksiGajiController::class, 'indexData'])->name('tgaji.searchData');

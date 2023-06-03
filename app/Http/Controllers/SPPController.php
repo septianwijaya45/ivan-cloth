@@ -69,179 +69,86 @@ class SPPController extends Controller
         $req_data   = $request->data;
         $note       = $request->notes;
         foreach ($req_data as $dt) {
-            if ($dt['ukuran_kain_potong'] === null || $dt['ukuran_kain_potong'] === '') {
+            $hasil = ($dt['hasil'] == 0) ? 1 :  $dt['hasil'];
+            // insert spp
+            $m_kainroll = Kain_roll::where('kode_lot', $dt['nama_lot'])->first();
+            $m_kainpotongan = Kain_potongan::where([
+                ['kain_roll_id', $m_kainroll->id],
+                ['ukuran', $dt['ukuran']]
+            ])->first();
+            if ($m_kainroll->stok_roll < $dt['quantity']) {
+                return response()->json([
+                    'code'      => 400,
+                    'kode_lot'  => $m_kainroll->kode_lot,
+                    'message'   => 'Gagal Menyimpan Data! Stok kurang!',
+                ]);
+            }
+            Kain_roll::where('kode_lot', $dt['nama_lot'])->update([
+                'stok_roll'     => $m_kainroll->stok_roll - $dt['quantity']
+            ]);
 
-                $hasil = ($dt['hasil'] == 0) ? 1 :  $dt['hasil'];
-                // insert spp
-                $m_kainroll = Kain_roll::where('kode_lot', $dt['nama_lot'])->first();
-                $m_kainpotongan = Kain_potongan::where([
+            $k_id = [$dt['u1'], $dt['u2']];
+
+            SPP::insert([
+                'uuid'              => Uuid::uuid4()->getHex(),
+                'kode_spp'          => $dt['kode_spp'],
+                'kain_roll_id'      => $m_kainroll->id,
+                'ukuran'            => $dt['ukuran'],
+                'tanggal'           => $dt['tanggal'],
+                'quantity'          => $dt['quantity'],
+                'hasil_potongan'    => $dt['hasil'],
+                'karyawan'          => json_encode($dt['karyawan']),
+                'karyawan_id'       => json_encode($k_id),
+                'gaji'              => $dt['gaji'],
+                'status'            => 'Belum Konfirmasi',
+                'note'              => $note,
+                'created_at'        => Carbon::now(),
+                'updated_at'        => Carbon::now()
+            ]);
+
+            if ($m_kainpotongan != null || !empty($m_kainpotongan)) {
+                Kain_potongan::where([
                     ['kain_roll_id', $m_kainroll->id],
                     ['ukuran', $dt['ukuran']]
-                ])->first();
-                if ($m_kainroll->stok_roll < $dt['quantity']) {
-                    return response()->json([
-                        'code'      => 400,
-                        'kode_lot'  => $m_kainroll->kode_lot,
-                        'message'   => 'Gagal Menyimpan Data! Stok kurang!',
-                    ]);
-                }
-                Kain_roll::where('kode_lot', $dt['nama_lot'])->update([
-                    'stok_roll'     => $m_kainroll->stok_roll - $dt['quantity']
+                ])->update([
+                    'stok'    => $m_kainpotongan->stok + $dt['hasil']
                 ]);
-
-                $k_id = [$dt['u1'], $dt['u2']];
-
-                SPP::insert([
+            } else {
+                Kain_potongan::insert([
                     'uuid'              => Uuid::uuid4()->getHex(),
-                    'kode_spp'          => $dt['kode_spp'],
                     'kain_roll_id'      => $m_kainroll->id,
                     'ukuran'            => $dt['ukuran'],
-                    'tanggal'           => $dt['tanggal'],
-                    'quantity'          => $dt['quantity'],
-                    'hasil_potongan'    => $dt['hasil'],
-                    'karyawan'          => json_encode($dt['karyawan']),
-                    'karyawan_id'       => json_encode($k_id),
-                    'gaji'              => $dt['gaji'],
-                    'status'            => 'Belum Konfirmasi',
-                    'note'              => $note,
+                    'stok'              => $dt['hasil'],
                     'created_at'        => Carbon::now(),
                     'updated_at'        => Carbon::now()
                 ]);
+            }
 
-                if ($m_kainpotongan != null || !empty($m_kainpotongan)) {
-                    Kain_potongan::where([
-                        ['kain_roll_id', $m_kainroll->id],
-                        ['ukuran', $dt['ukuran']]
-                    ])->update([
-                        'stok'    => $m_kainpotongan->stok + $dt['hasil']
-                    ]);
-                } else {
-                    Kain_potongan::insert([
-                        'uuid'              => Uuid::uuid4()->getHex(),
-                        'kain_roll_id'      => $m_kainroll->id,
-                        'ukuran'            => $dt['ukuran'],
-                        'stok'              => $dt['hasil'],
+            $k1 = Karyawan::where('uuid', $dt['u1'])->first();
+            $k2 = Karyawan::where('uuid', $dt['u2'])->first();
+
+            // gaji
+            if (!empty($k1)) {
+                Gaji::insert([
+                    [
+                        'karyawan_id'       => $k1->id,
+                        'kode_transaksi'    => $dt['kode_spp'],
+                        'gaji'              => $dt['gaji'] * $hasil,
                         'created_at'        => Carbon::now(),
                         'updated_at'        => Carbon::now()
-                    ]);
-                }
-
-                $k1 = Karyawan::where('uuid', $dt['u1'])->first();
-                $k2 = Karyawan::where('uuid', $dt['u2'])->first();
-
-                // gaji
-                if (!empty($k1)) {
-                    Gaji::insert([
-                        [
-                            'karyawan_id'       => $k1->id,
-                            'kode_transaksi'    => $dt['kode_spp'],
-                            'gaji'              => $dt['gaji'] * $hasil,
-                            'created_at'        => Carbon::now(),
-                            'updated_at'        => Carbon::now()
-                        ]
-                    ]);
-                }
-                if (!empty($k2)) {
-                    Gaji::insert([
-                        [
-                            'karyawan_id'       => $k2->id,
-                            'gaji'              => $dt['gaji'] * $hasil,
-                            'kode_transaksi'    => $dt['kode_spp'],
-                            'created_at'        => Carbon::now(),
-                            'updated_at'        => Carbon::now()
-                        ]
-                    ]);
-                }
-            } else {
-                $hasil = ($dt['hasil'] == 0) ? 1 :  $dt['hasil'];
-                // insert spp
-                $m_kainroll = Kain_roll::where('kode_lot', $dt['nama_lot'])->first();
-                $m_kainpotongan = Kain_potongan::join('m_kain_rolls', 'm_kain_rolls.id', '=', 'm_kain_potongans.kain_roll_id')
-                    ->where([
-                        ['m_kain_potongans.kain_roll_id', $m_kainroll->id],
-                        ['m_kain_potongans.ukuran', $dt['ukuran_kain_potong']]
-                    ])->select('m_kain_potongans.*', 'm_kain_rolls.warna', 'm_kain_rolls.kode_lot')->first();
-
-                if ($m_kainpotongan->stok < $dt['quantity']) {
-                    return response()->json([
-                        'code'              => 400,
-                        'id_kain_potongan'  => $m_kainpotongan->id,
-                        'message'           => 'Gagal Menyimpan Data! Stok kurang!',
-                    ]);
-                } else {
-                    Kain_potongan::where('id', $m_kainpotongan->id)->update([
-                        'stok'     => $m_kainpotongan->stok - $dt['quantity']
-                    ]);
-                }
-
-                $k_id = [$dt['u1'], $dt['u2']];
-
-                SPP::insert([
-                    'uuid'              => Uuid::uuid4()->getHex(),
-                    'kode_spp'          => $dt['kode_spp'],
-                    'kain_potongan_id'  => $m_kainpotongan->id,
-                    'ukuran'            => $dt['ukuran'],
-                    'tanggal'           => $dt['tanggal'],
-                    'quantity'          => $dt['quantity'],
-                    'hasil_potongan'    => $dt['hasil'],
-                    'karyawan'          => json_encode($dt['karyawan']),
-                    'karyawan_id'       => json_encode($k_id),
-                    'gaji'              => $dt['gaji'],
-                    'status'            => 'Belum Konfirmasi',
-                    'note'              => $note,
-                    'created_at'        => Carbon::now(),
-                    'updated_at'        => Carbon::now()
+                    ]
                 ]);
-
-                $cek_kainpotongan = Kain_potongan::where([
-                    ['kain_roll_id', $m_kainpotongan->kain_roll_id],
-                    ['ukuran', $dt['ukuran']]
-                ])->first();
-
-                if ($cek_kainpotongan != null || !empty($cek_kainpotongan)) {
-                    Kain_potongan::where([
-                        ['kain_roll_id', $cek_kainpotongan->kain_roll_id],
-                        ['ukuran', $dt['ukuran']]
-                    ])->update([
-                        'stok'    => $cek_kainpotongan->stok + $dt['hasil']
-                    ]);
-                } else {
-                    Kain_potongan::insert([
-                        'uuid'              => Uuid::uuid4()->getHex(),
-                        'kain_roll_id'      => $m_kainpotongan->kain_roll_id,
-                        'ukuran'            => $dt['ukuran'],
-                        'stok'              => $dt['hasil'],
+            }
+            if (!empty($k2)) {
+                Gaji::insert([
+                    [
+                        'karyawan_id'       => $k2->id,
+                        'gaji'              => $dt['gaji'] * $hasil,
+                        'kode_transaksi'    => $dt['kode_spp'],
                         'created_at'        => Carbon::now(),
                         'updated_at'        => Carbon::now()
-                    ]);
-                }
-
-                $k1 = Karyawan::where('uuid', $dt['u1'])->first();
-                $k2 = Karyawan::where('uuid', $dt['u2'])->first();
-
-                // gaji
-                if (!empty($k1)) {
-                    Gaji::insert([
-                        [
-                            'karyawan_id'       => $k1->id,
-                            'kode_transaksi'    => $dt['kode_spp'],
-                            'gaji'              => $dt['gaji'] * $hasil,
-                            'created_at'        => Carbon::now(),
-                            'updated_at'        => Carbon::now()
-                        ]
-                    ]);
-                }
-                if (!empty($k2)) {
-                    Gaji::insert([
-                        [
-                            'karyawan_id'       => $k2->id,
-                            'gaji'              => $dt['gaji'] * $hasil,
-                            'kode_transaksi'    => $dt['kode_spp'],
-                            'created_at'        => Carbon::now(),
-                            'updated_at'        => Carbon::now()
-                        ]
-                    ]);
-                }
+                    ]
+                ]);
             }
         }
 

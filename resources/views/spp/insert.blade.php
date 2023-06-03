@@ -45,27 +45,6 @@
                             <form action="#" method="POST" enctype="multipart/form-data" id="formSPP">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-2">
-                                            <h4 class="py-1">Pilih Stok Kain :</h4>
-                                        </div>
-                                        <div class="col-md-10">
-                                            <ul class="nav nav-pills text-center" id="pills-tab" role="tablist">
-                                                <li class="nav-item col">
-                                                    <a class="nav-link bg-gray-light active" id="dari_kain_roll"
-                                                        data-toggle="pill" href="#dari-kain-roll" role="tab"
-                                                        aria-controls="pills-home" aria-selected="true">Kain Roll</a>
-                                                </li>
-                                                <li class="nav-item col">
-                                                    <a class="nav-link bg-gray-light" id="dari_kain_potongan"
-                                                        data-toggle="pill" href="#dari-kain-potongan" role="tab"
-                                                        aria-controls="pills-profile" aria-selected="false">Kain
-                                                        Potongan</a>
-                                                </li>
-                                            </ul>
-                                        </div>
-                                        <div class="col-md-12">
-                                            <hr>
-                                        </div>
                                         <div class="col-md-3">
                                             <label for="kode_spp">Kode SPP</label>
                                             <div class="col-md-14 row">
@@ -100,7 +79,7 @@
                                     <div class="row">
                                         <div class="col-lg-12">
                                             <hr>
-                                            <h4 id="header_form">Form Potongan Kain Roll :</h4>
+                                            <h4 id="header_form">Form Potong Kain Roll :</h4>
                                         </div>
 
                                         <div class="col-lg-3" id="ukuran_kain_potong_visibility">
@@ -236,7 +215,6 @@
                                                     <th>Tanggal</th>
                                                     <th>Kode Lot</th>
                                                     <th>Warna</th>
-                                                    <th>Ukuran (dari Kain Potong)</th>
                                                     <th>Quantity</th>
                                                     <th>Hasil</th>
                                                     <th>Karyawan</th>
@@ -291,15 +269,6 @@
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                 }
             });
-
-            $('#dari_kain_potongan').on('click', function() {
-                $('#ukuran_kain_potong_visibility').show()
-                $('#header_form').html('Form Potong Kain Potongan :')
-                $('#kode_lot_visibility').hide()
-                $('#kode_lot_potongan_visibility').show()
-                $('#ukuran_kain_potong').prop('disabled', false)
-                clearForm()
-            })
 
             $('#dari_kain_roll').on('click', function() {
                 $('#ukuran_kain_potong_visibility').hide()
@@ -425,7 +394,6 @@
                 if (nama_lot == '') {
                     nama_lot = $('#kode_lot_potongan').val();
                 }
-                let ukuran_kain_potong = $('#ukuran_kain_potong').val();
                 let warna = $('#warna').val();
                 let quantity = $('#quantity').val();
                 let hasil = $('#hasil').val();
@@ -448,7 +416,6 @@
                             tanggal: tanggal,
                             kode_lot: kode_lot,
                             nama_lot: nama_lot,
-                            ukuran_kain_potong: ukuran_kain_potong,
                             warna: warna,
                             quantity: quantity,
                             hasil: hasil,
@@ -515,10 +482,6 @@
                         {
                             data: 'warna',
                             name: 'warna',
-                        },
-                        {
-                            data: 'ukuran_kain_potong',
-                            name: 'ukuran_kain_potong',
                         },
                         {
                             data: 'quantity',
