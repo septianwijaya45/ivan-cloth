@@ -13,7 +13,7 @@
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
-                            <li class="breadcrumb-item"><a href="{{route('dashboard')}}">Home</a></li>
+                            <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
                             <li class="breadcrumb-item active">Surat Perintah Kain</li>
                         </ol>
                     </div><!-- /.col -->
@@ -34,11 +34,11 @@
                                 <h5 class="card-title">Data Surat Perintah Kain</h5>
 
                                 <div class="card-tools">
-                                    @if(Auth::user()->role_id == 1)
-                                    <a href="{{ route('spk.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
+                                    @if (Auth::user()->role_id == 1)
+                                        <a href="{{ route('spk.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
                                     @endif
-                                    @if(Auth::user()->role_id == 3)
-                                    <a href="{{ route('w.spk.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
+                                    @if (Auth::user()->role_id == 3)
+                                        <a href="{{ route('w.spk.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
                                     @endif
                                 </div>
                             </div>
@@ -52,7 +52,7 @@
                                             <tr>
                                                 <th width="5%" style="text-align: center;">ID</th>
                                                 <th>Kode SPK</th>
-                                                <th>Total Perintah Potongan</th>
+                                                <th>Total Perintah Sablon</th>
                                                 <th>Tanggal</th>
                                                 <th>Status Surat</th>
                                                 <th width="10%">Aksi</th>
@@ -135,11 +135,11 @@
         function getSPK() {
             var htmlview
             $.ajax({
-                @if(Auth::user()->role_id == 1)
-                url: "{{ route('spk.data') }}",
+                @if (Auth::user()->role_id == 1)
+                    url: "{{ route('spk.data') }}",
                 @endif
-                @if(Auth::user()->role_id == 3)
-                url: "{{ route('w.spk.data') }}",
+                @if (Auth::user()->role_id == 3)
+                    url: "{{ route('w.spk.data') }}",
                 @endif
                 type: 'GET',
                 success: function(res) {
@@ -147,30 +147,33 @@
                     $('tbody').html('')
                     $.each(res, function(i, data) {
                         htmlview += `<tr>
-                        <td style="text-align: center;">` + (no = no+1) + `</td>
+                        <td style="text-align: center;">` + (no = no + 1) + `</td>
                         <td>` + data.kode_spk + `</td>
                         <td>` + data.total + `</td>
                         <td>` + data.tanggal + `</td>
                         `;
-                        if(data.status == 'Belum Konfirmasi'){
+                        if (data.status == 'Belum Konfirmasi') {
                             htmlview += `<td>
-                                <button class="btn btn-danger btn-sm" title="Confirm Data!" onClick="confirmSPK('` + data
+                                <button class="btn btn-danger btn-sm" title="Confirm Data!" onClick="confirmSPK('` +
+                                data
                                 .kode_spk + `')"> Belum Konfirmasi </button></td>
                             `;
                         }
-                        if(data.status == 'Sedang Dikerjakan'){
+                        if (data.status == 'Sedang Dikerjakan') {
                             htmlview += `<td>
-                                <button class="btn btn-warning btn-sm" title="Finish Data!" onClick="finishedSPK('` + data
+                                <button class="btn btn-warning btn-sm" title="Finish Data!" onClick="finishedSPK('` +
+                                data
                                 .kode_spk + `')"> Sedang Dikerjakan </button></td>
                             `;
                         }
-                        if(data.status == 'Selesai Dikerjakan'){
+                        if (data.status == 'Selesai Dikerjakan') {
                             htmlview += `<td>
                                 <span class="bg-success p-2">Selesai Dikerjakan</span></td>
                             `;
                         }
-                        htmlview +=`<td>
-                          <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-kain/edit-data/`+data.uuid+`"> <i class="fas fa-pencil-alt"></i>
+                        htmlview += `<td>
+                          <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-kain/edit-data/` +
+                            data.uuid + `"> <i class="fas fa-pencil-alt"></i>
                           </a>
                           <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPK('` + data
                             .kode_spk + `')"> <i class="fas fa-trash"></i>
@@ -196,11 +199,11 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        @if(Auth::user()->role_id == 1)
-                        var _url = "{{ route('spk.delete', 'kode_spk') }}";
+                        @if (Auth::user()->role_id == 1)
+                            var _url = "{{ route('spk.delete', 'kode_spk') }}";
                         @endif
-                        @if(Auth::user()->role_id == 3)
-                        var _url = "{{ route('w.spk.delete', 'kode_spk') }}";
+                        @if (Auth::user()->role_id == 3)
+                            var _url = "{{ route('w.spk.delete', 'kode_spk') }}";
                         @endif
                         _url = _url.replace('kode_spk', kode_spk)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -218,13 +221,13 @@
                                 $("#tbl_ukuran").DataTable().destroy();
                                 getSPK();
 
-                                if(res.code == 500){
+                                if (res.code == 500) {
                                     Notif.fire({
                                         icon: 'error',
                                         title: 'Gagal Menyimpan Data Gaji',
                                         text: 'Server Error!'
                                     });
-                                    
+
                                 }
                             },
                             error: function(err) {
@@ -245,11 +248,11 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        @if(Auth::user()->role_id == 1)
-                        var _url = "{{ route('spk.confirm', 'kode_spk') }}";
+                        @if (Auth::user()->role_id == 1)
+                            var _url = "{{ route('spk.confirm', 'kode_spk') }}";
                         @endif
-                        @if(Auth::user()->role_id == 3)
-                        var _url = "{{ route('w.spk.confirm', 'kode_spk') }}";
+                        @if (Auth::user()->role_id == 3)
+                            var _url = "{{ route('w.spk.confirm', 'kode_spk') }}";
                         @endif
                         _url = _url.replace('kode_spk', kode_spk)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -267,13 +270,13 @@
                                 $("#tbl_ukuran").DataTable().destroy();
                                 getSPK();
 
-                                if(res.code == 500){
+                                if (res.code == 500) {
                                     Notif.fire({
                                         icon: 'error',
                                         title: 'Gagal Konfirmasi Data SPK',
                                         text: 'Server Error!'
                                     });
-                                    
+
                                 }
                             },
                             error: function(err) {
@@ -294,11 +297,11 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        @if(Auth::user()->role_id == 1)
-                        var _url = "{{ route('spk.finished', 'kode_spk') }}";
+                        @if (Auth::user()->role_id == 1)
+                            var _url = "{{ route('spk.finished', 'kode_spk') }}";
                         @endif
-                        @if(Auth::user()->role_id == 3)
-                        var _url = "{{ route('w.spk.finished', 'kode_spk') }}";
+                        @if (Auth::user()->role_id == 3)
+                            var _url = "{{ route('w.spk.finished', 'kode_spk') }}";
                         @endif
                         _url = _url.replace('kode_spk', kode_spk)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -316,13 +319,13 @@
                                 $("#tbl_ukuran").DataTable().destroy();
                                 getSPK();
 
-                                if(res.code == 500){
+                                if (res.code == 500) {
                                     Notif.fire({
                                         icon: 'error',
                                         title: 'Gagal Konfirmasi Selesai Data SPK',
                                         text: 'Server Error!'
                                     });
-                                    
+
                                 }
                             },
                             error: function(err) {

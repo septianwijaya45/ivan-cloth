@@ -93,11 +93,10 @@
                                         </div>
                                         <div class="col-md-6">
                                             <div class="col-md-12">
-                                                <form action="" method="POST" id="form-data-gambar">
-                                                    <label for="">Tambahkan Gambar</label>
-                                                    <input type="file" name="gambar[]" id="gambar"
-                                                        placeholder="Tambahkan Gambar" class="form-control" multiple>
-                                                </form>
+                                                <label for="">Tambahkan Gambar <span class="text-mute">*max
+                                                        2MB</span></label>
+                                                <input type="file" name="gambar" id="gambar"
+                                                    placeholder="Tambahkan Gambar" class="form-control">
                                             </div>
                                             <br>
                                             <div class="col-md-12">
@@ -806,15 +805,16 @@
                                 },
                                 success: function(res) {
                                     if (res.code === 200) {
-                                        Swal.fire(
-                                            'Berhasil!',
-                                            'Berhasil Simpan Data!',
-                                            'success'
-                                        )
                                         data = [];
                                         $('#btn-tambah').attr('disabled', true);
                                         $('#btn-save-data').attr('disabled', true);
-                                        saveGambar();
+
+                                        saveGambar()
+
+                                        setTimeout(() => {
+                                            window.location.href =
+                                                "{{ route('spk') }}"
+                                        }, 1500);
                                     }
                                     if (res.code === 400) {
                                         Swal.fire(
@@ -848,16 +848,12 @@
             // simpan gambar
             function saveGambar() {
                 let kode_spk = $('#kode_spk').val()
-                let form = document.getElementById('form-data-gambar');
-                let formData = new FormData(form)
-                const totalGambar = $('#gambar')[0].files.length;
-                let gambar = $('#gambar')[0];
-
-                for (let i = 0; i < totalGambar; i++) {
-                    formData.append('gambar' + i, gambar.files[i])
-                }
-                formData.append('totalGambar', totalGambar)
+                let gambar = $('#gambar')[0].files[0];
+                let formData = new FormData()
+                formData.append('gambar', gambar)
                 formData.append('kode_spk', kode_spk)
+
+                console.log(formData);
 
                 $.ajaxSetup({
                     headers: {
@@ -880,10 +876,11 @@
                     contentType: false,
                     success: function(res) {
                         if (res.code === 200) {
-                            setTimeout(() => {
-                                window.location.href =
-                                    "{{ route('spk') }}"
-                            }, 1500);
+                            Swal.fire(
+                                'Berhasil!',
+                                'Berhasil Simpan Data!',
+                                'success'
+                            )
                         }
                         if (res.code === 400) {
                             Swal.fire(

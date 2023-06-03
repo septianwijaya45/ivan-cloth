@@ -58,7 +58,8 @@ class SPKController extends Controller
 
     public function indexData()
     {
-        $data = SPK::select('uuid', 'kode_spk', DB::raw('COUNT(*) as total'), DB::raw('DATE_FORMAT(tanggal, "%d %M %Y") as tanggal'), 'status')->groupBy('kode_spk')->get();
+        $data = SPK::join('t_spk_details', 't_spk_details.t_spk_id', '=', 't_spks.id')
+            ->select('t_spks.uuid', 't_spk_details.kode_spk', DB::raw('COUNT(t_spk_details.t_spk_id) as total'), DB::raw('DATE_FORMAT(t_spks.tanggal, "%d %M %Y") as tanggal'), 't_spks.status')->groupBy('t_spk_details.kode_spk')->get();
         return response()->json($data);
     }
 
@@ -170,8 +171,7 @@ class SPKController extends Controller
     public function storeGambar(Request $request)
     {
         $validate = $request->validate([
-            'gambar' => 'required',
-            'gambar.*' => 'mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'gambar'   => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if (!$validate) {
@@ -182,19 +182,16 @@ class SPKController extends Controller
             ]);
         }
 
-        if ($request->hasfile('gambar')) {
-            foreach ($request->gambar as $image) {
-                $name = time() . rand(1, 100) . '.' . $image->extension();
-                if ($image->move(public_path('img/gambar/'), $name)) {
-                    FileSPK::create([
-                        'uuid'      => Uuid::uuid4()->getHex(),
-                        'kode_spk'  => $request->kode_spk,
-                        'nama_foto' => $name,
-                        'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now()
-                    ]);
-                }
-            }
+
+        $name = time() . rand(1, 100) . '.' . $request->gambar->extension();
+        if ($request->gambar->move(public_path('img/gambar/'), $name)) {
+            FileSPK::create([
+                'uuid'      => Uuid::uuid4()->getHex(),
+                'kode_spk'  => $request->kode_spk,
+                'nama_foto' => $name,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]);
         }
 
         return response()->json([
@@ -206,8 +203,7 @@ class SPKController extends Controller
     public function storeGambarEdit(Request $request)
     {
         $validate = $request->validate([
-            'gambar' => 'required',
-            'gambar.*' => 'mimes:jpeg,png,jpg,gif,svg|max:2048'
+            'gambar'   => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
         ]);
 
         if (!$validate) {
@@ -218,19 +214,16 @@ class SPKController extends Controller
             ]);
         }
 
-        if ($request->hasfile('gambar')) {
-            foreach ($request->gambar as $image) {
-                $name = time() . rand(1, 100) . '.' . $image->extension();
-                if ($image->move(public_path('img/gambar/'), $name)) {
-                    FileSPK::create([
-                        'uuid'      => Uuid::uuid4()->getHex(),
-                        'kode_spk'  => $request->kode_spk,
-                        'nama_foto' => $name,
-                        'created_at' => Carbon::now(),
-                        'updated_at' => Carbon::now()
-                    ]);
-                }
-            }
+
+        $name = time() . rand(1, 100) . '.' . $request->gambar->extension();
+        if ($request->gambar->move(public_path('img/gambar/'), $name)) {
+            FileSPK::create([
+                'uuid'      => Uuid::uuid4()->getHex(),
+                'kode_spk'  => $request->kode_spk,
+                'nama_foto' => $name,
+                'created_at' => Carbon::now(),
+                'updated_at' => Carbon::now()
+            ]);
         }
 
         return response()->json([

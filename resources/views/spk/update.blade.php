@@ -33,7 +33,8 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title">Form Edit SPK : {{ $spk->kode_spk }}</h5>
+                                <h5 class="card-title">Form Edit SPK : {{ $spk->kode_spk }} ( Ukuran : {{ $spk->ukuran }} |
+                                    Artikel : {{ $spk->artikel }} )</h5>
                                 <div class="card-tools">
                                     <a href="{{ route('spk') }}" class="btn btn-warning btn-sm">Kembali</a>
                                 </div>
@@ -197,7 +198,8 @@
                                                     <div class="col-md-14 row">
                                                         <div class="col-md-12">
                                                             <input type="text" name="artikel" id="artikel"
-                                                                class="form-control" value="" readonly>
+                                                                class="form-control" value="{{ $spk->artikel }}"
+                                                                readonly>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -211,17 +213,8 @@
                                                 <div class="col-md-3">
                                                     <label for="ukuran">Model / Ukuran</label>
                                                     <div class="col-md-12">
-                                                        <select name="ukuran" id="ukuran" class="form-control">
-                                                            <option value="" selected disabled class="text-center">
-                                                                Pilih
-                                                                Ukuran</option>
-                                                            @foreach ($ukuran as $data)
-                                                                <option value="{{ $data->kode_ukuran }}"
-                                                                    class="text-center">
-                                                                    {{ $data->kode_ukuran }} ({{ $data->ukuran }})
-                                                                </option>
-                                                            @endforeach
-                                                        </select>
+                                                        <input name="ukuran" id="ukuran" class="form-control"
+                                                            value="{{ $spk->ukuran }}" readonly>
                                                     </div>
                                                 </div>
                                             </div>
@@ -393,8 +386,8 @@
                                         class="dataTables_wrapper dt-bootstrap4 table-responsive text-nowrap">
                                         <div class="col-lg-12">
                                             <label for="">Tambahkan Gambar</label>
-                                            <input type="file" name="gambar[]" id="gambar"
-                                                placeholder="Tambahkan Gambar" class="form-control" multiple>
+                                            <input type="file" name="gambar" id="gambar"
+                                                placeholder="Tambahkan Gambar" class="form-control">
                                         </div>
                                         <br>
                                         <div class="col-lg-12">
@@ -407,14 +400,10 @@
                                                             data-card-widget="collapse">
                                                             <i class="fas fa-plus"></i>
                                                         </button>
-                                                        <button type="button" class="btn btn-tool"
-                                                            data-card-widget="remove">
-                                                            <i class="fas fa-times"></i>
-                                                        </button>
                                                     </div>
                                                 </div>
                                                 <!-- /.card-header -->
-                                                <div class="card-body" style="display: none;">
+                                                <div class="card-body" style="display: block;">
                                                     <div class="row">
                                                         <div class="upload-img">
                                                             @foreach ($gambarSpk as $dt)
@@ -463,7 +452,7 @@
         $(document).ready(function() {
 
             function refreshS2main() {
-                $("#ukuran, [name*='kp_id[]'],[name*='satuan[]'], [name*='karyawan_1[]'], [name*='karyawan_2[]'], [name*='gaji[]']")
+                $("[name*='kp_id[]'],[name*='satuan[]'], [name*='karyawan_1[]'], [name*='karyawan_2[]'], [name*='gaji[]']")
                     .select2({
                         theme: 'classic',
                         width: '100%',
@@ -599,6 +588,8 @@
                 })
             }
 
+            $('#ukuran').trigger()
+
             $(document).on('change', '#ukuran', function(e) {
                 e.preventDefault();
                 let data = $('#ukuran').val();
@@ -612,8 +603,6 @@
                     // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
                     method: "GET",
                     success: function(res) {
-
-                        $('#artikel').val(res.artikel);
 
                         let htmlView =
                             '<option value="" selected disabled class="text-center">Kain Potongan</option>'
@@ -657,7 +646,7 @@
                         reader.onload = function(event) {
                             let html = `
                                 <div class = "uploaded-img">
-                                    <img src = "${event.target.result}" width="600" class="text-center">
+                                    <img src = "${event.target.result}" width="600px">
                                 </div>
                             `;
                             $(".upload-img").append(html);
@@ -666,7 +655,7 @@
                     }
 
                     $('.upload-info-value').text(filesAmount);
-                    $('.upload-img').css('padding', "20px");
+                    $('.upload-img').css('padding', "2px");
                 }
             });
         });
@@ -961,8 +950,6 @@
 
             // clear input
             function clearForm() {
-                $('[name="ukuran"]').val('').trigger('change.select2');
-                $('[name="artikel"]').val('');
                 $('[name*="kp_id" ]').val('').trigger('change.select2');
                 $('[name*="satuan" ]').val('').trigger('change.select2');
                 $('[name*="sisa_stok"]').val('');
@@ -976,7 +963,7 @@
             $('#tabel_insert').on('click', '#edit-data', function() {
                 let uuid = $(this).data('uuid');
                 let dt_detail = data.find(dt => dt.uuid === uuid)
-                $('#ukuran').val(dt_detail.ukuran).change();
+                $('#ukuran').val(dt_detail.ukuran);
                 $('#tanggal').val(dt_detail.tanggal);
                 $('#kode_lot').val(dt_detail.kode_lot).change();
                 $('#warna').val(dt_detail.warna);
@@ -1077,15 +1064,9 @@
                         if (result.isConfirmed) {
                             e.preventDefault();
                             let kode_spk = $('#kode_spk').val()
-                            let form = document.getElementById('form-data-gambar');
-                            let formData = new FormData(form)
-                            const totalGambar = $('#gambar')[0].files.length;
-                            let gambar = $('#gambar')[0];
-
-                            for (let i = 0; i < totalGambar; i++) {
-                                formData.append('gambar' + i, gambar.files[i])
-                            }
-                            formData.append('totalGambar', totalGambar)
+                            let gambar = $('#gambar')[0].files[0];
+                            let formData = new FormData()
+                            formData.append('gambar', gambar)
                             formData.append('kode_spk', kode_spk)
 
                             $.ajaxSetup({
@@ -1111,7 +1092,7 @@
                                     if (res.code === 200) {
                                         Swal.fire(
                                             'Berhasil!',
-                                            'Berhasil Simpan Data! Silahkan Upload Gambar!',
+                                            'Berhasil Simpan Data!',
                                             'success'
                                         )
 

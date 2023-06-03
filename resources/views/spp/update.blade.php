@@ -48,24 +48,6 @@
                             <form action="#" method="POST" enctype="multipart/form-data" id="formSPP">
                                 <div class="card-body">
                                     <div class="row">
-                                        <div class="col-md-2">
-                                            <h4 class="py-1">Pilih Stok Kain :</h4>
-                                        </div>
-                                        <div class="col-md-10">
-                                            <ul class="nav nav-pills text-center" id="pills-tab" role="tablist">
-                                                <li class="nav-item col">
-                                                    <a class="nav-link bg-gray-light active" id="dari_kain_roll"
-                                                        data-toggle="pill" href="#dari-kain-roll" role="tab"
-                                                        aria-controls="pills-home" aria-selected="true">Kain Roll</a>
-                                                </li>
-                                                <li class="nav-item col">
-                                                    <a class="nav-link bg-gray-light" id="dari_kain_potongan"
-                                                        data-toggle="pill" href="#dari-kain-potongan" role="tab"
-                                                        aria-controls="pills-profile" aria-selected="false">Kain
-                                                        Potongan</a>
-                                                </li>
-                                            </ul>
-                                        </div>
                                         <div class="col-md-3">
                                             <input type="text" name="id" id="id-data" value=""
                                                 class="form-control" hidden readonly>
@@ -239,7 +221,6 @@
                                                     <th>Tanggal</th>
                                                     <th>Kode Lot</th>
                                                     <th>Warna</th>
-                                                    <th>Ukuran (dari Kain Potong)</th>
                                                     <th>Quantity</th>
                                                     <th>Hasil</th>
                                                     <th>Karyawan</th>
@@ -432,7 +413,6 @@
                 if (nama_lot == '') {
                     nama_lot = $('#kode_lot_potongan').val();
                 }
-                let ukuran_kain_potong = $('#ukuran_kain_potong').val();
                 let warna = $('#warna').val();
                 let quantity = $('#quantity').val();
                 let hasil = $('#hasil').val();
@@ -458,7 +438,6 @@
                             tanggal: tanggal,
                             kode_lot: kode_lot,
                             nama_lot: nama_lot,
-                            ukuran_kain_potong: ukuran_kain_potong,
                             warna: warna,
                             quantity: quantity,
                             hasil: hasil,
@@ -525,10 +504,6 @@
                         {
                             data: 'warna',
                             name: 'warna',
-                        },
-                        {
-                            data: 'ukuran_kain_potong',
-                            name: 'ukuran_kain_potong',
                         },
                         {
                             data: 'quantity',
@@ -618,7 +593,6 @@
                 $('[name="karyawan_1"]').val('').trigger('change.select2');
                 $('[name="karyawan_2"]').val('').trigger('change.select2');
                 $('[name="gaji"]').val('').trigger('change.select2');
-                $('[name="ukuran_kain_potong"]').val('').trigger('change.select2');
                 $('[name="kode_lot_potongan"]').val('').trigger('change.select2');
             }
 
@@ -645,7 +619,6 @@
 
                     $('#ukuran').val(dt_detail.ukuran).change();
                     $('#tanggal').val(dt_detail.tanggal);
-                    $('#ukuran_kain_potong').val(dt_detail.ukuran_kain_potong).change();
                     $('#kode_lot_potongan').val(dt_detail.nama_lot);
                     $('#warna').val(dt_detail.warna);
                     $('#quantity').val(dt_detail.quantity);
