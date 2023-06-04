@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\FileSPK;
 use App\Models\Gaji;
 use App\Models\GajiMaster;
+use App\Models\Jahit;
 use App\Models\Kain_potongan;
 use App\Models\Kain_roll;
 use App\Models\Kain_tersablon;
@@ -525,9 +526,28 @@ class SPKController extends Controller
                 'status' => 'Selesai Dikerjakan'
             ]);
 
+            $spk = SPK::where('kode_spk', $kode_spk)->first();
+            $detail_spk = SPKDetail::where('kode_spk', $kode_spk)->get();
+
+            foreach ($detail_spk as $data) {
+                Jahit::create([
+                    'uuid'          => Uuid::uuid4()->getHex(),
+                    'detail_spk_id' => $data->id,
+                    'kode_spk'      => $data->kode_spk,
+                    'kode_jahit'    => kodeJahit(),
+                    'artikel'       => $spk->artikel,
+                    'tanggal'       => Carbon::now(),
+                    'jumlah_jahit'  => $data->quantity,
+                    'satuan'        => $data->satuan,
+                    'gaji'          => 0,
+                    'status'        => 'Belum Menentukan Karyawan',
+                ]);
+            }
+
             return response()->json([
                 'code'      => 200,
-                'message'   => 'Berhasil Konfirmasi Data SPK!',
+                'message'   => 'Berhasil Konfirmasi Data SPK!
+                <br> Surat Jahit berhasil dibuat, Silahkan lengkapi data karyawan jahit!',
             ]);
         } catch (\Throwable $th) {
             //throw $th;
