@@ -178,7 +178,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
         });
 
         // Route Jahit
-        Route::group(['prefix' => 'Jahit'], function () {
+        Route::group(['prefix' => 'jahit'], function () {
             // get artikel spk
             Route::get('getArtikelFromSPK/{kode_spk}', [JahitController::class, 'getArtikelFromSPK'])->name('getArtikelSpk');
             Route::get('getQuantityArtikel/{id}', [JahitController::class, 'getQuantityArtikel'])->name('getQuantityArtikel');
@@ -199,6 +199,9 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // Confirm & Finishing
             Route::put('confirm-work/{kode_jahit}', [JahitController::class, 'confirm'])->name('jahit.confirm');
             Route::put('finished-work/{kode_jahit}', [JahitController::class, 'finished'])->name('jahit.finished');
+
+            Route::get('detail-karyawan/{kode_jahit}', [JahitController::class, 'detailFormKaryawan'])->name('jahit.detailKaryawan');
+            Route::put('tambah-karyawan/{id}', [JahitController::class, 'addKaryawanJahit'])->name('jahit.addKaryawan');
         });
 
         // Route Pemasukkan

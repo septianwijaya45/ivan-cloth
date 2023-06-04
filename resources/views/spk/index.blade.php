@@ -126,7 +126,7 @@
             toast: true,
             position: 'top-end',
             showConfirmButton: false,
-            timer: 2000,
+            timer: 5000,
             timerProgressBar: true,
         })
 
@@ -289,7 +289,7 @@
 
         function finishedSPK(kode_spk) {
             Swal.fire({
-                    title: "Apakah anda yakin konfirmasi selesai data ini?",
+                    title: "Apakah anda yakin konfirmasi selesai data ini? <br> Surat Jahit akan dibuat otomatis!",
                     icon: "warning",
                     showCancelButton: true,
                     confirmButtonText: "Ya, Konfirmasi!",
