@@ -29,8 +29,6 @@ class SPPController extends Controller
         return response()->json($data);
     }
 
-
-
     public function searchKainPotongan($ukuran)
     {
         $data = Kain_potongan::join('m_kain_rolls', 'm_kain_rolls.id', '=', 'm_kain_potongans.kain_roll_id')

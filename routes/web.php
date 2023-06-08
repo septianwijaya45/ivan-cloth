@@ -207,6 +207,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::get('',  [PemasukkanController::class, 'index'])->name('pemasukkan');
             Route::get('data', [PemasukkanController::class, 'indexData'])->name('pemasukkan.data');
             Route::post('search-data', [PemasukkanController::class, 'indexData'])->name('pemasukkan.searchData');
+            Route::post('search-data-pemasukkan', [PemasukkanController::class, 'indexDataPemasukkan'])->name('pemasukkan.searchPemasukkan');
             // Insert
             Route::get('tambah-data',  [PemasukkanController::class, 'insert'])->name('pemasukkan.insert');
             Route::post('tambah-data',  [PemasukkanController::class, 'store'])->name('pemasukkan.store');
@@ -226,6 +227,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::get('',  [PengeluaranController::class, 'index'])->name('pengeluaran');
             Route::get('data', [PengeluaranController::class, 'indexData'])->name('pengeluaran.data');
             Route::post('search-data', [PengeluaranController::class, 'indexData'])->name('pengeluaran.searchData');
+            Route::post('search-data-pengeluaran', [PengeluaranController::class, 'indexDataPengeluaran'])->name('pengeluaran.searchPengeluaran');
             // Insert
             Route::get('tambah-data',  [PengeluaranController::class, 'insert'])->name('pengeluaran.insert');
             Route::post('tambah-data',  [PengeluaranController::class, 'store'])->name('pengeluaran.store');
@@ -242,6 +244,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::get('', [TransaksiGajiController::class, 'index'])->name('tgaji');
             Route::get('data', [TransaksiGajiController::class, 'indexData'])->name('tgaji.data');
             Route::post('', [TransaksiGajiController::class, 'indexData'])->name('tgaji.searchData');
+            Route::put('konfirmasi-gaji/{sp}/{id}', [TransaksiGajiController::class, 'confirmGaji'])->name('tgaji.confirm');
         });
     });
 

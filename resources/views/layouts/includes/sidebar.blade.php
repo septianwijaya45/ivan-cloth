@@ -254,7 +254,7 @@
                 </li>
                 <li class="nav-header">Keuangan</li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('pemasukkan') }}" class="nav-link">
                         <i class="nav-icon fas fa-chart-line"></i>
                         <p>
                             Pemasukkan
@@ -262,10 +262,18 @@
                     </a>
                 </li>
                 <li class="nav-item">
-                    <a href="#" class="nav-link">
+                    <a href="{{ route('pengeluaran') }}" class="nav-link">
                         <i class="nav-icon fas fa-receipt"></i>
                         <p>
                             Pengeluaran
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="{{ route('tgaji') }}" class="nav-link">
+                        <i class="nav-icon fas fa-money-bill"></i>
+                        <p>
+                            Pengeluaran Gaji
                         </p>
                     </a>
                 </li>

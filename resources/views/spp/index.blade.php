@@ -174,6 +174,9 @@
                           <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-potong/edit-data/` +
                             data.uuid + `"> <i class="fas fa-pencil-alt"></i>
                           </a>
+                          <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-potong/print-data/` +
+                            data.uuid + `"> <i class="fas fa-print"></i>
+                          </a>
                           <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPP('` + data
                             .kode_spp + `')"> <i class="fas fa-trash"></i>
                           </button>
