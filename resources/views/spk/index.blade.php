@@ -1,5 +1,5 @@
 @extends('layouts.app')
-@section('title', 'Surat Perintah Kain')
+@section('title', 'Surat Perintah Kerja')
 
 @section('content')
     <!-- Content Wrapper. Contains page content -->
@@ -9,12 +9,12 @@
             <div class="container-fluid">
                 <div class="row mb-2">
                     <div class="col-sm-6">
-                        <h1 class="m-0">Surat Perintah Kain</h1>
+                        <h1 class="m-0">Surat Perintah Kerja</h1>
                     </div><!-- /.col -->
                     <div class="col-sm-6">
                         <ol class="breadcrumb float-sm-right">
                             <li class="breadcrumb-item"><a href="{{ route('dashboard') }}">Home</a></li>
-                            <li class="breadcrumb-item active">Surat Perintah Kain</li>
+                            <li class="breadcrumb-item active">Surat Perintah Kerja</li>
                         </ol>
                     </div><!-- /.col -->
                 </div><!-- /.row -->
@@ -31,7 +31,7 @@
                     <div class="col-md-12">
                         <div class="card">
                             <div class="card-header">
-                                <h5 class="card-title">Data Surat Perintah Kain</h5>
+                                <h5 class="card-title">Data Surat Perintah Kerja</h5>
 
                                 <div class="card-tools">
                                     @if (Auth::user()->role_id == 1)
@@ -172,10 +172,10 @@
                             `;
                         }
                         htmlview += `<td>
-                          <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-kain/edit-data/` +
+                          <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-kerja/edit-data/` +
                             data.uuid + `"> <i class="fas fa-pencil-alt"></i>
                           </a>
-                          <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-potong/print-data/` +
+                          <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-kerja/print-data/` +
                             data.uuid + `"> <i class="fas fa-print"></i>
                           </a>
                           <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPK('` + data

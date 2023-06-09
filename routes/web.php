@@ -141,10 +141,13 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
 
             Route::get('get-data/{ukuran}', [SPPController::class, 'searchKainPotongan'])->name('spp.searchKainPotongan');
             Route::get('get-data/{ukuran}/{kode_lot}', [SPPController::class, 'searchKainPotonganStok'])->name('spp.searchKainPotonganStok');
+
+            // Print SPP
+            Route::get('print-data/{uuid}', [SPPController::class, 'cetakPdf'])->name('spp.cetakPdf');
         });
 
         // Route SPK
-        Route::group(['prefix' => 'surat-perintah-kain'], function () {
+        Route::group(['prefix' => 'surat-perintah-kerja'], function () {
             // getArticle
             Route::get('artikel/{artikel}', [SPKController::class, 'getArtikel'])->name('spk.artikel');
             // get Hasil Potongan
