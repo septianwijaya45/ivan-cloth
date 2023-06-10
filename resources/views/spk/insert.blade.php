@@ -95,8 +95,8 @@
                                             <div class="col-md-12">
                                                 <label for="">Tambahkan Gambar <span class="text-mute">*max
                                                         2MB</span></label>
-                                                <input type="file" name="gambar" id="gambar"
-                                                    placeholder="Tambahkan Gambar" class="form-control">
+                                                <input type="file" name="gambar[]" id="gambar"
+                                                    placeholder="Tambahkan Gambar" class="form-control" multiple>
                                             </div>
                                             <br>
                                             <div class="col-md-12">
@@ -279,6 +279,26 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-primary">
+                                <h3 class="card-title">Gambar Per Artikel</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: block;">
+                                <div class="row upload-img2 ">
+                                    
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </div>
                 <!-- /.row -->
             </div>
@@ -291,6 +311,12 @@
 @section('script')
     <script>
         $(document).ready(function() {
+            $.ajaxSetup({
+                headers: {
+                    'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
+                        'content')
+                }
+            });
 
             function refreshS2main() {
                 $("#ukuran, [name*='kp_id[]'],[name*='satuan[]'], [name*='karyawan_1[]'], [name*='karyawan_2[]'], [name*='gaji[]']")
@@ -405,10 +431,10 @@
                 $('#add_kain_potongan').hide()
                 $.ajax({
                     @if (Auth::user()->role_id == 1)
-                        url: "{{ url('surat-perintah-kain/artikel') }}/" + data,
+                        url: "{{ url('surat-perintah-kerja/artikel') }}/" + data,
                     @endif
                     @if (Auth::user()->role_id == 3)
-                        url: "{{ url('warehouse/surat-perintah-kain/artikel') }}/" + data,
+                        url: "{{ url('warehouse/surat-perintah-kerja/artikel') }}/" + data,
                     @endif
                     // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
                     method: "GET",
@@ -434,10 +460,10 @@
                 let data = $('#ukuran').val();
                 $.ajax({
                     @if (Auth::user()->role_id == 1)
-                        url: "{{ url('surat-perintah-kain/artikel') }}/" + data,
+                        url: "{{ url('surat-perintah-kerja/artikel') }}/" + data,
                     @endif
                     @if (Auth::user()->role_id == 3)
-                        url: "{{ url('warehouse/surat-perintah-kain/artikel') }}/" + data,
+                        url: "{{ url('warehouse/surat-perintah-kerja/artikel') }}/" + data,
                     @endif
                     // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
                     method: "GET",
@@ -465,10 +491,10 @@
                 let $this = $(this).closest('tr')
                 $.ajax({
                     @if (Auth::user()->role_id == 1)
-                        url: "{{ url('surat-perintah-kain/hasil-potongan') }}/" + kp_id,
+                        url: "{{ url('surat-perintah-kerja/hasil-potongan') }}/" + kp_id,
                     @endif
                     @if (Auth::user()->role_id == 3)
-                        url: "{{ url('warehouse/surat-perintah-kain/hasil-potongan') }}/" + kp_id,
+                        url: "{{ url('warehouse/surat-perintah-kerja/hasil-potongan') }}/" + kp_id,
                     @endif
                     method: "GET",
                     success: function(res) {
@@ -480,11 +506,23 @@
             $('#gambar').change(event => {
                 if (event.target.files) {
                     let filesAmount = event.target.files.length;
+                    let image = event.target.files;
                     $('.upload-img').html("");
 
+                    
+                    var validMimeTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
                     for (let i = 0; i < filesAmount; i++) {
-                        let reader = new FileReader();
-                        reader.onload = function(event) {
+                        if (validMimeTypes.indexOf(event.target.files[i].type) === -1) {
+                            Swal.fire(
+                                'Gagal!',
+                                'Gambar Harus Berformat JPEG, PNG, JPG dan GIF!',
+                                'error'
+                            )
+                            $('#gambar').val('');
+                        }else{ 
+                            let reader = new FileReader();
+        
+                            reader.onload = function(event) {
                             let html = `
                                 <div class = "uploaded-img p-0">
                                     <img src = "${event.target.result}" width="100%" class="p-0">
@@ -493,10 +531,11 @@
                             $(".upload-img").append(html);
                         }
                         reader.readAsDataURL(event.target.files[i]);
-                    }
 
-                    $('.upload-info-value').text(filesAmount);
-                    $('.upload-img').css('padding', "0px");
+                            $('.upload-info-value').text(filesAmount);
+                            $('.upload-img').css('padding', "0px");
+                        }
+                    }
                 }
             });
         });
@@ -515,6 +554,7 @@
             };
 
             var data = [];
+            var dataImage = [];
 
             // Simpan
             $('#btn-tambah').on('click', function() {
@@ -551,12 +591,15 @@
                     .map(function() {
                         return $(this).val();
                     }).get();
+                
+                
 
                 try {
                     if (kp_id !== null && kp_id !== '' && satuan !== null && satuan !== '' && ukuran !==
                         null && ukuran !== '' && kode_spk !== null && kode_spk !== '' && k1 !== null &&
                         k1 !== '' && gaji !== null && gaji !== '' && k1 !== k2) {
                         let uuidmake = uuid();
+                        
                         for (let i = 0; i < kp_id.length; i++) {
                             data.push({
                                 "uuid": uuidmake,
@@ -576,13 +619,16 @@
                             })
                         }
 
-                        // data.push({
-                        //     spk_data: spk_data
-                        // })
-                        console.log(data)
+                        let gambarInput = document.getElementById("gambar");
+                        let gambar = gambarInput.files;
+
+                        if(gambar.length !== 0){
+                            saveGambar();
+                        }
 
                         dataInsert(data);
-                        clearForm()
+                        clearForm();
+                        getGambar()
 
                         Swal.fire(
                             'Berhasil!',
@@ -726,11 +772,58 @@
                     .then((result) => {
                         if (result.isConfirmed) {
                             check = data.findIndex(e => e['uuid'] === uuid)
-                            console.log(check)
+                            let findByUuid = data.find(e => e.uuid === uuid);
+                            let kode_spk = findByUuid.kode_spk;
+                            let artikel = findByUuid.artikel;
+
                             if (check !== -1) {
                                 data.splice(check, 1)
                             }
+
+                            findByUuid = data.find(e => (e.kode_spk === kode_spk && e.artikel === artikel));
+                            let length = findByUuid ? findByUuid.length : 0;
+
+                            if(length === 0){
+                                @if (Auth::user()->role_id == 1)
+                                    let _url = "{{ route('spk.deleteBySPKArtikelGambar', ['kode_spk', 'artikel']) }}";
+                                    _url = _url.replace('kode_spk', kode_spk)
+                                    _url = _url.replace('artikel', artikel)
+                                @endif
+
+                                $.ajax({
+                                    url: _url,
+                                    method: "DELETE",
+                                    success: function(res) {
+                                        getGambar()
+                                        if (res.code === 200) {
+                                            Swal.fire(
+                                                'Berhasil!',
+                                                'Berhasil Hapus Gambar!',
+                                                'success'
+                                            )
+                                        }
+                                        if (res.code === 500) {
+                                            console.log(res.error)
+                                            Swal.fire(
+                                                'Gagal!',
+                                                'Server Error!',
+                                                'error'
+                                            )
+                                        }
+                                    },
+                                    error: function(err) {
+                                        console.log(err);
+                                        Swal.fire(
+                                            'Gagal!',
+                                            'Server Error!',
+                                            'error'
+                                        )
+                                    }
+                                })
+                            }
+
                             dataInsert(data);
+                            getGambar();
                             Swal.fire(
                                 'Berhasil!',
                                 'Berhasil Hapus Data!',
@@ -745,10 +838,14 @@
                 $('[name*="kp_id" ]').val('').trigger('change.select2');
                 $('[name*="satuan" ]').val('').trigger('change.select2');
                 $('[name*="sisa_stok"]').val('');
+                $('[name*="ukuran" ]').val('').trigger('change.select2');
+                $('[name*="artikel"]').val('');
                 $('[name*="kain_potongan_dipakai"]').val('0');
                 $('[name*="karyawan_1"]').val('').trigger('change.select2');
                 $('[name*="karyawan_2"]').val('').trigger('change.select2');
                 $('[name*="gaji"]').val('').trigger('change.select2');
+                $('#gambar').val('');
+                $('.uploaded-img').remove();
             }
 
             // edit data table
@@ -757,19 +854,7 @@
                 let dt_detail = data.find(dt => dt.uuid === uuid)
                 $('#ukuran').val(dt_detail.ukuran).change();
                 $('#tanggal').val(dt_detail.tanggal);
-                $('#kode_lot').val(dt_detail.kode_lot).change();
-                $('#warna').val(dt_detail.warna);
-                $('#berat').val(dt_detail.berat);
-                $('#hasil').val(dt_detail.hasil);
-                $('#gaji').val(dt_detail.gaji).change();
-                $('#karyawan_1').val(dt_detail.k1).change();
-                $('#karyawan_2').val(dt_detail.k2).change();
-
-                let check = data.findIndex(e => e['uuid'] === uuid)
-                if (check !== -1) {
-                    data.splice(check, 1)
-                }
-                dataInsert(data);
+                $('#artikel').val(dt_detail.artikel);
             })
 
 
@@ -809,8 +894,6 @@
                                         $('#btn-tambah').attr('disabled', true);
                                         $('#btn-save-data').attr('disabled', true);
 
-                                        saveGambar()
-
                                         setTimeout(() => {
                                             window.location.href =
                                                 "{{ route('spk') }}"
@@ -847,20 +930,18 @@
 
             // simpan gambar
             function saveGambar() {
+                let artikel = $('#artikel').val()
                 let kode_spk = $('#kode_spk').val()
-                let gambar = $('#gambar')[0].files[0];
+                
+                let gambarInput = document.getElementById("gambar");
+                let gambar = gambarInput.files;
+
                 let formData = new FormData()
-                formData.append('gambar', gambar)
+                for (var i = 0; i < gambar.length; i++) {
+                    formData.append('gambar[]', gambar[i])
+                }
+                formData.append('artikel', artikel)
                 formData.append('kode_spk', kode_spk)
-
-                console.log(formData);
-
-                $.ajaxSetup({
-                    headers: {
-                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr(
-                            'content')
-                    }
-                });
 
                 $.ajax({
                     @if (Auth::user()->role_id == 1)
@@ -875,6 +956,7 @@
                     cache: false,
                     contentType: false,
                     success: function(res) {
+                        getGambar()
                         if (res.code === 200) {
                             Swal.fire(
                                 'Berhasil!',
@@ -908,6 +990,50 @@
                     }
                 })
             }
-        });
+
+            getGambar()
+            // get Gambar
+            function getGambar(){
+                let kode_spk = $('#kode_spk').val()
+                let formData = new FormData()
+                formData.append('kode_spk', kode_spk)
+
+                $.ajax({
+                    @if (Auth::user()->role_id == 1)
+                        url: "{{ route('spk.getGambar') }}",
+                    @endif
+                    @if (Auth::user()->role_id == 3)
+                        url: "{{ route('spk.getGambar') }}",
+                    @endif
+                    method: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(res) {
+                        let dataImages = res.data;
+                        let html = '';
+                        $('.uploaded-img').remove();
+                        for (let i = 0; i < dataImages.length; i++) {
+                            html += `<div class="col-md-4 p-0 uploaded-img">
+                                        <div class="col-md-6">
+                                            <p>Artikel: <span>`+dataImages[i].artikel+`</span></p>
+                                            <img src="{{ url('/img/gambar') }}/`+dataImages[i].nama_foto+`"
+                                            width="300" class="text-center">
+                                        </div>
+                                </div>`;
+                        }
+                        $(".upload-img2").append(html);
+                    },
+                    error: function(err) {
+                        console.log(err);
+                        Swal.fire(
+                            'Gagal!',
+                            'Server Error!',
+                            'error'
+                        )
+                    }
+                })
+            }
+    });
     </script>
 @endsection

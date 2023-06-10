@@ -52,13 +52,15 @@
                                                         style="width: 100%;">
                                                         <thead>
                                                             <tr>
-                                                                <th width='15%'> Kain Potongan </th>
-                                                                <th width='13%'> Sisa Stok</th>
-                                                                <th width='13%'> Quantity</th>
+                                                                <th width='12%'> Tanggal </th>
+                                                                <th width='12%'> Artikel </th>
+                                                                <th width='10%'> Ukuran </th>
+                                                                <th width='13%'> Jenis Kain</th>
+                                                                <th width='8%'> Quantity</th>
                                                                 <th width='10%'> Satuan</th>
-                                                                <th width='15%'> Karyawan 1</th>
-                                                                <th width='15%'> Karyawan 2</th>
-                                                                <th width='10%'> Gaji</th>
+                                                                <th width='12%'> Karyawan 1</th>
+                                                                <th width='12%'> Karyawan 2</th>
+                                                                <th width='20%'> Gaji</th>
                                                                 <th width="3%"></th>
                                                             </tr>
                                                         </thead>
@@ -67,6 +69,21 @@
                                                                 <?php $karyawanDetail = json_decode($dt->karyawan); ?>
 
                                                                 <tr>
+                                                                    <td>
+                                                                        <input type="date" name="tanggale[]" class="form-control" value="{{$dt->tanggal}}" readonly>
+                                                                    </td>
+                                                                    <td>
+                                                                        <input type="text" name="artikele[]" class="form-control" value="{{$dt->artikel}}" readonly>
+                                                                    </td>
+                                                                    <td>
+                                                                        <select name="ukurane[]" class="form-control" disabled>
+                                                                            <option value="" disabled
+                                                                                class="text-center"> Ukuran </option>
+                                                                            @foreach($ukuran as $u)
+                                                                                <option value="{{ $u->ukuran }}" @if($u->ukuran == $dt->ukuran) selected @endif>{{ $u->ukuran }}</option>
+                                                                            @endforeach
+                                                                        </select>
+                                                                    </td>
                                                                     <td hidden><input type="number" class="form-control"
                                                                             name="idDetail[]" value="{{ $dt->id }}"
                                                                             hidden></td>
@@ -77,12 +94,6 @@
                                                                             <option value="{{ $dt->id_kp }}" selected>
                                                                                 {{ $dt->nama_kain_roll }}</option>
                                                                         </select>
-                                                                    </td>
-                                                                    <td>
-                                                                        <input type="number" name="sisa_stoke[]"
-                                                                            class="form-control sisa_stok"
-                                                                            placeholder="Stok" value="{{ $dt->stok_roll }}"
-                                                                            readonly>
                                                                     </td>
                                                                     <td>
                                                                         <input type="number"
@@ -181,58 +192,94 @@
                                 <div class="col-md-12">
                                     <form action="#" method="POST" enctype="multipart/form-data" id="formSPK">
                                         <div class="card-body">
-                                            <h5>Detail Form Tambah Data SPK</h5>
                                             <div class="row">
-                                                <div class="col-md-3">
-                                                    <label for="kode_spp">Kode SPK</label>
-                                                    <div class="col-md-14 row">
+                                                <div class="col-md-6 row align-items-start">
+                                                    <div class="col-md-6">
+                                                        <label for="kode_spp">Kode SPK</label>
+                                                        <div class="col-md-14 row">
+                                                            <div class="col-md-12">
+                                                                <input type="text" name="kode_spk" id="kode_spk"
+                                                                    class="form-control" value="{{ $spk->kode_spk }}" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="artikel">Artikel</label>
+                                                        <div class="col-md-14 row">
+                                                            <div class="col-md-12">
+                                                                <input type="text" name="artikel" id="artikel"
+                                                                    class="form-control" value="" readonly>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="tanggal">Tanggal</label>
                                                         <div class="col-md-12">
-                                                            <input type="text" name="kode_spk" id="kode_spk"
-                                                                class="form-control" value="{{ $spk->kode_spk }}"
-                                                                readonly>
+                                                            <input type="date" name="tanggal" id="tanggal" class="form-control"
+                                                                value="{{ $spk->tanggal }}">
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6">
+                                                        <label for="ukuran">Model / Ukuran</label>
+                                                        <div class="col-md-12">
+                                                            <select name="ukuran" id="ukuran" class="form-control">
+                                                                <option value="" selected disabled class="text-center">Pilih
+                                                                    Ukuran</option>
+                                                                @foreach ($ukuran as $data)
+                                                                    <option value="{{ $data->kode_ukuran }}" class="text-center">
+                                                                        {{ $data->kode_ukuran }} ({{ $data->ukuran }})</option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
                                                     </div>
                                                 </div>
-                                                <div class="col-md-3">
-                                                    <label for="artikel">Artikel</label>
-                                                    <div class="col-md-14 row">
-                                                        <div class="col-md-12">
-                                                            <input type="text" name="artikel" id="artikel"
-                                                                class="form-control" value="{{ $spk->artikel }}"
-                                                                readonly>
+                                                <div class="col-md-6">
+                                                    <div class="col-md-12">
+                                                        <label for="">Tambahkan Gambar <span class="text-mute">*max
+                                                                2MB</span></label>
+                                                        <input type="file" name="gambar[]" id="gambar"
+                                                            placeholder="Tambahkan Gambar" class="form-control" multiple>
+                                                    </div>
+                                                    <br>
+                                                    <div class="col-md-12">
+                                                        <div class="card collapsed-card">
+                                                            <div class="card-header bg-primary">
+                                                                <h3 class="card-title">Preview Gambar</h3>
+        
+                                                                <div class="card-tools">
+                                                                    <button type="button" class="btn btn-tool"
+                                                                        data-card-widget="collapse">
+                                                                        <i class="fas fa-plus"></i>
+                                                                    </button>
+                                                                </div>
+                                                            </div>
+                                                            <!-- /.card-header -->
+                                                            <div class="card-body" style="display: none;">
+                                                                <div class="row">
+                                                                    <div class="upload-img container-fluid p-0">
+                                                                        <!-- image here -->
+                                                                    </div>
+                                                                </div>
+                                                            </div>
                                                         </div>
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <label for="tanggal">Tanggal</label>
-                                                    <div class="col-md-12">
-                                                        <input type="date" name="tanggal" id="tanggal"
-                                                            class="form-control" value="{{ $spk->tanggal }}">
-                                                    </div>
-                                                </div>
-                                                <div class="col-md-3">
-                                                    <label for="ukuran">Model / Ukuran</label>
-                                                    <div class="col-md-12">
-                                                        <input name="ukuran" id="ukuran" class="form-control"
-                                                            value="{{ $spk->ukuran }}" readonly>
                                                     </div>
                                                 </div>
                                             </div>
                                             <hr>
-                                            <div>
+                                            <div class="">
                                                 <div id="form_kain_potongan"
                                                     class="dataTables_wrapper dt-bootstrap4 table-responsive text-nowrap">
-                                                    <table class="table table-hover table-bordered dataTable"
-                                                        id="tab_kp" style="width: 100%;">
+                                                    <table class="table table-hover table-bordered dataTable" id="tab_kp"
+                                                        style="width: 100%;">
                                                         <thead>
                                                             <tr>
                                                                 <th width='15%'> Kain Potongan </th>
                                                                 <th width='13%'> Sisa Stok</th>
-                                                                <th width='13%'> Quantity</th>
+                                                                <th width='10%'> Quantity</th>
                                                                 <th width='10%'> Satuan</th>
                                                                 <th width='15%'> Karyawan 1</th>
                                                                 <th width='15%'> Karyawan 2</th>
-                                                                <th width='10%'> Gaji</th>
+                                                                <th width='13%'> Gaji</th>
                                                                 <th width="3%"></th>
                                                             </tr>
                                                         </thead>
@@ -254,8 +301,7 @@
                                                                 <td>
                                                                     <input type="number" name="kain_potongan_dipakai[]"
                                                                         class="form-control kain_potongan_dipakai"
-                                                                        placeholder="Quantity Kain Potongan"
-                                                                        value="0">
+                                                                        placeholder="Quantity Kain Potongan" value="0">
                                                                 </td>
                                                                 <td>
                                                                     <select name="satuan[]" class="form-control satuan">
@@ -268,8 +314,7 @@
                                                                     </select>
                                                                 </td>
                                                                 <td>
-                                                                    <select name="karyawan_1[]"
-                                                                        class="form-control karyawan_1">
+                                                                    <select name="karyawan_1[]" class="form-control karyawan_1">
                                                                         <option value="" disabled selected
                                                                             class="text-center">
                                                                             Karyawan
@@ -283,8 +328,7 @@
                                                                     </select>
                                                                 </td>
                                                                 <td>
-                                                                    <select name="karyawan_2[]"
-                                                                        class="form-control karyawan_2">
+                                                                    <select name="karyawan_2[]" class="form-control karyawan_2">
                                                                         <option value="" disabled selected
                                                                             class="text-center">
                                                                             Karyawan
@@ -309,7 +353,7 @@
                                                                         @endforeach
                                                                     </select>
                                                                 </td>
-
+        
                                                                 <td>
                                                                     <!-- placeholder for remove button -->
                                                                 </td>
@@ -318,8 +362,7 @@
                                                     </table>
                                                 </div>
                                             </div>
-                                            <button class="btn btn-info text-center container-fluid"
-                                                id="add_kain_potongan">Tambah
+                                            <button class="btn btn-info text-center container-fluid" id="add_kain_potongan">Tambah
                                                 Kain Potongan</button>
                                         </div>
                                         <div class="card-footer">
@@ -348,20 +391,25 @@
                                                 <thead>
                                                     <tr>
                                                         <th>Kode SPK</th>
-                                                        <th>Artikel</th>
                                                         <th>Tanggal</th>
-                                                        <th>Kode SPP</th>
-                                                        <th>Warna | Model/Ukuran</th>
-                                                        <th>Kain Potongan Dipakai</th>
-                                                        <th>Hasil | Satuan</th>
+                                                        <th>Artikel</th>
+                                                        <th>Ukuran</th>
+                                                        <th>Jenis Kain</th>
+                                                        <th>Warna</th>
+                                                        <th>Quantity | Satuan</th>
                                                         <th>Karyawan</th>
                                                         <th>Gaji</th>
                                                         <th width="10%">Aksi</th>
                                                     </tr>
                                                 </thead>
-                                                <tbody>
+                                                <tbody style=" vertical-align: middle;">
                                                 </tbody>
                                             </table>
+                                        </div>
+                                        <div class="col-lg-12">
+                                            <label for="note">Notes</label>
+                                            <textarea name="note" id="note" cols="30" rows="2" placeholder="Keterangan"
+                                                class="form-control"></textarea>
                                         </div>
                                     </div>
                                     <div class="col-md-3 mt-2 offset-md-9">
@@ -376,64 +424,20 @@
                     </div>
                     <div class="col-md-12">
                         <div class="card">
-                            <div class="card-header">
-                                <h5 class="card-title">Tambahkan Gambar Surat Perintah Kain</h5>
+                            <div class="card-header bg-primary">
+                                <h3 class="card-title">Gambar Per Artikel</h3>
+
+                                <div class="card-tools">
+                                    <button type="button" class="btn btn-tool" data-card-widget="collapse">
+                                        <i class="fas fa-minus"></i>
+                                    </button>
+                                </div>
                             </div>
-
-                            <div class="card-body">
-                                <form action="" method="POST" id="form-data-gambar">
-                                    <div id="tbl_ukuran_wrapper"
-                                        class="dataTables_wrapper dt-bootstrap4 table-responsive text-nowrap">
-                                        <div class="col-lg-12">
-                                            <label for="">Tambahkan Gambar</label>
-                                            <input type="file" name="gambar" id="gambar"
-                                                placeholder="Tambahkan Gambar" class="form-control">
-                                        </div>
-                                        <br>
-                                        <div class="col-lg-12">
-                                            <div class="card collapsed-card">
-                                                <div class="card-header bg-primary">
-                                                    <h3 class="card-title">Preview Gambar</h3>
-
-                                                    <div class="card-tools">
-                                                        <button type="button" class="btn btn-tool"
-                                                            data-card-widget="collapse">
-                                                            <i class="fas fa-plus"></i>
-                                                        </button>
-                                                    </div>
-                                                </div>
-                                                <!-- /.card-header -->
-                                                <div class="card-body" style="display: block;">
-                                                    <div class="row">
-                                                        <div class="upload-img">
-                                                            @foreach ($gambarSpk as $dt)
-                                                                <div class="uploaded-img col-md-6"
-                                                                    id="{{ $dt->uuid }}">
-                                                                    <img src="{{ url('/img/gambar/' . $dt->nama_foto) }}"
-                                                                        width="600" class="text-center">
-                                                                </div>
-                                                                <div class="col-md-6 mb-3" id="btn-{{ $dt->uuid }}">
-                                                                    <button type="button"
-                                                                        class="btn btn-danger "data-uuid="{{ $dt->uuid }}"
-                                                                        id="btn-hapus-gambar"> Hapus Gambar </button>
-                                                                </div>
-                                                            @endforeach
-                                                        </div>
-                                                        <div class="upload-img2">
-
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3 mt-2 offset-md-9">
-                                        <button type="button" id="btn-save-gambar" type="button"
-                                            class="btn btn-success btn-block">
-                                            <i class="fa fa-save" aria-hidden="true"> </i> Save
-                                        </button>
-                                    </div>
-                                </form>
+                            <!-- /.card-header -->
+                            <div class="card-body" style="display: block;">
+                                <div class="row upload-img2 ">
+                                    
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -452,7 +456,7 @@
         $(document).ready(function() {
 
             function refreshS2main() {
-                $("[name*='kp_id[]'],[name*='satuan[]'], [name*='karyawan_1[]'], [name*='karyawan_2[]'], [name*='gaji[]']")
+                $("#ukuran, [name*='kp_id[]'],[name*='satuan[]'], [name*='karyawan_1[]'], [name*='karyawan_2[]'], [name*='gaji[]']")
                     .select2({
                         theme: 'classic',
                         width: '100%',
@@ -475,6 +479,73 @@
             $.ajaxSetup({
                 headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                }
+            });
+
+            $(document).on('change', '#ukuran', function(e) {
+                e.preventDefault();
+                let data = $('#ukuran').val();
+                $.ajax({
+                    @if (Auth::user()->role_id == 1)
+                        url: "{{ url('surat-perintah-kerja/artikel') }}/" + data,
+                    @endif
+                    @if (Auth::user()->role_id == 3)
+                        url: "{{ url('warehouse/surat-perintah-kerja/artikel') }}/" + data,
+                    @endif
+                    // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
+                    method: "GET",
+                    success: function(res) {
+
+                        $('#artikel').val(res.artikel);
+
+                        let htmlView =
+                            '<option value="" selected disabled class="text-center">Kain Potongan</option>'
+
+                        $.each(res.kp, function(i, data) {
+                            htmlView += '<option value="' + data.id + '|' + data
+                                .jenis_kain +
+                                '|' + data.warna + '" class="text-center"> ' + data
+                                .jenis_kain + ' | ' + data.warna + ' </option>'
+                        })
+
+                        $('td [name*="kp_id[]"]').html(htmlView)
+                    }
+                })
+            });
+
+            $('#gambar').change(event => {
+                if (event.target.files) {
+                    let filesAmount = event.target.files.length;
+                    let image = event.target.files;
+                    $('.upload-img').html("");
+
+                    
+                    var validMimeTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
+                    for (let i = 0; i < filesAmount; i++) {
+                        if (validMimeTypes.indexOf(event.target.files[i].type) === -1) {
+                            Swal.fire(
+                                'Gagal!',
+                                'Gambar Harus Berformat JPEG, PNG, JPG dan GIF!',
+                                'error'
+                            )
+                            $('#gambar').val('');
+                        }else{ 
+                            let reader = new FileReader();
+        
+                            reader.onload = function(event) {
+                            let html = `
+                                <div class = "uploaded-img p-0">
+                                    <img src = "${event.target.result}" width="100%" class="p-0">
+                                </div>
+                            `;
+                            $(".upload-img").append(html);
+                        }
+                        reader.readAsDataURL(event.target.files[i]);
+
+                            $('.upload-info-value').text(filesAmount);
+                            $('.upload-img').css('padding', "0px");
+                        }
+                    }
                 }
             });
 
@@ -564,10 +635,10 @@
                 $('#add_kain_potongan').hide()
                 $.ajax({
                     @if (Auth::user()->role_id == 1)
-                        url: "{{ url('surat-perintah-kain/artikel') }}/" + data,
+                        url: "{{ url('surat-perintah-kerja/artikel') }}/" + data,
                     @endif
                     @if (Auth::user()->role_id == 3)
-                        url: "{{ url('warehouse/surat-perintah-kain/artikel') }}/" + data,
+                        url: "{{ url('warehouse/surat-perintah-kerja/artikel') }}/" + data,
                     @endif
                     // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
                     method: "GET",
@@ -588,17 +659,15 @@
                 })
             }
 
-            $('#ukuran').trigger()
-
             $(document).on('change', '#ukuran', function(e) {
                 e.preventDefault();
                 let data = $('#ukuran').val();
                 $.ajax({
                     @if (Auth::user()->role_id == 1)
-                        url: "{{ url('surat-perintah-kain/artikel') }}/" + data,
+                        url: "{{ url('surat-perintah-kerja/artikel') }}/" + data,
                     @endif
                     @if (Auth::user()->role_id == 3)
-                        url: "{{ url('warehouse/surat-perintah-kain/artikel') }}/" + data,
+                        url: "{{ url('warehouse/surat-perintah-kerja/artikel') }}/" + data,
                     @endif
                     // url: "{{ url('surat-perintah-potong/data-spp') }}?spp='"+data+"'",
                     method: "GET",
@@ -624,10 +693,10 @@
                 let $this = $(this).closest('tr')
                 $.ajax({
                     @if (Auth::user()->role_id == 1)
-                        url: "{{ url('surat-perintah-kain/hasil-potongan') }}/" + kp_id,
+                        url: "{{ url('surat-perintah-kerja/hasil-potongan') }}/" + kp_id,
                     @endif
                     @if (Auth::user()->role_id == 3)
-                        url: "{{ url('warehouse/surat-perintah-kain/hasil-potongan') }}/" + kp_id,
+                        url: "{{ url('warehouse/surat-perintah-kerja/hasil-potongan') }}/" + kp_id,
                     @endif
                     method: "GET",
                     success: function(res) {
@@ -784,10 +853,12 @@
                             })
                         }
 
-                        // data.push({
-                        //     spk_data: spk_data
-                        // })
-                        console.log(data)
+                        let gambarInput = document.getElementById("gambar");
+                        let gambar = gambarInput.files;
+
+                        if(gambar.length !== 0){
+                            saveGambar();
+                        }
 
                         dataInsert(data);
                         clearForm()
@@ -1015,7 +1086,7 @@
                                     if (res.code === 200) {
                                         Swal.fire(
                                             'Berhasil!',
-                                            'Berhasil Simpan Data! Silahkan Upload Gambar!',
+                                            'Berhasil Simpan Data!',
                                             'success'
                                         )
                                         data = [];
@@ -1224,7 +1295,7 @@
                                     console.log(err);
                                     Swal.fire(
                                         'Gagal!',
-                                        'Server Error!',
+                                        'Server Error! Contact Developer!',
                                         'error'
                                     )
                                 }
@@ -1254,7 +1325,7 @@
                             });
 
                             $.ajax({
-                                url: "{{ url('surat-perintah-kain/delete-gambar-spk') }}/" +
+                                url: "{{ url('surat-perintah-kerja/delete-gambar-spk') }}/" +
                                     uuid,
                                 method: "DELETE",
                                 success: function(res) {
@@ -1279,6 +1350,113 @@
                         }
                     })
             })
+
+            // simpan gambar
+            function saveGambar() {
+                let artikel = $('#artikel').val()
+                let kode_spk = $('#kode_spk').val()
+                
+                let gambarInput = document.getElementById("gambar");
+                let gambar = gambarInput.files;
+
+                let formData = new FormData()
+                for (var i = 0; i < gambar.length; i++) {
+                    formData.append('gambar[]', gambar[i])
+                }
+                formData.append('artikel', artikel)
+                formData.append('kode_spk', kode_spk)
+
+                $.ajax({
+                    @if (Auth::user()->role_id == 1)
+                        url: "{{ route('spk.storeGambar') }}",
+                    @endif
+                    @if (Auth::user()->role_id == 3)
+                        url: "{{ route('w.spk.storeGambar') }}",
+                    @endif
+                    method: "POST",
+                    data: formData,
+                    processData: false,
+                    cache: false,
+                    contentType: false,
+                    success: function(res) {
+                        getGambar()
+                        if (res.code === 200) {
+                            Swal.fire(
+                                'Berhasil!',
+                                'Berhasil Simpan Data!',
+                                'success'
+                            )
+                        }
+                        if (res.code === 400) {
+                            Swal.fire(
+                                'Gagal!',
+                                res.message + ' LOT: ' + res.kode_lot,
+                                'error'
+                            )
+                        }
+                        if (res.code === 500) {
+                            console.log(res.error)
+                            Swal.fire(
+                                'Gagal!',
+                                'Server Error!',
+                                'error'
+                            )
+                        }
+                    },
+                    error: function(err) {
+                        console.log(err);
+                        Swal.fire(
+                            'Gagal!',
+                            'Server Error!',
+                            'error'
+                        )
+                    }
+                })
+            }
+
+            getGambar()
+            // get Gambar
+            function getGambar(){
+                let kode_spk = $('#kode_spk').val()
+                let formData = new FormData()
+                formData.append('kode_spk', kode_spk)
+
+                $.ajax({
+                    @if (Auth::user()->role_id == 1)
+                        url: "{{ route('spk.getGambar') }}",
+                    @endif
+                    @if (Auth::user()->role_id == 3)
+                        url: "{{ route('spk.getGambar') }}",
+                    @endif
+                    method: "POST",
+                    data: formData,
+                    contentType: false,
+                    processData: false,
+                    success: function(res) {
+                        let dataImages = res.data;
+                        let html = '';
+                        $('.uploaded-img').remove();
+                        for (let i = 0; i < dataImages.length; i++) {
+                            html += `<div class="col-md-4 p-0 uploaded-img">
+                                        <div class="col-md-6">
+                                            <p>Artikel: <span>`+dataImages[i].artikel+`</span></p>
+                                            <img src="{{ url('/img/gambar') }}/`+dataImages[i].nama_foto+`"
+                                            width="300" class="text-center">
+                                        </div>
+                                </div>`;
+                        }
+                        $(".upload-img2").append(html);
+                    },
+                    error: function(err) {
+                        console.log(err);
+                        Swal.fire(
+                            'Gagal!',
+                            'Server Error!',
+                            'error'
+                        )
+                    }
+                })
+            }
         });
     </script>
 @endsection
