@@ -2,83 +2,50 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Controllers\Controller;
+use App\Models\BarangJadi;
 use App\Models\FinishingModel;
 use App\Models\Gaji;
 use App\Models\GajiMaster;
-use App\Models\Jahit;
 use App\Models\Karyawan;
-use App\Models\SPK;
-use App\Models\SPKDetail;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
 
-class JahitController extends Controller
+class FinishingController extends Controller
 {
     public function index()
     {
-        $karyawan   = Karyawan::where('posisi', 'jahit')->get();
+        $karyawan   = Karyawan::where('posisi', 'finishing')->get();
         $gaji       = GajiMaster::all();
-        return view('jahit.index', compact(['karyawan', 'gaji']));
+        return view('finishing.index', compact(['karyawan', 'gaji']));
     }
 
     public function indexData($status)
     {
-        $data = Jahit::join('t_spk_details', 't_spk_details.id', '=', 't_jahits.detail_spk_id')
+        $data = FinishingModel::join('t_jahits', 't_jahits.id', '=', 't_finishings.jahit_id')
+            ->join('t_spk_details', 't_spk_details.id', '=', 't_jahits.detail_spk_id')
             ->join('m_kain_potongans', 'm_kain_potongans.id', '=', 't_spk_details.kain_potongan_id')
             ->join('m_kain_rolls', 'm_kain_rolls.id', '=', 'm_kain_potongans.kain_roll_id')
             ->select(
-                't_jahits.*',
-                DB::raw('CONCAT(t_jahits.jumlah_jahit," ",t_jahits.satuan) as jml_jahit'),
-                DB::raw('DATE_FORMAT(t_jahits.tanggal, "%d %M %Y") as tanggal'),
+                't_finishings.*',
+                't_jahits.kode_jahit',
+                DB::raw('CONCAT(t_finishings.jumlah_finishing," ",t_finishings.satuan) as jml_finishing'),
+                DB::raw('DATE_FORMAT(t_finishings.tanggal, "%d %M %Y") as tanggal'),
                 'm_kain_potongans.ukuran',
                 'm_kain_rolls.kode_lot',
                 'm_kain_rolls.jenis_kain',
                 'm_kain_rolls.warna'
             )
-            ->where('t_jahits.status', $status)
+            ->where('t_finishings.status', $status)
             ->get();
         return response()->json($data);
     }
 
-    public function getArtikelFromSPK($kode_spk)
+    public function detailFormKaryawan($kode_finishing)
     {
-        $data = SPK::select('t_spks.id', 'm_kain_potongans.id as id_potongan', 't_spks.artikel', DB::raw('CONCAT(t_spks.artikel, " | ", m_kain_rolls.kode_lot, " | ", m_kain_rolls.jenis_kain, " | ", m_kain_rolls.warna) as nama'))
-            ->join('t_spk_details', 't_spk_details.kode_spk', '=', 't_spks.kode_spk')
-            ->join('m_kain_potongans', 'm_kain_potongans.id', '=', 't_spk_details.kain_potongan_id')
-            ->join('m_kain_rolls', 'm_kain_rolls.id', '=', 'm_kain_potongans.kain_roll_id')
-            ->where('t_spks.kode_spk', $kode_spk)
-            ->get();
-
-        return response()->json($data);
-    }
-
-    public function getQuantityArtikel($id)
-    {
-        $explodeData = explode(',', $id);
-        $id = $explodeData[0];
-        $kainPotonganId = $explodeData[1];
-        $data = SPKDetail::select(DB::raw('SUM(quantity) as quantity'))
-            ->where('t_spk_id', $id)
-            ->where('kain_potongan_id', $kainPotonganId)
-            ->first();
-        return response()->json($data);
-    }
-
-    public function insert()
-    {
-        $karyawan   = Karyawan::where('posisi', 'jahit')->get();
-        $gaji       = GajiMaster::all();
-        $spk        = SPK::all();
-
-        $date = Carbon::now()->format('Y-m-d');
-        return view('jahit.insert', compact(['spk', 'karyawan', 'gaji', 'date']));
-    }
-
-    public function detailFormKaryawan($kode_jahit)
-    {
-        $data = Jahit::where('kode_jahit', $kode_jahit)->first();
+        $data = FinishingModel::where('kode_finishing', $kode_finishing)->first();
         if ($data->karyawan != null) {
             $karyawan = json_decode($data->karyawan_id);
             $data['karyawan1'] = $karyawan[0];
@@ -87,7 +54,7 @@ class JahitController extends Controller
         return response()->json($data);
     }
 
-    public function addKaryawanJahit(Request $request, $id)
+    public function addKaryawanFinishing(Request $request, $id)
     {
         // try {
         $k_id = [$request->karyawan1, $request->karyawan2];
@@ -97,7 +64,7 @@ class JahitController extends Controller
 
         $karyawan = [$k1->nama, $k2->nama];
 
-        Jahit::where('id', $id)->update([
+        FinishingModel::where('id', $id)->update([
             'karyawan_id' => json_encode($k_id),
             'karyawan'    => json_encode($karyawan),
             'gaji'        => $request->gaji,
@@ -110,8 +77,8 @@ class JahitController extends Controller
             Gaji::insert([
                 [
                     'karyawan_id'       => $k1->id,
-                    'kode_transaksi'    => $request->kode_jahit,
-                    'gaji'              => $request->gaji * $request->jumlah_jahit,
+                    'kode_transaksi'    => $request->kode_finishing,
+                    'gaji'              => $request->gaji * $request->jumlah_finishing,
                     'created_at'        => Carbon::now(),
                     'updated_at'        => Carbon::now()
                 ]
@@ -121,8 +88,8 @@ class JahitController extends Controller
             Gaji::insert([
                 [
                     'karyawan_id'       => $k2->id,
-                    'kode_transaksi'    => $request->kode_jahit,
-                    'gaji'              => $request->gaji * $request->jumlah_jahit,
+                    'kode_transaksi'    => $request->kode_finishing,
+                    'gaji'              => $request->gaji * $request->jumlah_finishing,
                     'created_at'        => Carbon::now(),
                     'updated_at'        => Carbon::now()
                 ]
@@ -142,7 +109,7 @@ class JahitController extends Controller
         // }
     }
 
-    public function updateKaryawanJahit(Request $request, $id)
+    public function updateKaryawanFinishing(Request $request, $id)
     {
         // try {
         $k_id = [$request->karyawan1, $request->karyawan2];
@@ -152,7 +119,7 @@ class JahitController extends Controller
 
         $karyawan = [$k1->nama, $k2->nama];
 
-        Jahit::where('id', $id)->update([
+        FinishingModel::where('id', $id)->update([
             'karyawan_id' => json_encode($k_id),
             'karyawan'    => json_encode($karyawan),
             'gaji'        => $request->gaji,
@@ -161,14 +128,14 @@ class JahitController extends Controller
         ]);
 
         // gaji
-        Gaji::where('kode_transaksi', $request->kode_jahit)->delete();
+        Gaji::where('kode_transaksi', $request->kode_finishing)->delete();
 
         if (!empty($k1)) {
             Gaji::insert([
                 [
                     'karyawan_id'       => $k1->id,
-                    'kode_transaksi'    => $request->kode_jahit,
-                    'gaji'              => $request->gaji * $request->jumlah_jahit,
+                    'kode_transaksi'    => $request->kode_finishing,
+                    'gaji'              => $request->gaji * $request->jumlah_finishing,
                     'created_at'        => Carbon::now(),
                     'updated_at'        => Carbon::now()
                 ]
@@ -178,8 +145,8 @@ class JahitController extends Controller
             Gaji::insert([
                 [
                     'karyawan_id'       => $k2->id,
-                    'kode_transaksi'    => $request->kode_jahit,
-                    'gaji'              => $request->gaji * $request->jumlah_jahit,
+                    'kode_transaksi'    => $request->kode_finishing,
+                    'gaji'              => $request->gaji * $request->jumlah_finishing,
                     'created_at'        => Carbon::now(),
                     'updated_at'        => Carbon::now()
                 ]
@@ -199,76 +166,72 @@ class JahitController extends Controller
         // }
     }
 
-    public function confirm($kode_jahit)
+    public function confirm($kode_finishing)
     {
         try {
-            Jahit::where('kode_jahit', $kode_jahit)->update([
+            FinishingModel::where('kode_finishing', $kode_finishing)->update([
                 'status' => 'Sedang Dikerjakan'
             ]);
 
             return response()->json([
                 'code'      => 200,
-                'message'   => 'Berhasil Konfirmasi Data Jahit!',
+                'message'   => 'Berhasil Konfirmasi Data Finishing!',
             ]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
                 'code'      => 500,
-                'message'   => 'Gagal Konfirmasi Data Jahit!',
+                'message'   => 'Gagal Konfirmasi Data Finishing!',
                 'error'     => $th
             ]);
         }
     }
 
-    public function finished($kode_jahit)
+    public function finished($kode_finishing)
     {
         try {
-            Jahit::where('kode_jahit', $kode_jahit)->update([
+            FinishingModel::where('kode_finishing', $kode_finishing)->update([
                 'status' => 'Selesai Dikerjakan'
             ]);
 
-            $jahit = Jahit::where('kode_jahit', $kode_jahit)->first();
+            $finishing = FinishingModel::where('kode_finishing', $kode_finishing)->first();
 
-            FinishingModel::create([
+            BarangJadi::create([
                 'uuid'              => Uuid::uuid4()->getHex(),
-                'jahit_id'          => $jahit->id,
-                'kode_finishing'    => kodeFinishing(),
-                'artikel'           => $jahit->artikel,
+                'artikel'           => $finishing->artikel,
                 'tanggal'           => Carbon::now(),
-                'jumlah_finishing'  => $jahit->jumlah_jahit,
-                'satuan'            => $jahit->satuan,
-                'gaji'              => 0,
-                'status'            => 'Belum Menentukan Karyawan',
+                'total_barang'      => $finishing->jumlah_finishing,
+                'status'            => 'Belum Konfirmasi',
             ]);
 
             return response()->json([
                 'code'      => 200,
-                'message'   => 'Berhasil Konfirmasi Data Jahit!
-                <br> Surat Finishing berhasil dibuat, Silahkan lengkapi data karyawan finishing!',
+                'message'   => 'Berhasil Konfirmasi Data Finishing!
+                <br> Hasil Finishing telah berhasil ditambahkan ke Barang Jadi!',
             ]);
         } catch (\Throwable $th) {
             //throw $th;
             return response()->json([
                 'code'      => 500,
-                'message'   => 'Gagal Konfirmasi Data Jahit!',
+                'message'   => 'Gagal Konfirmasi Data Finishing!',
                 'error'     => $th
             ]);
         }
     }
 
-    public function destroy($kode_jahit)
+    public function destroy($kode_finishing)
     {
         try {
-            $jahit = Jahit::where('kode_jahit', $kode_jahit)->first();
-            if ($jahit->karyawan_id !== null) {
-                Gaji::where('kode_transaksi', $jahit->kode_jahit)->delete();
+            $finishing = FinishingModel::where('kode_finishing', $kode_finishing)->first();
+            if ($finishing->karyawan_id !== null) {
+                Gaji::where('kode_transaksi', $finishing->kode_finishing)->delete();
             }
 
-            Jahit::where('id', $jahit->id)->delete();
+            FinishingModel::where('id', $finishing->id)->delete();
 
             return response()->json([
                 'code'      => 200,
-                'message'   => 'Berhasil Hapus data Surat Jahit!',
+                'message'   => 'Berhasil Hapus data Surat Finishing!',
             ]);
 
             // $ukuran = Ukuran::all();
@@ -278,7 +241,7 @@ class JahitController extends Controller
             //throw $th;
             return response()->json([
                 'code'      => 500,
-                'message'   => 'Gagal Hapus data Surat Jahit!',
+                'message'   => 'Gagal Hapus data Surat Finishing!',
                 'error'     => $th
             ]);
         }
