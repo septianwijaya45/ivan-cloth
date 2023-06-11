@@ -34,16 +34,27 @@
                             </div>
                             <div class="card-body">
                                 <div class="row">
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="fromDate">Dari Tanggal</label>
                                             <input type="date" class="form-control" placeholder="Tanggal" id="fromDate" name="fromDate" value="{{$date}}">
                                         </div>
                                     </div>
-                                    <div class="col-md-4">
+                                    <div class="col-md-2">
                                         <div class="form-group">
                                             <label for="fromDate">Ke Tanggal</label>
                                             <input type="date" class="form-control" placeholder="Tanggal" id="toDate" name="toDate" value="{{$date}}">
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="fromDate">Status Pembayaran</label>
+                                            <select name="status" id="status" class="form-control">
+                                                <option value="-" disabled selected>Status Pembayaran</option>
+                                                <option value="">Tanpa Status</option>
+                                                <option value="Belum Dibayar">Belum Dibayar</option>
+                                                <option value="Sudah Dibayar">Sudah Dibayar</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-md-2">
@@ -84,6 +95,7 @@
                                                 <th>Kode Transaksi</th>
                                                 <th>Nama Karyawan</th>
                                                 <th>Total Gaji</th>
+                                                <th>Status Pembayaran</th>
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -107,6 +119,10 @@
 
 @section('script')
     <script>
+        $("#status").select2({
+                        theme: 'classic',
+                        width: '100%',
+                    })
         $.ajaxSetup({
             headers: {
                 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
@@ -120,6 +136,63 @@
             timer: 2000,
             timerProgressBar: true,
         })
+
+        function confirmGaji(sp, id) {
+            Swal.fire({
+                    title: "Apakah anda yakin hapus data ini?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Hapus!",
+                    cancelButtonText: "Tidak",
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        @if (Auth::user()->role_id == 1)
+                            var _url = "{{ route('tgaji.confirm', ['sp', 'id']) }}";
+                        @endif
+                        @if (Auth::user()->role_id == 3)
+                            var _url = "{{ route('tgaji.confirm', 'kode_spk') }}";
+                        @endif
+                        _url = _url.replace('sp', sp)
+                        _url = _url.replace('id', id)
+                        var _token = $('meta[name="csrf-token"]').attr('content');
+                        $.ajax({
+                            url: _url,
+                            type: 'PUT',
+                            data: {
+                                _token: _token,
+                                sp: sp,
+                                id: id
+                            },
+                            success: function(res) {
+                                Notif.fire({
+                                    icon: 'success',
+                                    title: res.message,
+                                })
+                                $("#tbl_pemasukkan").DataTable().ajax.reload();
+
+                                if (res.code == 500) {
+                                    Notif.fire({
+                                        icon: 'error',
+                                        title: 'Gagal Menyimpan Data Gaji',
+                                        text: 'Server Error!'
+                                    });
+
+                                }
+                            },
+                            error: function(err) {
+                                console.log(err);
+                                Swal.fire(
+                                    'Gagal!',
+                                    'Server Error!',
+                                    'error'
+                                )
+                                $("#tbl_pemasukkan").DataTable().ajax.reload();
+                            }
+                        })
+                    }
+                });
+        }
     </script>
     <script>
         $(document).ready(function(){
@@ -139,18 +212,23 @@
                     {data: 'kode_transaksi', name: 'kode_transaksi'},
                     {data: 'total', name: 'total', render: function(data){ return 'Rp '+data}},
                     {data: 'nama', name: 'nama'},
+                    {data: 'Status', name: 'Status'},
                 ]
             });
 
             
-            let fromDate, toDate, htmlview
+            let fromDate, toDate, status, htmlview
             fromDate = $('#fromDate').val()
             toDate = $('#toDate').val()
+            status = $('#status').val();
             $('#fromDate').on('change', function(){
                 fromDate = $(this).val()
             })
             $('#toDate').on('change', function(){
                 toDate = $(this).val()
+            })
+            $('#status').on('change', function(){
+                status = $(this).val()
             })
 
             $('#searchData').on('click', function(){
@@ -164,13 +242,14 @@
                     ajax            : {
                             url         : "{{route('tgaji.searchData')}}",
                             method      : "POST",
-                            data: {'fromDate': fromDate, 'toDate': toDate},
+                            data: {'fromDate': fromDate, 'toDate': toDate, 'status': status},
                     },
                     columns         : [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                         {data: 'kode_transaksi', name: 'kode_transaksi'},
                         {data: 'total', name: 'total', render: function(data){ return 'Rp '+data}},
                         {data: 'nama', name: 'nama'},
+                        {data: 'Status', name: 'Status'},
                     ]
                 });
                 setInterval(function () {
@@ -181,6 +260,7 @@
             $('#clearData').on('click', function(){
                 $('#fromDate').val('{{$date}}')
                 $('#toDate').val('{{$date}}')
+                $('#status').val('').trigger('change.select2');
                 $('#tbl_pemasukkan').DataTable({
                     processing      : true,
                     serverSide      : true,
@@ -197,6 +277,7 @@
                         {data: 'kode_transaksi', name: 'kode_transaksi'},
                         {data: 'total', name: 'total', render: function(data){ return 'Rp '+data}},
                         {data: 'nama', name: 'nama'},
+                        {data: 'Status', name: 'Status'},
                     ]
                 });
             });

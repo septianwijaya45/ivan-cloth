@@ -13,7 +13,14 @@ class PengeluaranController extends Controller
     public function index()
     {
         $date = Carbon::now()->format('Y-m-d');
-        return view('pengeluaran.index', compact(['date']));
+        $dateNow = Carbon::now()->format('d F Y');
+        $pengeluaran = Pengeluaran::select(DB::raw('SUM(total_uang) as total_uang'))
+            ->where('tanggal', '>=', "$date")
+            ->where('tanggal', '<=', "$date")
+            ->orderBy('id', 'DESC')
+            ->groupBy('kode_pengeluaran')
+            ->first();
+        return view('pengeluaran.index', compact(['date', 'dateNow', 'pengeluaran']));
     }
 
     public function indexData(Request $request)
@@ -50,6 +57,25 @@ class PengeluaranController extends Controller
                     ->rawColumns(['Action', 'Status'])
                     ->addIndexColumn()
                     ->make(true);
+    }
+
+    public function indexDataPengeluaran(Request $request)
+    {
+        $data = Pengeluaran::select(DB::raw('SUM(total_uang) as total_uang'))
+            ->where('tanggal', '>=', "$request->fromDate")
+            ->where('tanggal', '<=', "$request->toDate")
+            ->orderBy('id', 'DESC')
+            ->groupBy('kode_pengeluaran')
+            ->first();
+
+        $fromDate = date('d F Y', strtotime($request->fromDate));
+        $toDate = date('d F Y', strtotime($request->toDate));
+
+        return response()->json([
+            'data'      => $data,
+            'fromDate'  => $fromDate,
+            'toDate'    => $toDate
+        ]);
     }
 
     public function insert()

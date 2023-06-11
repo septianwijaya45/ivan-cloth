@@ -13,13 +13,22 @@ class PemasukkanController extends Controller
     public function index()
     {
         $date = Carbon::now()->format('Y-m-d');
-        return view('pemasukkan.index', compact(['date']));
+        $dateNow = Carbon::now()->format('d F Y');
+        $pemasukkan = Pemasukkan::select(DB::raw('SUM(total_uang) as total_uang'))
+            ->where('tanggal', '>=', "$date")
+            ->where('tanggal', '<=', "$date")
+            ->orderBy('id', 'DESC')
+            ->groupBy('kode_pemasukan')
+            ->first();
+        return view('pemasukkan.index', compact(['date', 'dateNow', 'pemasukkan']));
     }
 
     public function indexData(Request $request)
     {
         if($request->method() == 'GET'){
+            $tanggal = Carbon::now()->format('Y-m-d');
             $data = Pemasukkan::select(DB::raw('COUNT(*) as total'), 'kode_pemasukan', DB::raw("DATE_FORMAT(tanggal, '%d %M %Y') as tanggal"), 'uuid', 'status')
+                    ->where('tanggal', $tanggal)
                     ->orderBy('id', 'DESC')
                     ->groupBy('kode_pemasukan')
                     ->get();
@@ -50,6 +59,24 @@ class PemasukkanController extends Controller
                     ->rawColumns(['Action', 'Status'])
                     ->addIndexColumn()
                     ->make(true);
+    }
+
+    public function indexDataPemasukkan(Request $request)
+    {
+        $data = Pemasukkan::select(DB::raw('SUM(total_uang) as total_uang'))
+            ->where('tanggal', '>=', "$request->fromDate")
+            ->where('tanggal', '<=', "$request->toDate")
+            ->orderBy('id', 'DESC')
+            ->groupBy('kode_pemasukan')
+            ->first();
+        $fromDate = date('d F Y', strtotime($request->fromDate));
+        $toDate = date('d F Y', strtotime($request->toDate));
+
+        return response()->json([
+            'data'      => $data,
+            'fromDate'  => $fromDate,
+            'toDate'    => $toDate
+        ]);
     }
 
     public function insert()
