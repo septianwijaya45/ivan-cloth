@@ -7,6 +7,7 @@ use App\Http\Controllers\KainRollController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\FilmSablonController;
+use App\Http\Controllers\FinishingController;
 use App\Http\Controllers\GajiController;
 use App\Http\Controllers\JahitController;
 use App\Http\Controllers\PemasukkanController;
@@ -192,7 +193,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::get('getQuantityArtikel/{id}', [JahitController::class, 'getQuantityArtikel'])->name('getQuantityArtikel');
             // index
             Route::get('', [JahitController::class, 'index'])->name('jahit');
-            Route::get('data', [JahitController::class, 'indexData'])->name('jahit.data');
+            Route::get('data/{status}', [JahitController::class, 'indexData'])->name('jahit.data');
             // create
             Route::get('tambah-data', [JahitController::class, 'insert'])->name('jahit.insert');
             Route::post('tambah-data', [JahitController::class, 'store'])->name('jahit.store');
@@ -210,6 +211,32 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
 
             Route::get('detail-karyawan/{kode_jahit}', [JahitController::class, 'detailFormKaryawan'])->name('jahit.detailKaryawan');
             Route::put('tambah-karyawan/{id}', [JahitController::class, 'addKaryawanJahit'])->name('jahit.addKaryawan');
+            Route::put('update-karyawan/{id}', [JahitController::class, 'updateKaryawanJahit'])->name('jahit.updateKaryawan');
+        });
+
+        // Route Finishing
+        Route::group(['prefix' => 'finishing'], function () {
+            // index
+            Route::get('', [FinishingController::class, 'index'])->name('finishing');
+            Route::get('data/{status}', [FinishingController::class, 'indexData'])->name('finishing.data');
+            // create
+            Route::get('tambah-data', [FinishingController::class, 'insert'])->name('finishing.insert');
+            Route::post('tambah-data', [FinishingController::class, 'store'])->name('finishing.store');
+            // edit
+            Route::get('edit-data/{uuid}', [FinishingController::class, 'edit'])->name('finishing.edit');
+            Route::post('edit-data', [FinishingController::class, 'update'])->name('finishing.update');
+            Route::post('edit-detail', [FinishingController::class, 'updateDetail'])->name('finishing.updateDetail');
+            // delete detail
+            Route::delete('detail-data/delete/{id}', [FinishingController::class, 'deleteInsertorEdit'])->name('finishing.deleteInsertEdit');
+            // delete Finishing
+            Route::delete('delete/{kode_finishing}', [FinishingController::class, 'destroy'])->name('finishing.delete');
+            // Confirm & Finishing
+            Route::put('confirm-work/{kode_finishing}', [FinishingController::class, 'confirm'])->name('finishing.confirm');
+            Route::put('finished-work/{kode_finishing}', [FinishingController::class, 'finished'])->name('finishing.finished');
+
+            Route::get('detail-karyawan/{kode_finishing}', [FinishingController::class, 'detailFormKaryawan'])->name('finishing.detailKaryawan');
+            Route::put('tambah-karyawan/{id}', [FinishingController::class, 'addKaryawanFinishing'])->name('finishing.addKaryawan');
+            Route::put('update-karyawan/{id}', [FinishingController::class, 'updateKaryawanFinishing'])->name('finishing.updateKaryawan');
         });
 
         // Route Pemasukkan
