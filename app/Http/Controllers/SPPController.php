@@ -15,6 +15,7 @@ use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SPPController extends Controller
 {
@@ -28,8 +29,6 @@ class SPPController extends Controller
         $data = SPP::select('uuid', 'kode_spp', DB::raw('COUNT(*) as total'), DB::raw('DATE_FORMAT(tanggal, "%d %M %Y") as tanggal'), 'status')->groupBy('kode_spp')->get();
         return response()->json($data);
     }
-
-
 
     public function searchKainPotongan($ukuran)
     {
@@ -432,5 +431,18 @@ class SPPController extends Controller
             ->where('kode_spp', $kode_spp)
             ->get();
         return response()->json($spp);
+    }
+
+    public function cetakPdf($uuid){
+        $spp = SPP::where('uuid', $uuid)->first();
+        $dataSpp = DB::select("
+            SELECT spp.ukuran, spp.quantity, spp.hasil_potongan, spp.karyawan, spp.note, kr.kode_lot, CONCAT(kr.jenis_kain, ' | ', kr.warna) as jenis
+            FROM t_spps spp, m_kain_rolls kr
+            WHERE spp.kain_roll_id = kr.id
+        ");
+        $no = 1;
+
+        $pdf = Pdf::loadView('spp.pdf.index', compact(['spp', 'dataSpp', 'no']));
+        return $pdf->stream('Cetak SPP - '.$spp->kode_spp);
     }
 }

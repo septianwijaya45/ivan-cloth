@@ -99,6 +99,37 @@
                     </div>
                     <!-- /.col -->
                 </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="card">
+                            <div class="card-header bg-success">
+                                <h5 class="card-title">Pendapatan</h5>
+                            </div>
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="fromDate">Dari Tanggal</label>
+                                            <p id="fromDateP">{{ $dateNow }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="toDate">Ke Tanggal</label>
+                                            <p id="toDateP">{{ $dateNow }}</p>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-4">
+                                        <div class="form-group">
+                                            <label for="totalPengeluaran">Total Pengeluaran</label>
+                                            <p class="text-success text-bold">Rp <span id="totalPengeluaran">{{ ($pengeluaran !== null) ? $pengeluaran->total_uang : 0 }}</span></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
                 <!-- /.row -->
             </div>
             <!--/. container-fluid -->
@@ -217,11 +248,42 @@
                         {data: 'Action', name: 'Action', orderable:'false', searchable: 'false'}
                     ]
                 });
+
+                
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    @if(Auth::user()->role_id == 1)
+                    url         : "{{route('pengeluaran.searchPengeluaran')}}",
+                    @endif
+                    method      : "POST",
+                    data: {'fromDate': fromDate, 'toDate': toDate},
+                    success     : function(res){
+                        $('#fromDateP').text(res.fromDate)
+                        $('#toDateP').text(res.toDate)
+                        $('#totalPengeluaran').text(res.data.total_uang)
+                    },
+                    error       : function(err){
+                        Swal.fire(
+                            'Gagal!',
+                            'Server Error!',
+                            'error'
+                        )
+                    }
+                })
             });
 
             $('#clearData').on('click', function(){
-                $('#fromDate').val('{{$date}}')
-                $('#toDate').val('{{$date}}')
+                $('#fromDate').val('{{$date}}');
+                $('#toDate').val('{{$date}}');
+
+                fromDate = $('#fromDate').val()
+                toDate = $('#toDate').val()
+
                 $('#tbl_pengeluaran').DataTable({
                     processing      : true,
                     serverSide      : true,
@@ -242,6 +304,32 @@
                         {data: 'Action', name: 'Action', orderable:'false', searchable: 'false', sClass:'text-center'}
                     ]
                 });
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+
+                $.ajax({
+                    @if(Auth::user()->role_id == 1)
+                    url         : "{{route('pengeluaran.searchPengeluaran')}}",
+                    @endif
+                    method      : "POST",
+                    data: {'fromDate': fromDate, 'toDate': toDate},
+                    success     : function(res){
+                        $('#fromDateP').text(res.fromDate)
+                        $('#toDateP').text(res.toDate)
+                        $('#totalPengeluaran').text(res.data.total_uang)
+                    },
+                    error       : function(err){
+                        Swal.fire(
+                            'Gagal!',
+                            'Server Error!',
+                            'error'
+                        )
+                    }
+                })
             });
         })
     </script>

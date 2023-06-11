@@ -141,10 +141,13 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
 
             Route::get('get-data/{ukuran}', [SPPController::class, 'searchKainPotongan'])->name('spp.searchKainPotongan');
             Route::get('get-data/{ukuran}/{kode_lot}', [SPPController::class, 'searchKainPotonganStok'])->name('spp.searchKainPotonganStok');
+
+            // Print SPP
+            Route::get('print-data/{uuid}', [SPPController::class, 'cetakPdf'])->name('spp.cetakPdf');
         });
 
         // Route SPK
-        Route::group(['prefix' => 'surat-perintah-kain'], function () {
+        Route::group(['prefix' => 'surat-perintah-kerja'], function () {
             // getArticle
             Route::get('artikel/{artikel}', [SPKController::class, 'getArtikel'])->name('spk.artikel');
             // get Hasil Potongan
@@ -156,6 +159,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::get('tambah-data', [SPKController::class, 'insert'])->name('spk.insert');
             Route::post('tambah-data', [SPKController::class, 'store'])->name('spk.store');
             // save image
+            Route::post('get-gambar', [SPKController::class, 'getGambar'])->name('spk.getGambar');
             Route::post('tambah-gambar', [SPKController::class, 'storeGambar'])->name('spk.storeGambar');
             Route::post('tambah-gambar-edit', [SPKController::class, 'storeGambarEdit'])->name('spk.storeGambarEdit');
 
@@ -169,12 +173,16 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::delete('delete/{kode_spk}', [SPKController::class, 'destroy'])->name('spk.delete');
             // delete gambar
             Route::delete('delete-gambar-spk/{uuid}', [SPKController::class, 'destroyImage'])->name('spk.deleteImage');
+            Route::delete('delete-gambar-spk/{kode_spk}/{artikel}', [SPKController::class, 'destroyBySpkArtikelImage'])->name('spk.deleteBySPKArtikelGambar');
             // delete detail SPK
             Route::delete('delete-detail-spk/{id}', [SPKController::class, 'destroyDetail'])->name('spk.deleteDetail');
 
             // Confirm & Finishing
             Route::put('confirm-work/{kode_spk}', [SPKController::class, 'confirm'])->name('spk.confirm');
             Route::put('finished-work/{kode_spk}', [SPKController::class, 'finished'])->name('spk.finished');
+
+            // Print SPK
+            Route::get('print-data/{uuid}', [SPKController::class, 'cetakPdf'])->name('spk.cetakPdf');
         });
 
         // Route Jahit
@@ -210,6 +218,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::get('',  [PemasukkanController::class, 'index'])->name('pemasukkan');
             Route::get('data', [PemasukkanController::class, 'indexData'])->name('pemasukkan.data');
             Route::post('search-data', [PemasukkanController::class, 'indexData'])->name('pemasukkan.searchData');
+            Route::post('search-data-pemasukkan', [PemasukkanController::class, 'indexDataPemasukkan'])->name('pemasukkan.searchPemasukkan');
             // Insert
             Route::get('tambah-data',  [PemasukkanController::class, 'insert'])->name('pemasukkan.insert');
             Route::post('tambah-data',  [PemasukkanController::class, 'store'])->name('pemasukkan.store');
@@ -229,6 +238,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::get('',  [PengeluaranController::class, 'index'])->name('pengeluaran');
             Route::get('data', [PengeluaranController::class, 'indexData'])->name('pengeluaran.data');
             Route::post('search-data', [PengeluaranController::class, 'indexData'])->name('pengeluaran.searchData');
+            Route::post('search-data-pengeluaran', [PengeluaranController::class, 'indexDataPengeluaran'])->name('pengeluaran.searchPengeluaran');
             // Insert
             Route::get('tambah-data',  [PengeluaranController::class, 'insert'])->name('pengeluaran.insert');
             Route::post('tambah-data',  [PengeluaranController::class, 'store'])->name('pengeluaran.store');
@@ -245,6 +255,7 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::get('', [TransaksiGajiController::class, 'index'])->name('tgaji');
             Route::get('data', [TransaksiGajiController::class, 'indexData'])->name('tgaji.data');
             Route::post('', [TransaksiGajiController::class, 'indexData'])->name('tgaji.searchData');
+            Route::put('konfirmasi-gaji/{sp}/{id}', [TransaksiGajiController::class, 'confirmGaji'])->name('tgaji.confirm');
         });
     });
 

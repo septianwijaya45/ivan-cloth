@@ -19,6 +19,7 @@ use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class SPKController extends Controller
 {
@@ -169,30 +170,29 @@ class SPKController extends Controller
         ]);
     }
 
+    function getGambar(Request $request) {
+        $gambar = DB::select("SELECT * FROM t_spk_files WHERE kode_spk = '$request->kode_spk'");
+        return response()->json([
+            'data'      => $gambar
+        ]);
+    }
+
     public function storeGambar(Request $request)
     {
-        $validate = $request->validate([
-            'gambar'   => 'required|mimes:jpeg,png,jpg,gif,svg|max:2048',
-        ]);
 
-        if (!$validate) {
-            return response()->json([
-                'code'      => 400,
-                'title'     => 'Gagal Menyimpan Gambar!',
-                'message'   => 'Gambar Harus Kurang dari 2 MB atau tipe gambar harus jpeg,png,jpg,gif,svg'
-            ]);
-        }
-
-
-        $name = time() . rand(1, 100) . '.' . $request->gambar->extension();
-        if ($request->gambar->move(public_path('img/gambar/'), $name)) {
-            FileSPK::create([
-                'uuid'      => Uuid::uuid4()->getHex(),
-                'kode_spk'  => $request->kode_spk,
-                'nama_foto' => $name,
-                'created_at' => Carbon::now(),
-                'updated_at' => Carbon::now()
-            ]);
+        $countFile = $request->file('gambar');
+        foreach($countFile as $dt){
+            $name = time() . rand(1, 100) . '.' . $dt->extension();
+            if ($dt->move(public_path('img/gambar/'), $name)) {
+                FileSPK::create([
+                    'uuid'      => Uuid::uuid4()->getHex(),
+                    'kode_spk'  => $request->kode_spk,
+                    'artikel'  => $request->artikel,
+                    'nama_foto' => $name,
+                    'created_at' => Carbon::now(),
+                    'updated_at' => Carbon::now()
+                ]);
+            }
         }
 
         return response()->json([
@@ -241,10 +241,11 @@ class SPKController extends Controller
         $gaji       = GajiMaster::all();
         $ukuran     = Ukuran::all();
 
-        $spkDetail = SPKDetail::select('t_spk_details.*', 'm_kain_potongans.id as id_kp', DB::raw('CONCAT(m_kain_rolls.jenis_kain, " | ", m_kain_rolls.warna) as nama_kain_roll'), 'm_kain_rolls.stok_roll')
+        $spkDetail = SPKDetail::select('t_spk_details.*', 'm_kain_potongans.id as id_kp', DB::raw('CONCAT(m_kain_rolls.jenis_kain, " | ", m_kain_rolls.warna) as nama_kain_roll'), 'm_kain_rolls.stok_roll', 't_spks.artikel', 't_spks.tanggal', 't_spks.ukuran')
+            ->join('t_spks', 't_spks.id', '=', 't_spk_details.t_spk_id')
             ->join('m_kain_potongans', 'm_kain_potongans.id', '=', 't_spk_details.kain_potongan_id')
             ->join('m_kain_rolls', 'm_kain_rolls.id', '=', 'm_kain_potongans.kain_roll_id')
-            ->where('kode_spk', $spk->kode_spk)
+            ->where('t_spk_details.kode_spk', $spk->kode_spk)
             ->get();
 
         $gambarSpk = FileSPK::where('kode_spk', $spk->kode_spk)->get();
@@ -254,12 +255,10 @@ class SPKController extends Controller
 
     public function update(Request $request)
     {
-        // try {
+        try {
         $req_data   = $request->data;
         $note       = $request->notes;
         foreach ($req_data as $dt) {
-            // dd($dt);
-
             $checkSPK = SPK::where([
                 ['artikel', $dt['artikel']],
                 ['ukuran', $dt['ukuran']],
@@ -422,23 +421,23 @@ class SPKController extends Controller
             'code'      => 200,
             'message'   => 'Berhasil Menyimpan Data!!',
         ]);
-        // } catch (\Exception $th) {
-        //     return response()->json([
-        //         'code'      => 500,
-        //         'message'   => 'Error Server!',
-        //         'error'     => $th
-        //     ]);
-        // }
+        } catch (\Exception $th) {
+            return response()->json([
+                'code'      => 500,
+                'message'   => 'Error Server!',
+                'error'     => $th
+            ]);
+        }
     }
 
     public function updateDetail(Request $request)
     {
-        try {
+        // try {
             $reqData    = $request->data;
             $note       = $request->notes;
 
             foreach ($reqData as $dt) {
-                $kp = Kain_potongan::where('kain_roll_id', $dt['kp_ide'])->first();
+                $kp = Kain_potongan::where('id', $dt['kp_ide'])->first();
                 $kr = Kain_roll::where('id', $kp->kain_roll_id)->first();
 
                 $splitK1 = explode('-', $dt['k1e']);
@@ -481,6 +480,7 @@ class SPKController extends Controller
                     'kain_potongan_id'      => $dt['kp_ide'],
                     'quantity'              => $dt['quantitye'],
                     'satuan'                => $dt['satuane'],
+                    'gaji'                  => $dt['gajie'],
                     'karyawan_id'           => json_encode($k_id),
                     'karyawan'              => json_encode($k_nama)
                 ]);
@@ -489,13 +489,13 @@ class SPKController extends Controller
                 'code'      => 200,
                 'message'   => 'Berhasil Menyimpan Data!!',
             ]);
-        } catch (\Exception $th) {
-            return response()->json([
-                'code'      => 500,
-                'message'   => 'Error Server!',
-                'error'     => $th
-            ]);
-        }
+        // } catch (\Exception $th) {
+        //     return response()->json([
+        //         'code'      => 500,
+        //         'message'   => 'Error Server!',
+        //         'error'     => $th
+        //     ]);
+        // }
     }
 
     public function confirm($kode_spk)
@@ -614,6 +614,31 @@ class SPKController extends Controller
         }
     }
 
+    public function destroyBySpkArtikelImage($kode_spk, $artikel)
+    {
+        // try {
+            $fileImageSpk = FileSPK::where('kode_spk', $kode_spk)->where('artikel', $artikel);
+            if ($fileImageSpk) {
+                $fileImageSpk = $fileImageSpk->get();
+                foreach($fileImageSpk as $dt){
+                    $image = $dt->value('nama_foto');
+                    File::delete('img/gambar/' . $image);
+                    $dt->delete();
+                }
+                return response()->json([
+                    'code'      => 200,
+                    'message'   => 'Berhasil Hapus data Gambar SPK',
+                ]);
+            }
+        // } catch (\Throwable $th) {
+        //     return response()->json([
+        //         'code'      => 500,
+        //         'message'   => 'Gagal Hapus data SPK!',
+        //         'error'     => $th
+        //     ]);
+        // }
+    }
+
     public function destroyDetail($id)
     {
         try {
@@ -643,5 +668,18 @@ class SPKController extends Controller
                 'error'     => $th
             ]);
         }
+    }
+
+    public function cetakPdf($uuid){
+        $spk = SPK::where('uuid', $uuid)->first();
+        $dataSpk = DB::select("
+            SELECT spk.artikel, spk.tanggal, spk.note, spk.ukuran, spk.note, spkd.quantity, spkd.satuan, spkd.karyawan, kr.warna, kr.kode_lot, CONCAT(kr.jenis_kain, ' | ', kr.warna) as jenis
+            FROM t_spks spk, t_spk_details spkd, m_kain_potongans kp, m_kain_rolls kr
+            WHERE spk.id = spkd.t_spk_id AND spkd.kain_potongan_id = kp.id AND kp.kain_roll_id = kr.id AND spk.kode_spk = '$spk->kode_spk'
+        ");
+        $no = 1;
+
+        $pdf = Pdf::loadView('spk.pdf.index', compact(['spk', 'dataSpk', 'no']));
+        return $pdf->stream('Cetak SPP - '.$spk->kode_spk);
     }
 }
