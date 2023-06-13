@@ -77,18 +77,13 @@
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title">Data Pengeluaran Gaji</h5>
-                                <div class="card-tools">
-                                    <a href="{{ route('pemasukkan.insert') }}" class="btn btn-success btn-sm">
-                                        <i class="fas fa-plus"></i> Tambah Data
-                                    </a>
-                                </div>
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
-                                <div id="tbl_pemasukkan_wrapper"
+                                <div id="tbl_gaji_wrapper"
                                     class="dataTables_wrapper dt-bootstrap4 table-responsive text-nowrap">
-                                    <table id="tbl_pemasukkan" class="table table-bordered table-striped dataTable"
-                                        aria-describedby="tbl_pemasukkan" style="width: 100%;">
+                                    <table id="tbl_gaji" class="table table-bordered table-striped dataTable"
+                                        aria-describedby="tbl_gaji" style="width: 100%;">
                                         <thead>
                                             <tr>
                                                 <th width="5%" style="text-align: center;">ID</th>
@@ -139,10 +134,10 @@
 
         function confirmGaji(sp, id) {
             Swal.fire({
-                    title: "Apakah anda yakin hapus data ini?",
+                    title: "Apakah anda yakin konfirmasi data ini?",
                     icon: "warning",
                     showCancelButton: true,
-                    confirmButtonText: "Ya, Hapus!",
+                    confirmButtonText: "Ya, Konfirmasi!",
                     cancelButtonText: "Tidak",
                 })
                 .then((result) => {
@@ -150,8 +145,8 @@
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('tgaji.confirm', ['sp', 'id']) }}";
                         @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('tgaji.confirm', 'kode_spk') }}";
+                        @if (Auth::user()->role_id == 2)
+                            var _url = "{{ route('a.tgaji.confirm', ['sp', 'id']) }}";
                         @endif
                         _url = _url.replace('sp', sp)
                         _url = _url.replace('id', id)
@@ -169,7 +164,7 @@
                                     icon: 'success',
                                     title: res.message,
                                 })
-                                $("#tbl_pemasukkan").DataTable().ajax.reload();
+                                $("#tbl_gaji").DataTable().ajax.reload();
 
                                 if (res.code == 500) {
                                     Notif.fire({
@@ -187,7 +182,7 @@
                                     'Server Error!',
                                     'error'
                                 )
-                                $("#tbl_pemasukkan").DataTable().ajax.reload();
+                                $("#tbl_gaji").DataTable().ajax.reload();
                             }
                         })
                     }
@@ -196,17 +191,25 @@
     </script>
     <script>
         $(document).ready(function(){
-            $('#tbl_pemasukkan').DataTable({
+            $('#tbl_gaji').DataTable({
                 processing      : true,
                 serverSide      : true,
                 autoWidth       : true,
                 destroy         : true,
                 pageLength      : 10,
                 "order"         : [[0, "desc"]],
+                @if (Auth::user()->role_id == 1)
                 ajax            : {
                         url         : "{{route('tgaji.data')}}",
                         method      : "GET"
                 },
+                @endif
+                @if (Auth::user()->role_id == 2)
+                ajax            : {
+                        url         : "{{route('a.tgaji.data')}}",
+                        method      : "GET"
+                },
+                @endif
                 columns         : [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'kode_transaksi', name: 'kode_transaksi'},
@@ -232,18 +235,27 @@
             })
 
             $('#searchData').on('click', function(){
-                $('#tbl_pemasukkan').DataTable({
+                $('#tbl_gaji').DataTable({
                     processing      : true,
                     serverSide      : true,
                     autoWidth       : true,
                     destroy         : true,
                     pageLength      : 10,
                     "order"         : [[0, "desc"]],
+                    @if (Auth::user()->role_id == 1)
                     ajax            : {
                             url         : "{{route('tgaji.searchData')}}",
                             method      : "POST",
                             data: {'fromDate': fromDate, 'toDate': toDate, 'status': status},
                     },
+                    @endif
+                    @if (Auth::user()->role_id == 2)
+                    ajax            : {
+                            url         : "{{route('a.tgaji.searchData')}}",
+                            method      : "POST",
+                            data: {'fromDate': fromDate, 'toDate': toDate, 'status': status},
+                    },
+                    @endif
                     columns         : [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                         {data: 'kode_transaksi', name: 'kode_transaksi'},
@@ -261,17 +273,27 @@
                 $('#fromDate').val('{{$date}}')
                 $('#toDate').val('{{$date}}')
                 $('#status').val('').trigger('change.select2');
-                $('#tbl_pemasukkan').DataTable({
+                $('#tbl_gaji').DataTable({
                     processing      : true,
                     serverSide      : true,
                     autoWidth       : true,
                     destroy         : true,
                     pageLength      : 10,
                     "order"         : [[0, "desc"]],
+                    
+                    @if (Auth::user()->role_id == 1)
                     ajax            : {
                             url         : "{{route('tgaji.data')}}",
                             method      : "GET"
                     },
+                    @endif
+                    
+                    @if (Auth::user()->role_id == 2)
+                    ajax            : {
+                            url         : "{{route('a.tgaji.data')}}",
+                            method      : "GET"
+                    },
+                    @endif
                     columns         : [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                         {data: 'kode_transaksi', name: 'kode_transaksi'},

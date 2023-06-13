@@ -45,8 +45,14 @@ class PemasukkanController extends Controller
 
         return \DataTables::of($data)
                     ->addColumn('Action', function($data){
-                        return '<a href="pemasukkan/edit-data/'.$data->uuid.'"> <button class="btn btn-warning btn-sm"><i class="fa fa-eye"></i></button></a>
-                        <button type="button" class="btn btn-danger btn-sm" onClick="deleteData('.$data->id.')"><i class="fa fa-trash"></i></button>';
+                        if($data->status == 'Belum Konfirmasi'){
+                            return '<a href="pemasukkan/edit-data/'.$data->uuid.'"> <button class="btn btn-warning btn-sm"><i class="fa fa-eye"></i></button></a>
+                            <button type="button" class="btn btn-danger btn-sm" onClick="deleteData(`'.$data->uuid.'`)"><i class="fa fa-trash"></i></button>';
+                        }
+                        if($data->status == 'Terkonfirmasi'){
+                            return '<button class="btn btn-warning btn-sm" disabled><i class="fa fa-eye"></i></button>
+                            <button type="button" class="btn btn-danger btn-sm" disabled><i class="fa fa-trash"></i></button>';
+                        }
                     })
                     ->addColumn('Status', function($data){
                         if($data->status == 'Belum Konfirmasi'){

@@ -38,8 +38,8 @@
                                     @if(Auth::user()->role_id == 1)
                                     <a href="{{ route('pengeluaran') }}" class="btn btn-warning btn-sm">Kembali</a>
                                     @endif
-                                    @if(Auth::user()->role_id == 3)
-                                    <a href="{{ route('w.spk') }}" class="btn btn-warning btn-sm">Kembali</a>
+                                    @if(Auth::user()->role_id == 2)
+                                    <a href="{{ route('a.pengeluaran') }}" class="btn btn-warning btn-sm">Kembali</a>
                                     @endif
                                 </div>
                             </div>
@@ -309,7 +309,12 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
+                        @if(Auth::user()->role_id == 1)
                         var _url = "{{ route('pengeluaran.deleteDetail', 'uuid') }}";
+                        @endif
+                        @if(Auth::user()->role_id == 2)
+                        var _url = "{{ route('a.pengeluaran.deleteDetail', 'uuid') }}";
+                        @endif
                         _url = _url.replace('uuid', uuid)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
@@ -399,6 +404,9 @@
                             @if(Auth::user()->role_id == 1)
                             url         : "{{route('pengeluaran.update')}}",
                             @endif
+                            @if(Auth::user()->role_id == 1)
+                            url         : "{{route('a.pengeluaran.update')}}",
+                            @endif
                             method      : "POST",
                             data        : {'data': data},
                             success     : function(res){
@@ -412,9 +420,16 @@
                                     $('#btn-tambah').attr('disabled', true);
                                     $('#btn-save-data').attr('disabled', true);
 
+                                    @if(Auth::user()->role_id == 1)
                                     setTimeout(() => {
                                         window.location.href = "{{route('pengeluaran')}}"
                                     }, 1500);
+                                    @endif
+                                    @if(Auth::user()->role_id == 2)
+                                    setTimeout(() => {
+                                        window.location.href = "{{route('a.pengeluaran')}}"
+                                    }, 1500);
+                                    @endif
                                 }
                                 if(res.code === 400){
                                     Swal.fire(

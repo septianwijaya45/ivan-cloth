@@ -67,7 +67,11 @@
                             <div class="card-header">
                                 <h5 class="card-title">Data Pemasukkan</h5>
                                 <div class="card-tools">
-                                    <a href="{{ route('pemasukkan.insert') }}" class="btn btn-success btn-sm">
+                                    @if(Auth::user()->role_id == 1)
+                                        <a href="{{ route('pemasukkan.insert') }}" class="btn btn-success btn-sm">
+                                    @elseif(Auth::user()->role_id == 2)
+                                        <a href="{{ route('a.pemasukkan.insert') }}" class="btn btn-success btn-sm">
+                                    @endif
                                         <i class="fas fa-plus"></i> Tambah Data
                                     </a>
                                 </div>
@@ -166,8 +170,9 @@
                     if (result.isConfirmed) {
                         @if(Auth::user()->role_id == 1)
                         var _url = "{{ route('pemasukkan.delete', ':id') }}";
-                        @else
-                        var _url = "{{ route('pemasukkan.delete', ':id') }}";
+                        @endif
+                        @if(Auth::user()->role_id == 2)
+                        var _url = "{{ route('a.pemasukkan.delete', ':id') }}";
                         @endif
                         _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -205,8 +210,9 @@
                     if (result.isConfirmed) {
                         @if(Auth::user()->role_id == 1)
                         var _url = "{{ route('pemasukkan.konfirmasi', ':kode_pemasukkan') }}";
-                        @else
-                        var _url = "{{ route('pemasukkan.konfirmasi', ':kode_pemasukkan') }}";
+                        @endif
+                        @if(Auth::user()->role_id == 2)
+                        var _url = "{{ route('a.pemasukkan.konfirmasi', ':kode_pemasukkan') }}";
                         @endif
                         _url = _url.replace(':kode_pemasukkan', kode_pemasukkan)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -240,10 +246,18 @@
                 destroy         : true,
                 pageLength      : 10,
                 "order"         : [[0, "desc"]],
-                ajax            : {
-                        url         : "{{route('pemasukkan.data')}}",
-                        method      : "GET"
-                },
+                @if(Auth::user()->role_id == 1)
+                    ajax            : {
+                            url         : "{{route('pemasukkan.data')}}",
+                            method      : "GET"
+                    },
+                @endif
+                @if(Auth::user()->role_id == 2)
+                    ajax            : {
+                            url         : "{{route('a.pemasukkan.data')}}",
+                            method      : "GET"
+                    },
+                @endif
                 columns         : [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'kode_pemasukan', name: 'kode_pemasukan'},
@@ -278,11 +292,20 @@
                     destroy         : true,
                     pageLength      : 10,
                     "order"         : [[0, "desc"]],
+                    @if(Auth::user()->role_id == 2)
                     ajax            : {
                             url         : "{{route('pemasukkan.searchData')}}",
                             method      : "POST",
                             data: {'fromDate': fromDate, 'toDate': toDate},
                     },
+                    @endif
+                    @if(Auth::user()->role_id == 2)
+                    ajax            : {
+                            url         : "{{route('a.pemasukkan.searchData')}}",
+                            method      : "POST",
+                            data: {'fromDate': fromDate, 'toDate': toDate},
+                    },
+                    @endif
                     columns         : [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                         {data: 'kode_pemasukan', name: 'kode_pemasukan'},
@@ -302,6 +325,9 @@
                 $.ajax({
                     @if(Auth::user()->role_id == 1)
                     url         : "{{route('pemasukkan.searchPemasukkan')}}",
+                    @endif
+                    @if(Auth::user()->role_id == 2)
+                    url         : "{{route('a.pemasukkan.searchPemasukkan')}}",
                     @endif
                     method      : "POST",
                     data: {'fromDate': fromDate, 'toDate': toDate},
@@ -338,6 +364,9 @@
                 $.ajax({
                     @if(Auth::user()->role_id == 1)
                     url         : "{{route('pemasukkan.searchPemasukkan')}}",
+                    @endif
+                    @if(Auth::user()->role_id == 2)
+                    url         : "{{route('a.pemasukkan.searchPemasukkan')}}",
                     @endif
                     method      : "POST",
                     data: {'fromDate': fromDate, 'toDate': toDate},

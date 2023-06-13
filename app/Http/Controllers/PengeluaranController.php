@@ -25,9 +25,12 @@ class PengeluaranController extends Controller
 
     public function indexData(Request $request)
     {
+        $date = Carbon::now()->format('Y-m-d');
         if($request->method() == 'GET'){
             $data = Pengeluaran::select(DB::raw('COUNT(*) as total'), 'kode_pengeluaran', DB::raw("DATE_FORMAT(tanggal, '%d %M %Y') as tanggal"), 'uuid', 'status')
                     ->orderBy('id', 'DESC')
+                    ->where('tanggal', '>=', "$date")
+                    ->where('tanggal', '<=', "$date")
                     ->groupBy('kode_pengeluaran')
                     ->get();
         }
@@ -43,14 +46,21 @@ class PengeluaranController extends Controller
         
         return \DataTables::of($data)
                     ->addColumn('Action', function($data){
-                        return '<a href="pengeluaran/edit-data/'.$data->uuid.'"> <button class="btn btn-warning btn-sm"><i class="fa fa-eye"></i></button></a>
-                        <button type="button" class="btn btn-danger btn-sm" onClick="deleteData('.$data->id.')"><i class="fa fa-trash"></i></button>';
+                        if($data->status == 'Belum Konfirmasi'){
+                            return '<a href="pengeluaran/edit-data/'.$data->uuid.'"> <button class="btn btn-warning btn-sm"><i class="fa fa-eye"></i></button></a>
+                            <button type="button" class="btn btn-danger btn-sm" onClick="deleteData('.$data->id.')"><i class="fa fa-trash"></i></button>';
+                        }
+                        
+                        if($data->status == 'Terkonfirmasi'){
+                            return '<button class="btn btn-warning btn-sm" disabled><i class="fa fa-eye"></i></button>
+                            <button type="button" class="btn btn-danger btn-sm" disabled><i class="fa fa-trash"></i></button>';
+                        }
                     })
                     ->addColumn('Status', function($data){
                         if($data->status == 'Belum Konfirmasi'){
-                            return '<button class="btn btn-danger btn-sm" title="Confirm Data!" onClick="confirmPengeluaran()"> Belum Konfirmasi </button>';
+                            return '<button class="btn btn-danger btn-sm" title="Confirm Data!" onClick="confirmPengeluaran(`'.$data->kode_pengeluaran.'`)"> Belum Konfirmasi </button>';
                         }
-                        if($data->status == 'Selesai Dikerjakan'){
+                        if($data->status == 'Terkonfirmasi'){
                             return '<span class="bg-success p-2">Selesai Dikerjakan</span>';
                         }
                     })
@@ -170,6 +180,29 @@ class PengeluaranController extends Controller
             return response()->json([
                 'code'      => 500,
                 'message'   => 'Error Server!',
+                'error'     => $th
+            ]);
+        }
+    }
+
+    public function confirmData($kode_pengeluaran)
+    {
+        try {
+            $pengeluaran = Pengeluaran::where('kode_pengeluaran', $kode_pengeluaran);
+            if($pengeluaran){
+                $pengeluaran->update([
+                    'status'    => 'Terkonfirmasi'
+                ]);
+                
+                return response()->json([
+                    'code'      => 200,
+                    'message'   => 'Berhasil Konfirmasi Data Pengeluaran',
+                ]);
+            }
+        } catch (\Exception $th) {
+            return response()->json([
+                'code'      => 500,
+                'message'   => 'Gagal Konfirmasi Data Pengeluaran!',
                 'error'     => $th
             ]);
         }

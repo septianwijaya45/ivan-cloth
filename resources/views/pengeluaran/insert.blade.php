@@ -38,8 +38,8 @@
                                     @if(Auth::user()->role_id == 1)
                                     <a href="{{ route('pengeluaran') }}" class="btn btn-warning btn-sm">Kembali</a>
                                     @endif
-                                    @if(Auth::user()->role_id == 3)
-                                    <a href="{{ route('w.spk') }}" class="btn btn-warning btn-sm">Kembali</a>
+                                    @if(Auth::user()->role_id == 2)
+                                    <a href="{{ route('a.pengeluaran') }}" class="btn btn-warning btn-sm">Kembali</a>
                                     @endif
                                 </div>
                             </div>
@@ -384,6 +384,9 @@
                             @if(Auth::user()->role_id == 1)
                             url         : "{{route('pengeluaran.store')}}",
                             @endif
+                            @if(Auth::user()->role_id == 2)
+                            url         : "{{route('a.pengeluaran.store')}}",
+                            @endif
                             method      : "POST",
                             data        : {'data': data},
                             success     : function(res){
@@ -397,9 +400,16 @@
                                     $('#btn-tambah').attr('disabled', true);
                                     $('#btn-save-data').attr('disabled', true);
 
-                                    setTimeout(() => {
-                                        window.location.href = "{{route('pengeluaran')}}"
-                                    }, 1500);
+                                    @if(Auth::user()->role_id == 1)
+                                        setTimeout(() => {
+                                            window.location.href = "{{route('pengeluaran')}}"
+                                        }, 1500);
+                                    @endif
+                                    @if(Auth::user()->role_id == 2)
+                                        setTimeout(() => {
+                                            window.location.href = "{{route('a.pengeluaran')}}"
+                                        }, 1500);
+                                    @endif
                                 }
                                 if(res.code === 400){
                                     Swal.fire(

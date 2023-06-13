@@ -272,6 +272,8 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // edit
             Route::get('edit-data/{uuid}',  [PengeluaranController::class, 'edit'])->name('pengeluaran.edit');
             Route::post('edit-data',  [PengeluaranController::class, 'update'])->name('pengeluaran.update');
+            // confirm
+            Route::put('konfirmasi-data/{kode_pengeluaran}',  [PengeluaranController::class, 'confirmData'])->name('pengeluaran.konfirmasi');
             // delete
             Route::delete('delete/{uuid}', [PengeluaranController::class, 'destroy'])->name('pengeluaran.delete');
             Route::delete('delete-detail/{uuid}', [PengeluaranController::class, 'destroyDetail'])->name('pengeluaran.deleteDetail');
@@ -336,6 +338,85 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::get('{uuid}', [AsetController::class, 'detailData'])->name('a.aset.detail');
             Route::put('{uuid}', [AsetController::class, 'updateData'])->name('a.aset.update');
             Route::delete('{uuid}', [AsetController::class, 'deleteData'])->name('a.aset.delete');
+        });
+
+        // Route Film Sablon
+        Route::group(['prefix' => 'Film-Sablon'], function () {
+            Route::get('/', [FilmSablonController::class, 'index'])->name('a.filmSablon');
+            Route::get('/get-data', [FilmSablonController::class, 'indexData'])->name('a.filmSablon.Data');
+        });
+
+        // Route Finishing
+        Route::group(['prefix' => 'finishing'], function () {
+            // index
+            Route::get('', [FinishingController::class, 'index'])->name('finishing');
+            Route::get('data/{status}', [FinishingController::class, 'indexData'])->name('finishing.data');
+            // create
+            Route::get('tambah-data', [FinishingController::class, 'insert'])->name('finishing.insert');
+            Route::post('tambah-data', [FinishingController::class, 'store'])->name('finishing.store');
+            // edit
+            Route::get('edit-data/{uuid}', [FinishingController::class, 'edit'])->name('finishing.edit');
+            Route::post('edit-data', [FinishingController::class, 'update'])->name('finishing.update');
+            Route::post('edit-detail', [FinishingController::class, 'updateDetail'])->name('finishing.updateDetail');
+            // delete detail
+            Route::delete('detail-data/delete/{id}', [FinishingController::class, 'deleteInsertorEdit'])->name('finishing.deleteInsertEdit');
+            // delete Finishing
+            Route::delete('delete/{kode_finishing}', [FinishingController::class, 'destroy'])->name('finishing.delete');
+            // Confirm & Finishing
+            Route::put('confirm-work/{kode_finishing}', [FinishingController::class, 'confirm'])->name('finishing.confirm');
+            Route::put('finished-work/{kode_finishing}', [FinishingController::class, 'finished'])->name('finishing.finished');
+
+            Route::get('detail-karyawan/{kode_finishing}', [FinishingController::class, 'detailFormKaryawan'])->name('finishing.detailKaryawan');
+            Route::put('tambah-karyawan/{id}', [FinishingController::class, 'addKaryawanFinishing'])->name('finishing.addKaryawan');
+            Route::put('update-karyawan/{id}', [FinishingController::class, 'updateKaryawanFinishing'])->name('finishing.updateKaryawan');
+        });
+
+        // Route Pemasukkan
+        Route::group(['prefix' => 'pemasukkan'], function () {
+            // index
+            Route::get('',  [PemasukkanController::class, 'index'])->name('a.pemasukkan');
+            Route::get('data', [PemasukkanController::class, 'indexData'])->name('a.pemasukkan.data');
+            Route::post('search-data', [PemasukkanController::class, 'indexData'])->name('a.pemasukkan.searchData');
+            Route::post('search-data-pemasukkan', [PemasukkanController::class, 'indexDataPemasukkan'])->name('a.pemasukkan.searchPemasukkan');
+            // Insert
+            Route::get('tambah-data',  [PemasukkanController::class, 'insert'])->name('a.pemasukkan.insert');
+            Route::post('tambah-data',  [PemasukkanController::class, 'store'])->name('a.pemasukkan.store');
+            // edit
+            Route::get('edit-data/{uuid}',  [PemasukkanController::class, 'edit'])->name('a.pemasukkan.edit');
+            Route::post('edit-data',  [PemasukkanController::class, 'update'])->name('a.pemasukkan.update');
+            // confirm
+            Route::put('konfirmasi-data/{kode_pemasukkan}',  [PemasukkanController::class, 'confirmData'])->name('a.pemasukkan.konfirmasi');
+            // delete
+            Route::delete('delete/{uuid}', [PemasukkanController::class, 'destroy'])->name('a.pemasukkan.delete');
+            Route::delete('delete-detail/{uuid}', [PemasukkanController::class, 'destroyDetail'])->name('a.pemasukkan.deleteDetail');
+        });
+
+        // Route Pengeluaran
+        Route::group(['prefix' => 'pengeluaran'], function () {
+            // index
+            Route::get('',  [PengeluaranController::class, 'index'])->name('a.pengeluaran');
+            Route::get('data', [PengeluaranController::class, 'indexData'])->name('a.pengeluaran.data');
+            Route::post('search-data', [PengeluaranController::class, 'indexData'])->name('a.pengeluaran.searchData');
+            Route::post('search-data-pengeluaran', [PengeluaranController::class, 'indexDataPengeluaran'])->name('a.pengeluaran.searchPengeluaran');
+            // Insert
+            Route::get('tambah-data',  [PengeluaranController::class, 'insert'])->name('a.pengeluaran.insert');
+            Route::post('tambah-data',  [PengeluaranController::class, 'store'])->name('a.pengeluaran.store');
+            // edit
+            Route::get('edit-data/{uuid}',  [PengeluaranController::class, 'edit'])->name('a.pengeluaran.edit');
+            Route::post('edit-data',  [PengeluaranController::class, 'update'])->name('a.pengeluaran.update');
+            // confirm
+            Route::put('konfirmasi-data/{kode_pengeluaran}',  [PengeluaranController::class, 'confirmData'])->name('a.pengeluaran.konfirmasi');
+            // delete
+            Route::delete('delete/{uuid}', [PengeluaranController::class, 'destroy'])->name('a.pengeluaran.delete');
+            Route::delete('delete-detail/{uuid}', [PengeluaranController::class, 'destroyDetail'])->name('a.pengeluaran.deleteDetail');
+        });
+
+        // Route Transaksi Gaji
+        Route::group(['prefix' => 'pengeluaran-gaji'], function () {
+            Route::get('', [TransaksiGajiController::class, 'index'])->name('a.tgaji');
+            Route::get('data', [TransaksiGajiController::class, 'indexData'])->name('a.tgaji.data');
+            Route::post('', [TransaksiGajiController::class, 'indexData'])->name('a.tgaji.searchData');
+            Route::put('konfirmasi-gaji/{sp}/{id}', [TransaksiGajiController::class, 'confirmGaji'])->name('a.tgaji.confirm');
         });
     });
 

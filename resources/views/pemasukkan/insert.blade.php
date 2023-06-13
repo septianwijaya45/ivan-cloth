@@ -38,8 +38,8 @@
                                     @if(Auth::user()->role_id == 1)
                                     <a href="{{ route('pemasukkan') }}" class="btn btn-warning btn-sm">Kembali</a>
                                     @endif
-                                    @if(Auth::user()->role_id == 3)
-                                    <a href="{{ route('w.spk') }}" class="btn btn-warning btn-sm">Kembali</a>
+                                    @if(Auth::user()->role_id == 2)
+                                    <a href="{{ route('a.pemasukkan') }}" class="btn btn-warning btn-sm">Kembali</a>
                                     @endif
                                 </div>
                             </div>
@@ -319,7 +319,6 @@
             .then((result) => {
                 if (result.isConfirmed) {
                     check = data.findIndex(e => e['uuid'] === uuid)
-                    console.log(check)
                     if(check !== -1){
                         data.splice(check, 1)
                     }
@@ -354,6 +353,9 @@
                             @if(Auth::user()->role_id == 1)
                             url         : "{{route('pemasukkan.store')}}",
                             @endif
+                            @if(Auth::user()->role_id == 2)
+                            url         : "{{route('a.pemasukkan.store')}}",
+                            @endif
                             method      : "POST",
                             data        : {'data': data},
                             success     : function(res){
@@ -367,9 +369,16 @@
                                     $('#btn-tambah').attr('disabled', true);
                                     $('#btn-save-data').attr('disabled', true);
 
-                                    setTimeout(() => {
-                                        window.location.href = "{{route('pemasukkan')}}"
-                                    }, 1500);
+                                    @if(Auth::user()->role_id == 1)
+                                        setTimeout(() => {
+                                            window.location.href = "{{route('pemasukkan')}}"
+                                        }, 1500);
+                                    @endif
+                                    @if(Auth::user()->role_id == 2)
+                                        setTimeout(() => {
+                                            window.location.href = "{{route('a.pemasukkan')}}"
+                                        }, 1500);
+                                    @endif
                                 }
                                 if(res.code === 400){
                                     Swal.fire(
