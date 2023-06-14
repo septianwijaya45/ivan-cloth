@@ -6,6 +6,7 @@ use App\Http\Controllers\KainPotonganController;
 use App\Http\Controllers\KainRollController;
 use App\Http\Controllers\KaryawanController;
 use App\Http\Controllers\Auth\LoginController;
+use App\Http\Controllers\BarangJadiController;
 use App\Http\Controllers\FilmSablonController;
 use App\Http\Controllers\FinishingController;
 use App\Http\Controllers\GajiController;
@@ -239,6 +240,17 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::put('update-karyawan/{id}', [FinishingController::class, 'updateKaryawanFinishing'])->name('finishing.updateKaryawan');
         });
 
+        // Route Barang Jadi
+        Route::group(['prefix' => 'barang-jadi'], function () {
+            // index
+            Route::get('', [BarangJadiController::class, 'index'])->name('barang_jadi');
+            Route::get('data/{status}', [BarangJadiController::class, 'indexData'])->name('barang_jadi.data');
+            // delete barang_jadi
+            Route::delete('delete/{id}', [BarangJadiController::class, 'destroy'])->name('barang_jadi.delete');
+            // Confirm & barang_jadi
+            Route::put('confirm-work/{id}', [BarangJadiController::class, 'confirm'])->name('barang_jadi.confirm');
+        });
+
         // Route Pemasukkan
         Route::group(['prefix' => 'pemasukkan'], function () {
             // index
@@ -349,26 +361,37 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
         // Route Finishing
         Route::group(['prefix' => 'finishing'], function () {
             // index
-            Route::get('', [FinishingController::class, 'index'])->name('finishing');
-            Route::get('data/{status}', [FinishingController::class, 'indexData'])->name('finishing.data');
+            Route::get('', [FinishingController::class, 'index'])->name('a.finishing');
+            Route::get('data/{status}', [FinishingController::class, 'indexData'])->name('a.finishing.data');
             // create
-            Route::get('tambah-data', [FinishingController::class, 'insert'])->name('finishing.insert');
-            Route::post('tambah-data', [FinishingController::class, 'store'])->name('finishing.store');
+            Route::get('tambah-data', [FinishingController::class, 'insert'])->name('a.finishing.insert');
+            Route::post('tambah-data', [FinishingController::class, 'store'])->name('a.finishing.store');
             // edit
-            Route::get('edit-data/{uuid}', [FinishingController::class, 'edit'])->name('finishing.edit');
-            Route::post('edit-data', [FinishingController::class, 'update'])->name('finishing.update');
-            Route::post('edit-detail', [FinishingController::class, 'updateDetail'])->name('finishing.updateDetail');
+            Route::get('edit-data/{uuid}', [FinishingController::class, 'edit'])->name('a.finishing.edit');
+            Route::post('edit-data', [FinishingController::class, 'update'])->name('a.finishing.update');
+            Route::post('edit-detail', [FinishingController::class, 'updateDetail'])->name('a.finishing.updateDetail');
             // delete detail
-            Route::delete('detail-data/delete/{id}', [FinishingController::class, 'deleteInsertorEdit'])->name('finishing.deleteInsertEdit');
+            Route::delete('detail-data/delete/{id}', [FinishingController::class, 'deleteInsertorEdit'])->name('a.finishing.deleteInsertEdit');
             // delete Finishing
-            Route::delete('delete/{kode_finishing}', [FinishingController::class, 'destroy'])->name('finishing.delete');
+            Route::delete('delete/{kode_finishing}', [FinishingController::class, 'destroy'])->name('a.finishing.delete');
             // Confirm & Finishing
-            Route::put('confirm-work/{kode_finishing}', [FinishingController::class, 'confirm'])->name('finishing.confirm');
-            Route::put('finished-work/{kode_finishing}', [FinishingController::class, 'finished'])->name('finishing.finished');
+            Route::put('confirm-work/{kode_finishing}', [FinishingController::class, 'confirm'])->name('a.finishing.confirm');
+            Route::put('finished-work/{kode_finishing}', [FinishingController::class, 'finished'])->name('a.finishing.finished');
 
-            Route::get('detail-karyawan/{kode_finishing}', [FinishingController::class, 'detailFormKaryawan'])->name('finishing.detailKaryawan');
-            Route::put('tambah-karyawan/{id}', [FinishingController::class, 'addKaryawanFinishing'])->name('finishing.addKaryawan');
-            Route::put('update-karyawan/{id}', [FinishingController::class, 'updateKaryawanFinishing'])->name('finishing.updateKaryawan');
+            Route::get('detail-karyawan/{kode_finishing}', [FinishingController::class, 'detailFormKaryawan'])->name('a.finishing.detailKaryawan');
+            Route::put('tambah-karyawan/{id}', [FinishingController::class, 'addKaryawanFinishing'])->name('a.finishing.addKaryawan');
+            Route::put('update-karyawan/{id}', [FinishingController::class, 'updateKaryawanFinishing'])->name('a.finishing.updateKaryawan');
+        });
+
+        // Route Barang Jadi
+        Route::group(['prefix' => 'barang-jadi'], function () {
+            // index
+            Route::get('', [BarangJadiController::class, 'index'])->name('a.barang_jadi');
+            Route::get('data/{status}', [BarangJadiController::class, 'indexData'])->name('a.barang_jadi.data');
+            // delete barang_jadi
+            Route::delete('delete/{id}', [BarangJadiController::class, 'destroy'])->name('a.barang_jadi.delete');
+            // Confirm & barang_jadi
+            Route::put('confirm-work/{id}', [BarangJadiController::class, 'confirm'])->name('a.barang_jadi.confirm');
         });
 
         // Route Pemasukkan
@@ -494,6 +517,13 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // Confirm & Finishing
             Route::put('confirm-work/{kode_spk}', [SPKController::class, 'confirm'])->name('w.spk.confirm');
             Route::put('finished-work/{kode_spk}', [SPKController::class, 'finished'])->name('w.spk.finished');
+        });
+
+        // Route Barang Jadi
+        Route::group(['prefix' => 'barang-jadi'], function () {
+            // index
+            Route::get('', [BarangJadiController::class, 'index'])->name('w.barang_jadi');
+            Route::get('data/{status}', [BarangJadiController::class, 'indexData'])->name('w.barang_jadi.data');
         });
     });
 });
