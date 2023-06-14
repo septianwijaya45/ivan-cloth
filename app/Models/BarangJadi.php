@@ -10,6 +10,6 @@ class BarangJadi extends Model
     use HasFactory;
     protected $table = "m_barang_jadies";
     protected $fillable = [
-        'uuid', 'artikel', 'total_barang', 'status'
+        'uuid', 'finishing_id', 'artikel', 'tanggal', 'total_barang', 'status'
     ];
 }

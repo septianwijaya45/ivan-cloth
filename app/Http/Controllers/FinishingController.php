@@ -198,10 +198,11 @@ class FinishingController extends Controller
 
             BarangJadi::create([
                 'uuid'              => Uuid::uuid4()->getHex(),
+                'finishing_id'      => $finishing->id,
                 'artikel'           => $finishing->artikel,
                 'tanggal'           => Carbon::now(),
                 'total_barang'      => $finishing->jumlah_finishing,
-                'status'            => 'Belum Konfirmasi',
+                'status'            => 'Belum Diambil',
             ]);
 
             return response()->json([
