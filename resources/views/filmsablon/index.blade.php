@@ -126,6 +126,9 @@
                 @if(Auth::user()->role_id == 1)
                     url: "{{ route('filmSablon.Data') }}",
                 @endif
+                @if(Auth::user()->role_id == 2)
+                    url: "{{ route('a.filmSablon.Data') }}",
+                @endif
                 type: 'GET',
                 success: function(res) {
                     $('tbody').html('')

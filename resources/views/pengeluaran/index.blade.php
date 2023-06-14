@@ -67,7 +67,12 @@
                             <div class="card-header">
                                 <h5 class="card-title">Data Pengeluaran</h5>
                                 <div class="card-tools">
+                                    @if(Auth::user()->role_id == 1)
                                     <a href="{{ route('pengeluaran.insert') }}" class="btn btn-success btn-sm">
+                                    @endif
+                                    @if(Auth::user()->role_id == 2)
+                                    <a href="{{ route('a.pengeluaran.insert') }}" class="btn btn-success btn-sm">
+                                    @endif
                                         <i class="fas fa-plus"></i> Tambah Data
                                     </a>
                                 </div>
@@ -166,8 +171,9 @@
                     if (result.isConfirmed) {
                         @if(Auth::user()->role_id == 1)
                         var _url = "{{ route('pengeluaran.delete', ':id') }}";
-                        @else
-                        var _url = "{{ route('pengeluaran.delete', ':id') }}";
+                        @endif
+                        @if(Auth::user()->role_id == 2)
+                        var _url = "{{ route('a.pengeluaran.delete', ':id') }}";
                         @endif
                         _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -183,7 +189,7 @@
                                     title: res.message,
                                 })
                                 $("#tbl_pengeluaran").DataTable().destroy();
-                                getPerlengkapan();
+                                getPengeluaran();
                             },
                             error: function(err) {
                                 console.log(err);
@@ -192,9 +198,48 @@
                     }
                 });
         }
-    </script>
-    <script>
-        $(document).ready(function(){
+
+        function confirmPengeluaran(kode_pengeluaran) {
+            Swal.fire({
+                    title: "Apakah anda yakin konfirmasi data ini?",
+                    icon: "warning",
+                    showCancelButton: true,
+                    confirmButtonText: "Ya, Konfirmasi!",
+                    cancelButtonText: "Tidak",
+                })
+                .then((result) => {
+                    if (result.isConfirmed) {
+                        @if(Auth::user()->role_id == 1)
+                        var _url = "{{ route('pengeluaran.konfirmasi', ':kode_pengeluaran') }}";
+                        @endif
+                        @if(Auth::user()->role_id == 2)
+                        var _url = "{{ route('a.pengeluaran.konfirmasi', ':kode_pengeluaran') }}";
+                        @endif
+                        _url = _url.replace(':kode_pengeluaran', kode_pengeluaran)
+                        var _token = $('meta[name="csrf-token"]').attr('content');
+                        $.ajax({
+                            url: _url,
+                            type: 'PUT',
+                            data: {
+                                _token: _token
+                            },
+                            success: function(res) {
+                                Notif.fire({
+                                    icon: 'success',
+                                    title: res.message,
+                                })
+                                $("#tbl_pengeluaran").DataTable().destroy();
+                                getPengeluaran();
+                            },
+                            error: function(err) {
+                                console.log(err);
+                            }
+                        })
+                    }
+                });
+        }
+
+        function getPengeluaran() {
             $('#tbl_pengeluaran').DataTable({
                 processing      : true,
                 serverSide      : true,
@@ -202,10 +247,18 @@
                 destroy         : true,
                 pageLength      : 10,
                 "order"         : [[0, "desc"]],
+                @if(Auth::user()->role_id == 1)
                 ajax            : {
                         url         : "{{route('pengeluaran.data')}}",
                         method      : "GET"
                 },
+                @endif
+                @if(Auth::user()->role_id == 2)
+                ajax            : {
+                        url         : "{{route('a.pengeluaran.data')}}",
+                        method      : "GET"
+                },
+                @endif
                 columns         : [
                     {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                     {data: 'kode_pengeluaran', name: 'kode_pengeluaran'},
@@ -215,6 +268,11 @@
                     {data: 'Action', name: 'Action', orderable:'false', searchable: 'false', sClass:'text-center'}
                 ]
             });
+        }
+    </script>
+    <script>
+        $(document).ready(function(){
+            getPengeluaran();
 
 
             let fromDate, toDate, htmlview
@@ -235,10 +293,20 @@
                     destroy         : true,
                     pageLength      : 10,
                     "order"         : [[0, "desc"]],
+                    @if(Auth::user()->role_id == 1)
                     ajax            : {
                             url         : "{{route('pengeluaran.searchData')}}",
-                            method      : "POST"
+                            method      : "POST",                    
+                            data: {'fromDate': fromDate, 'toDate': toDate},
                     },
+                    @endif
+                    @if(Auth::user()->role_id == 2)
+                    ajax            : {
+                            url         : "{{route('a.pengeluaran.searchData')}}",
+                            method      : "POST",
+                            data: {'fromDate': fromDate, 'toDate': toDate},
+                    },
+                    @endif
                     columns         : [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                         {data: 'kode_pengeluaran', name: 'kode_pengeluaran'},
@@ -259,6 +327,9 @@
                 $.ajax({
                     @if(Auth::user()->role_id == 1)
                     url         : "{{route('pengeluaran.searchPengeluaran')}}",
+                    @endif
+                    @if(Auth::user()->role_id == 2)
+                    url         : "{{route('a.pengeluaran.searchPengeluaran')}}",
                     @endif
                     method      : "POST",
                     data: {'fromDate': fromDate, 'toDate': toDate},
@@ -291,10 +362,18 @@
                     destroy         : true,
                     pageLength      : 10,
                     "order"         : [[0, "desc"]],
+                    @if(Auth::user()->role_id == 1)
                     ajax            : {
                             url         : "{{route('pengeluaran.data')}}",
                             method      : "GET"
                     },
+                    @endif
+                    @if(Auth::user()->role_id == 2)
+                    ajax            : {
+                            url         : "{{route('a.pengeluaran.data')}}",
+                            method      : "GET",
+                    },
+                    @endif
                     columns         : [
                         {data: 'DT_RowIndex', name: 'DT_RowIndex'},
                         {data: 'kode_pengeluaran', name: 'kode_pengeluaran'},
@@ -314,6 +393,9 @@
                 $.ajax({
                     @if(Auth::user()->role_id == 1)
                     url         : "{{route('pengeluaran.searchPengeluaran')}}",
+                    @endif
+                    @if(Auth::user()->role_id == 2)
+                    url         : "{{route('a.pengeluaran.searchPengeluaran')}}",
                     @endif
                     method      : "POST",
                     data: {'fromDate': fromDate, 'toDate': toDate},

@@ -243,7 +243,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="#" class="nav-link">
+                         <a href="{{ route('a.filmSablon') }}" class="nav-link">
                              <i class="nav-icon fas fa-film"></i>
                              <p>
                                  Film Sablon
@@ -252,7 +252,7 @@
                      </li>
                      <li class="nav-header">Keuangan</li>
                      <li class="nav-item">
-                         <a href="#" class="nav-link">
+                         <a href="{{ route('a.pemasukkan') }}" class="nav-link">
                              <i class="nav-icon fas fa-chart-line"></i>
                              <p>
                                  Pemasukkan
@@ -260,10 +260,18 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="#" class="nav-link">
+                         <a href="{{ route('a.pengeluaran') }}" class="nav-link">
                              <i class="nav-icon fas fa-receipt"></i>
                              <p>
                                  Pengeluaran
+                             </p>
+                         </a>
+                     </li>
+                     <li class="nav-item">
+                         <a href="{{ route('a.tgaji') }}" class="nav-link">
+                             <i class="nav-icon fas fa-money-bill"></i>
+                             <p>
+                                 Pengeluaran Gaji
                              </p>
                          </a>
                      </li>
