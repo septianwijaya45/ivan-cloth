@@ -170,6 +170,7 @@
                                 <span class="bg-success p-2">Selesai Dikerjakan</span></td>
                             `;
                         }
+                        @if(Auth::user()->role_id == 1)
                         htmlview += `<td>
                           <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-potong/edit-data/` +
                             data.uuid + `"> <i class="fas fa-pencil-alt"></i>
@@ -182,6 +183,15 @@
                           </button>
                         </td>
                        </tr>`
+                       @endif
+                        @if(Auth::user()->role_id == 3)
+                        htmlview += `<td>
+                          <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-potong/print-data/` +
+                            data.uuid + `"> <i class="fas fa-print"></i>
+                          </a>
+                        </td>
+                       </tr>`
+                       @endif
                     });
 
                     $('tbody').html(htmlview)

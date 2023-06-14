@@ -461,10 +461,12 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::put('finished-work/{kode_spp}', [SPPController::class, 'finished'])->name('w.spp.finished');
             // get spp for SPK
             Route::get('data/{kode_spp}', [SPPController::class, 'dataSPP'])->name('w.spp.getData');
+            // Print SPP
+            Route::get('print-data/{uuid}', [SPPController::class, 'cetakPdf'])->name('w.spp.cetakPdf');
         });
 
         // Route SPK
-        Route::group(['prefix' => 'surat-perintah-kain'], function () {
+        Route::group(['prefix' => 'surat-perintah-kerja'], function () {
             // getArticle
             Route::get('artikel/{artikel}', [SPKController::class, 'getArtikel'])->name('w.spk.artikel');
             // get Hasil Potongan
@@ -494,6 +496,9 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // Confirm & Finishing
             Route::put('confirm-work/{kode_spk}', [SPKController::class, 'confirm'])->name('w.spk.confirm');
             Route::put('finished-work/{kode_spk}', [SPKController::class, 'finished'])->name('w.spk.finished');
+            
+            // Print SPK
+            Route::get('print-data/{uuid}', [SPKController::class, 'cetakPdf'])->name('w.spk.cetakPdf');
         });
     });
 });
