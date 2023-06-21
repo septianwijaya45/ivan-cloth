@@ -500,5 +500,43 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // Print SPK
             Route::get('print-data/{uuid}', [SPKController::class, 'cetakPdf'])->name('w.spk.cetakPdf');
         });
+
+        // Route Jahit
+        Route::group(['prefix' => 'jahit'], function () {
+            // get artikel spk
+            Route::get('getArtikelFromSPK/{kode_spk}', [JahitController::class, 'getArtikelFromSPK'])->name('w.getArtikelSpk');
+            Route::get('getQuantityArtikel/{id}', [JahitController::class, 'getQuantityArtikel'])->name('w.getQuantityArtikel');
+            // index
+            Route::get('', [JahitController::class, 'index'])->name('w.jahit');
+            Route::get('data/{status}', [JahitController::class, 'indexData'])->name('w.jahit.data');
+            // create
+            Route::get('tambah-data', [JahitController::class, 'insert'])->name('w.jahit.insert');
+            Route::post('tambah-data', [JahitController::class, 'store'])->name('w.jahit.store');
+            // edit
+            Route::get('edit-data/{uuid}', [JahitController::class, 'edit'])->name('w.jahit.edit');
+            Route::post('edit-data', [JahitController::class, 'update'])->name('w.jahit.update');
+            Route::post('edit-detail', [JahitController::class, 'updateDetail'])->name('w.jahit.updateDetail');
+        });
+
+        // Route Finishing
+        Route::group(['prefix' => 'finishing'], function () {
+            // index
+            Route::get('', [FinishingController::class, 'index'])->name('w.finishing');
+            Route::get('data/{status}', [FinishingController::class, 'indexData'])->name('w.finishing.data');
+            // create
+            Route::get('tambah-data', [FinishingController::class, 'insert'])->name('w.finishing.insert');
+            Route::post('tambah-data', [FinishingController::class, 'store'])->name('w.finishing.store');
+            // edit
+            Route::get('edit-data/{uuid}', [FinishingController::class, 'edit'])->name('w.finishing.edit');
+            Route::post('edit-data', [FinishingController::class, 'update'])->name('w.finishing.update');
+            Route::post('edit-detail', [FinishingController::class, 'updateDetail'])->name('w.finishing.updateDetail');
+        });
+
+        // Route Barang Jadi
+        Route::group(['prefix' => 'barang-jadi'], function () {
+            // index
+            Route::get('', [BarangJadiController::class, 'index'])->name('w.barang_jadi');
+            Route::get('data/{status}', [BarangJadiController::class, 'indexData'])->name('w.barang_jadi.data');
+        });
     });
 });

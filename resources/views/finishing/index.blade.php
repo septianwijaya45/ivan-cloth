@@ -80,7 +80,9 @@
                                                 <th>Karyawan</th>
                                                 <th>Gaji</th>
                                                 <th>Status Surat</th>
+                                                @if(Auth::user()->role_id == 1 && Auth::user()->role_id == 2)
                                                 <th width="5%">Aksi</th>
+                                                @endif
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -399,6 +401,11 @@
                         <td> ` + data.karyawan.replace(',', '<br>') + ` </td>
                         <td class="text-right"> ` + data.gaji + `</td>`;
                         if (data.status == 'Belum Menentukan Karyawan') {
+                            @if(Auth::user()->role_id == 3)
+                                htmlview += `<td>
+                                    <span class="bg-secondary p-2">Belum Menentukan Karyawan</span></td>
+                                `;
+                            @else
                             htmlview +=
                                 ` <td>
                                     <button class = "btn btn-secondary btn-sm container-fluid" title = "Tentukan Karyawan!"
@@ -407,20 +414,33 @@
                                     </button>
                                     </td>
                                     `;
+                            @endif
                         }
                         if (data.status == 'Belum Konfirmasi') {
+                            @if(Auth::user()->role_id == 3)
+                                htmlview += `<td>
+                                    <span class="bg-danger p-2">Belum Konfirmasi</span></td>
+                                `;
+                            @else
                             htmlview +=
                                 `<td>
                                         <button class="btn btn-danger btn-sm container-fluid" title="Confirm Data!" 
                                         onClick="confirmFinishing('` + data.kode_finishing + `')"> Belum Konfirmasi </button></td>
                                     `;
+                            @endif
                         }
                         if (data.status == 'Sedang Dikerjakan') {
-                            htmlview +=
-                                `<td>
-                                    <button class="btn btn-warning btn-sm container-fluid" title="Finish Data!" 
-                                    onClick="finishedFinishing('` + data.kode_finishing + `')"> Sedang Dikerjakan </button></td>
-                                    `;
+                            @if(Auth::user()->role_id == 3)
+                                htmlview += `<td>
+                                    <span class="bg-danger p-2">Belum Konfirmasi</span></td>
+                                `;
+                            @else
+                                htmlview +=
+                                    `<td>
+                                        <button class="btn btn-warning btn-sm container-fluid" title="Finish Data!" 
+                                        onClick="finishedFinishing('` + data.kode_finishing + `')"> Sedang Dikerjakan </button></td>
+                                        `;
+                            @endif
                         }
                         if (data.status == 'Selesai Dikerjakan') {
                             htmlview += `<td>
@@ -428,25 +448,29 @@
                                     `;
                         }
                         if (data.status == 'Belum Menentukan Karyawan') {
-                            htmlview +=
-                                `<td class="text-right">
-                                  <button class="btn btn-danger btn-sm" title="Delete Data!" 
-                                  onClick="deleteFinishing('` + data.kode_finishing + `')"> <i class="fas fa-trash"></i>
-                                  </button>
-                                </td>
-                               </tr>`
+                            @if(Auth::user()->role_id == 1)
+                                htmlview +=
+                                    `<td class="text-right">
+                                    <button class="btn btn-danger btn-sm" title="Delete Data!" 
+                                    onClick="deleteFinishing('` + data.kode_finishing + `')"> <i class="fas fa-trash"></i>
+                                    </button>
+                                    </td>
+                                </tr>`
+                            @endif
                         } else {
-                            htmlview +=
-                                `<td class="text-right">
-                                  <button class="btn btn-info btn-sm" title="Edit Karyawan Finishing!" 
-                                  onClick="editKaryawanFinishing('` + data.kode_finishing + `')">
-                                    <i class="fas fa-pencil-alt"></i>
-                                  </button>
-                                  <button class="btn btn-danger btn-sm" title="Delete Data!" 
-                                  onClick="deleteFinishing('` + data.kode_finishing + `')"> <i class="fas fa-trash"></i>
-                                  </button>
-                                </td>
-                               </tr>`
+                            @if(Auth::user()->role_id == 1)
+                                htmlview +=
+                                    `<td class="text-right">
+                                    <button class="btn btn-info btn-sm" title="Edit Karyawan Finishing!" 
+                                    onClick="editKaryawanFinishing('` + data.kode_finishing + `')">
+                                        <i class="fas fa-pencil-alt"></i>
+                                    </button>
+                                    <button class="btn btn-danger btn-sm" title="Delete Data!" 
+                                    onClick="deleteFinishing('` + data.kode_finishing + `')"> <i class="fas fa-trash"></i>
+                                    </button>
+                                    </td>
+                                </tr>`
+                            @endif
                         }
                     });
                     $("#tbl_ukuran").DataTable(dtTableOption).destroy()
@@ -470,9 +494,6 @@
                     if (result.isConfirmed) {
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('finishing.delete', 'kode_finishing') }}";
-                        @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.finishing.delete', 'kode_finishing') }}";
                         @endif
                         _url = _url.replace('kode_finishing', kode_finishing)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -519,9 +540,6 @@
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('finishing.confirm', 'kode_finishing') }}";
                         @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.finishing.confirm', 'kode_finishing') }}";
-                        @endif
                         _url = _url.replace('kode_finishing', kode_finishing)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
@@ -566,9 +584,6 @@
                     if (result.isConfirmed) {
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('finishing.finished', 'kode_finishing') }}";
-                        @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.finishing.finished', 'kode_finishing') }}";
                         @endif
                         _url = _url.replace('kode_finishing', kode_finishing)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -731,6 +746,7 @@
             $('.invalid-feedback').remove();
             insertKaryawanFinishing()
         })
+
         $('#editData').on('click', function(e) {
             e.preventDefault()
             $('.is-invalid').removeClass('is-invalid');

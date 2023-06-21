@@ -153,18 +153,30 @@
                         <td>` + data.tanggal + `</td>
                         `;
                         if (data.status == 'Belum Konfirmasi') {
+                            @if(Auth::user()->role_id == 3)
+                            htmlview += `<td>
+                                <span class="bg-danger p-2">Belum Dikonfirmasi</span></td>
+                            `;
+                            @else
                             htmlview += `<td>
                                 <button class="btn btn-danger btn-sm" title="Confirm Data!" onClick="confirmSPK('` +
                                 data
                                 .kode_spk + `')"> Belum Konfirmasi </button></td>
                             `;
+                            @endif
                         }
                         if (data.status == 'Sedang Dikerjakan') {
+                            @if(Auth::user()->role_id == 3)
+                            htmlview += `<td>
+                                <span class="bg-warning p-2">Sedang Dikerjakan</span></td>
+                            `;
+                            @else
                             htmlview += `<td>
                                 <button class="btn btn-warning btn-sm" title="Finish Data!" onClick="finishedSPK('` +
                                 data
                                 .kode_spk + `')"> Sedang Dikerjakan </button></td>
                             `;
+                            @endif
                         }
                         if (data.status == 'Selesai Dikerjakan') {
                             htmlview += `<td>
