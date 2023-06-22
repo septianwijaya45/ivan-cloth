@@ -54,7 +54,7 @@ class SPPController extends Controller
 
     public function insert()
     {
-        $kainroll   = Kain_roll::all();
+        $kainroll   = Kain_roll::where('stok_roll', '>', 0)->get();
         $karyawan   = Karyawan::where('posisi', 'pemotong')->get();
         $gaji       = GajiMaster::all();
         $ukuran     = Ukuran::all();
@@ -433,7 +433,8 @@ class SPPController extends Controller
         return response()->json($spp);
     }
 
-    public function cetakPdf($uuid){
+    public function cetakPdf($uuid)
+    {
         $spp = SPP::where('uuid', $uuid)->first();
         $dataSpp = DB::select("
             SELECT spp.ukuran, spp.quantity, spp.hasil_potongan, spp.karyawan, spp.note, kr.kode_lot, CONCAT(kr.jenis_kain, ' | ', kr.warna) as jenis
@@ -443,6 +444,33 @@ class SPPController extends Controller
         $no = 1;
 
         $pdf = Pdf::loadView('spp.pdf.index', compact(['spp', 'dataSpp', 'no']));
-        return $pdf->stream('Cetak SPP - '.$spp->kode_spp);
+        return $pdf->stream('Cetak SPP - ' . $spp->kode_spp);
+    }
+
+    public function detailSPP($kode_spp)
+    {
+        $get_spp = SPP::where('kode_spp', $kode_spp)->get();
+
+        for ($i = 0; $i < count($get_spp); $i++) {
+            if (!empty($get_spp[$i]['kain_roll_id'])) {
+                $get_kr = Kain_roll::where('id', $get_spp[$i]['kain_roll_id'])->first();
+                $get_spp[$i]['kode_lot'] = $get_kr->uuid . '~' . $get_kr->kode_lot;
+                $get_spp[$i]['nama_lot'] = $get_kr->kode_lot;
+                $get_spp[$i]['warna'] = $get_kr->warna;
+                $get_spp[$i]['ukuran_kain_potong'] = null;
+            }
+            if (!empty($get_spp[$i]['kain_potongan_id'])) {
+                $get_kp = Kain_potongan::join('m_kain_rolls', 'm_kain_rolls.id', 'm_kain_potongans.kain_roll_id')
+                    ->select('m_kain_potongans.*', 'm_kain_rolls.kode_lot', 'm_kain_rolls.warna')
+                    ->where('m_kain_potongans.id', $get_spp[$i]['kain_potongan_id'])->first();
+                $get_spp[$i]['nama_lot'] = $get_kp->kode_lot;
+                $get_spp[$i]['warna'] = $get_kp->warna;
+                $get_spp[$i]['ukuran_kain_potong'] = $get_kp->ukuran;
+            }
+            $get_spp[$i]['hasil'] = $get_spp[$i]['hasil_potongan'];
+        }
+        $spp_all = $get_spp;
+
+        return response()->json($spp_all);
     }
 }

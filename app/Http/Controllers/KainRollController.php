@@ -16,7 +16,7 @@ class KainRollController extends Controller
 
     public function indexData()
     {
-        $data = Kain_roll::all();
+        $data = Kain_roll::where('stok_roll', '>', 0)->get();
         return response()->json($data);
     }
 

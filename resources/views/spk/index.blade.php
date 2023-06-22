@@ -75,6 +75,56 @@
         </section>
         <!-- /.content -->
     </div>
+
+    <div class="modal fade" id="modalDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog-scrollable modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Detail SPK (Sablon)</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body bg-light">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h4 id="kode_spk_detail">Kode SPK : </h4>
+                        </div>
+                        <div class="col-lg-12">
+                            <table id="tbl_detail" class="table table-bordered table-striped dataTable"
+                                aria-describedby="tbl_detail" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Tanggal</th>
+                                        <th>Ukuran</th>
+                                        <th class="text-center">Jenis Kain | Warna</th>
+                                        <th>Quantity</th>
+                                        <th>Karyawan</th>
+                                        <th>Gaji</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-6 mt-2">
+                            <label for="note">Notes</label>
+                            <textarea name="note" id="note_detail" cols="30" rows="5" placeholder="Notes" class="form-control"
+                                readonly></textarea>
+                        </div>
+
+                        <div class="col-lg-6 mt-2" id="gambar_spk">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer container-fluid mt-4">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
@@ -171,9 +221,14 @@
                                 <span class="bg-success p-2">Selesai Dikerjakan</span></td>
                             `;
                         }
-                        htmlview += `<td>
+                        htmlview += `
+                        <td>
+                          <button class="btn btn-secondary btn-sm" title="Detail Data!" 
+                          onClick="detailSPK('` + data.uuid + `')"> <i class="fas fa-eye"></i>
+                          </button>
                           <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-kerja/edit-data/` +
-                            data.uuid + `"> <i class="fas fa-pencil-alt"></i>
+                            data.uuid +
+                            `"> <i class="fas fa-pencil-alt"></i>
                           </a>
                           <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-kerja/print-data/` +
                             data.uuid + `"> <i class="fas fa-print"></i>
@@ -188,6 +243,55 @@
                     $('tbody').html(htmlview)
                     $("#tbl_ukuran").DataTable(dtTableOption).buttons().container().appendTo(
                         '#tbl_ukuran_wrapper .col-md-6:eq(0)')
+                }
+            })
+        }
+
+        function detailSPK(uuid) {
+            var htmlview
+            @if (Auth::user()->role_id == 1)
+                var _url = "{{ route('spk.detail', 'uuid') }}"
+            @endif
+            @if (Auth::user()->role_id == 3)
+                var _url = "{{ route('w.spk.detail', 'uuid') }}"
+            @endif
+            _url = _url.replace('uuid', uuid)
+            $.ajax({
+                url: _url,
+                type: 'GET',
+                success: function(res) {
+                    $('#modalDetail').modal('show');
+                    $('#tbl_detail tbody').html('')
+                    $('#kode_spk_detail').html('')
+                    $('#note_detail').val('')
+                    $('#gambar_spk').html('')
+
+                    $.each(res.spkDetail, function(i, data) {
+                        data.karyawan = data.karyawan.replace(/[\[\]"]/g, '');
+                        htmlview += `<tr>
+                    <td>` + data.tanggal + `</td>
+                    <td>` + data.ukuran + `</td>
+                    <td class="text-center">` + data.nama_kain_roll + `</td>
+                    <td class="text-right">` + data.quantity + ` ` + data.satuan + `</td>
+                    <td>` + data.karyawan.replace(',', '<br>') + `</td>
+                    <td class="text-right">` + data.gaji + `</td>
+                    </tr>`;
+                    });
+
+                    $('#kode_spk_detail').html(`Kode SPK : ` + res.spk.kode_spk + `<br>( Ukuran : ` + res.spk
+                        .ukuran +
+                        ` | Artikel : ` + res.spk.artikel + ` )`)
+                    $('#note_detail').val(res.spk.note)
+                    if (res.gambarSpk != '') {
+                        $('#gambar_spk').html(
+                            `<div class="col-lg-12">
+                                <label>Gambar Film Sablon</label>
+                                <img src="{{ url('/img/gambar') }}/` + res.gambarSpk[0].nama_foto + `"width="100%" class="text-center img-thumbnail">
+                            </div>`
+                        )
+                    }
+
+                    $('#tbl_detail tbody').html(htmlview)
                 }
             })
         }

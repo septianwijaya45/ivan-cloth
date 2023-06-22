@@ -125,6 +125,8 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
         Route::group(['prefix' => 'surat-perintah-potong'], function () {
             Route::get('', [SPPController::class, 'index'])->name('spp');
             Route::get('data', [SPPController::class, 'indexData'])->name('spp.data');
+            // detail SPP
+            Route::get('detail/{kode_spp}', [SPPController::class, 'detailSPP'])->name('spp.detail');
             // create
             Route::get('tambah-data', [SPPController::class, 'insert'])->name('spp.insert');
             Route::post('tambah-data', [SPPController::class, 'store'])->name('spp.store');
@@ -154,6 +156,8 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::get('artikel/{artikel}', [SPKController::class, 'getArtikel'])->name('spk.artikel');
             // get Hasil Potongan
             Route::get('hasil-potongan/{kp_id}', [SPKController::class, 'getHasilPotongan'])->name('spk.hasilPotongan');
+            // detail SPK
+            Route::get('detail/{uuid}', [SPKController::class, 'detailSPK'])->name('spk.detail');
             // index
             Route::get('', [SPKController::class, 'index'])->name('spk');
             Route::get('data', [SPKController::class, 'indexData'])->name('spk.data');
@@ -469,6 +473,8 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
         Route::group(['prefix' => 'surat-perintah-potong'], function () {
             Route::get('', [SPPController::class, 'index'])->name('w.spp');
             Route::get('data', [SPPController::class, 'indexData'])->name('w.spp.data');
+            // detail SPP
+            Route::get('detail/{kode_spp}', [SPPController::class, 'detailSPP'])->name('w.spp.detail');
             // create
             Route::get('tambah-data', [SPPController::class, 'insert'])->name('w.spp.insert');
             Route::post('tambah-data', [SPPController::class, 'store'])->name('w.spp.store');
@@ -492,6 +498,8 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             Route::get('artikel/{artikel}', [SPKController::class, 'getArtikel'])->name('w.spk.artikel');
             // get Hasil Potongan
             Route::get('hasil-potongan/{kode_spp}/{ukuran}/{warna}', [SPKController::class, 'getHasilPotongan'])->name('w.spk.hasilPotongan');
+            // detail SPP
+            Route::get('detail/{uuid}', [SPKController::class, 'detailSPK'])->name('w.spk.detail');
             // index
             Route::get('', [SPKController::class, 'index'])->name('w.spk');
             Route::get('data', [SPKController::class, 'indexData'])->name('w.spk.data');

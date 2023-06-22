@@ -75,6 +75,54 @@
         </section>
         <!-- /.content -->
     </div>
+
+    <div class="modal fade" id="modalDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog-scrollable modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Detail SPP (Potong)</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body bg-light">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h3 id="kode_spp_detail">Kode SPP : </h3>
+                        </div>
+                        <div class="col-lg-12">
+                            <table id="tbl_detail" class="table table-bordered table-striped dataTable"
+                                aria-describedby="tbl_detail" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Tanggal</th>
+                                        <th>Ukuran Potong</th>
+                                        <th>Kode Lot</th>
+                                        <th>Warna</th>
+                                        <th>Quantity</th>
+                                        <th>Hasil</th>
+                                        <th>Karyawan</th>
+                                        <th>Gaji</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-md-12 mt-3">
+                            <label for="note">Notes</label>
+                            <textarea name="note" id="note_detail" cols="30" rows="2" placeholder="Keterangan" class="form-control"
+                                readonly></textarea>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer container-fluid mt-4">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
@@ -144,7 +192,7 @@
                 type: 'GET',
                 success: function(res) {
                     let no = 0;
-                    $('tbody').html('')
+                    $('#tbl_ukuran tbody').html('')
                     $.each(res, function(i, data) {
                         htmlview += `<tr>
                         <td style="text-align: center;">` + (no = no + 1) + `</td>
@@ -171,8 +219,12 @@
                             `;
                         }
                         htmlview += `<td>
+                          <button class="btn btn-secondary btn-sm" title="Detail Data!" 
+                          onClick="detailSPP('` + data.kode_spp + `')"> <i class="fas fa-eye"></i>
+                          </button>
                           <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-potong/edit-data/` +
-                            data.uuid + `"> <i class="fas fa-pencil-alt"></i>
+                            data.uuid +
+                            `"> <i class="fas fa-pencil-alt"></i>
                           </a>
                           <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-potong/print-data/` +
                             data.uuid + `"> <i class="fas fa-print"></i>
@@ -184,9 +236,47 @@
                        </tr>`
                     });
 
-                    $('tbody').html(htmlview)
+                    $('#tbl_ukuran tbody').html(htmlview)
                     $("#tbl_ukuran").DataTable(dtTableOption).buttons().container().appendTo(
                         '#tbl_ukuran_wrapper .col-md-6:eq(0)')
+                }
+            })
+        }
+
+        function detailSPP(kode_spp) {
+            var htmlview
+            @if (Auth::user()->role_id == 1)
+                var _url = "{{ route('spp.detail', 'kode_spp') }}"
+            @endif
+            @if (Auth::user()->role_id == 3)
+                var _url = "{{ route('w.spp.detail', 'kode_spp') }}"
+            @endif
+            _url = _url.replace('kode_spp', kode_spp)
+            $.ajax({
+                url: _url,
+                type: 'GET',
+                success: function(res) {
+                    $('#modalDetail').modal('show');
+                    console.log(res);
+                    $('#tbl_detail tbody').html('')
+                    $.each(res, function(i, data) {
+                        data.karyawan = data.karyawan.replace(/[\[\]"]/g, '');
+                        htmlview += `<tr>
+                        <td>` + data.tanggal + `</td>
+                        <td>` + data.ukuran + `</td>
+                        <td>` + data.nama_lot + `</td>
+                        <td>` + data.warna + `</td>
+                        <td class="text-right">` + data.quantity + `</td>
+                        <td class="text-right">` + data.hasil + `</td>
+                        <td>` + data.karyawan.replace(',', '<br>') + `</td>
+                        <td>` + data.gaji + `</td>
+                        </tr>`;
+
+                        $('#kode_spp_detail').html(`Kode SPP : ` + data.kode_spp)
+                        $('#note_detail').val(data.note)
+                    });
+
+                    $('#tbl_detail tbody').html(htmlview)
                 }
             })
         }
