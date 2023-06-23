@@ -280,12 +280,14 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        @if (Auth::user()->role_id == 1)
-                            var _url = "{{ route('barang_jadi.confirm', 'id') }}";
-                        @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.barang_jadi.confirm', 'id') }}";
-                        @endif
+                        var _url = '';
+                        var role_id = "{{ Auth::user()->role_id }}";
+
+                        if (role_id == 1) {
+                            _url = "{{ route('barang_jadi.confirm', 'id') }}";
+                        } else if (role_id == 3) {
+                            _url = "{{ route('w.barang_jadi.confirm', 'id') }}";
+                        }
                         _url = _url.replace('id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
