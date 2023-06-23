@@ -263,7 +263,7 @@ class SPKController extends Controller
     {
         $spk = SPK::where('uuid', $uuid)->first();
 
-        $spkDetail = SPKDetail::select('t_spk_details.*', 'm_kain_potongans.id as id_kp', DB::raw('CONCAT(m_kain_rolls.jenis_kain, " | ", m_kain_rolls.warna) as nama_kain_roll'), 'm_kain_rolls.stok_roll', 't_spks.artikel', 't_spks.tanggal', 't_spks.ukuran')
+        $spkDetail = SPKDetail::select('t_spk_details.*', 'm_kain_potongans.id as id_kp', DB::raw('CONCAT(m_kain_rolls.jenis_kain, " - ", m_kain_rolls.warna) as nama_kain_roll'), 'm_kain_rolls.stok_roll', 't_spks.artikel', 't_spks.tanggal', 't_spks.ukuran')
             ->join('t_spks', 't_spks.id', '=', 't_spk_details.t_spk_id')
             ->join('m_kain_potongans', 'm_kain_potongans.id', '=', 't_spk_details.kain_potongan_id')
             ->join('m_kain_rolls', 'm_kain_rolls.id', '=', 'm_kain_potongans.kain_roll_id')

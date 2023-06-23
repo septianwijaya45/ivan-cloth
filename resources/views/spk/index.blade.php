@@ -80,7 +80,7 @@
         aria-hidden="true">
         <div class="modal-dialog-scrollable modal-dialog modal-dialog-centered modal-xl" role="document">
             <div class="modal-content">
-                <div class="modal-header">
+                <div class="modal-header bg-secondary">
                     <h5 class="modal-title" id="exampleModalLongTitle">Detail SPK (Sablon)</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
@@ -92,13 +92,14 @@
                             <h4 id="kode_spk_detail">Kode SPK : </h4>
                         </div>
                         <div class="col-lg-12">
+                            <hr>
                             <table id="tbl_detail" class="table table-bordered table-striped dataTable"
                                 aria-describedby="tbl_detail" style="width: 100%;">
                                 <thead>
                                     <tr>
                                         <th>Tanggal</th>
                                         <th>Ukuran</th>
-                                        <th class="text-center">Jenis Kain | Warna</th>
+                                        <th>Kain & Warna</th>
                                         <th>Quantity</th>
                                         <th>Karyawan</th>
                                         <th>Gaji</th>
@@ -108,14 +109,17 @@
                                 </tbody>
                             </table>
                         </div>
-                        <div class="col-lg-6 mt-2">
+                        <div class="col-lg-9 mt-2">
                             <label for="note">Notes</label>
-                            <textarea name="note" id="note_detail" cols="30" rows="5" placeholder="Notes" class="form-control"
+                            <textarea name="note" id="note_detail" cols="30" rows="2" placeholder="Notes" class="form-control"
                                 readonly></textarea>
                         </div>
 
-                        <div class="col-lg-6 mt-2" id="gambar_spk">
+                        <div class="col-lg-3 mt-2">
+                            <label>Gambar Film Sablon</label>
+                            <div id="gambar_spk" class="p-1 bg-gray-light border border-gray-500">
 
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -181,6 +185,8 @@
         })
 
         getSPK()
+
+        $.fn.dataTable.ext.errMode = 'none';
 
         function getSPK() {
             var htmlview
@@ -265,33 +271,43 @@
                     $('#kode_spk_detail').html('')
                     $('#note_detail').val('')
                     $('#gambar_spk').html('')
+                    $("#tbl_detail").DataTable().destroy();
 
                     $.each(res.spkDetail, function(i, data) {
                         data.karyawan = data.karyawan.replace(/[\[\]"]/g, '');
                         htmlview += `<tr>
                     <td>` + data.tanggal + `</td>
                     <td>` + data.ukuran + `</td>
-                    <td class="text-center">` + data.nama_kain_roll + `</td>
+                    <td>` + data.nama_kain_roll + `</td>
                     <td class="text-right">` + data.quantity + ` ` + data.satuan + `</td>
                     <td>` + data.karyawan.replace(',', '<br>') + `</td>
                     <td class="text-right">` + data.gaji + `</td>
                     </tr>`;
                     });
 
-                    $('#kode_spk_detail').html(`Kode SPK : ` + res.spk.kode_spk + `<br>( Ukuran : ` + res.spk
-                        .ukuran +
-                        ` | Artikel : ` + res.spk.artikel + ` )`)
+                    $('#kode_spk_detail').html(`Kode SPK : ` + res.spk.kode_spk +
+                        `<i class="float-right">Ukuran : ` + res.spk.ukuran + ` ~ Artikel : ` + res
+                        .spk
+                        .artikel + `</i>`)
                     $('#note_detail').val(res.spk.note)
                     if (res.gambarSpk != '') {
-                        $('#gambar_spk').html(
-                            `<div class="col-lg-12">
-                                <label>Gambar Film Sablon</label>
-                                <img src="{{ url('/img/gambar') }}/` + res.gambarSpk[0].nama_foto + `"width="100%" class="text-center img-thumbnail">
-                            </div>`
-                        )
+                        var htmlGambar = '';
+                        $.each(res.gambarSpk, function(i, data) {
+                            htmlGambar += `
+                                <a href="{{ url('/img/gambar') }}/` + data.nama_foto + `" data-toggle="lightbox" class="btn btn-primary container-fluid mb-1">
+                                   <i class="fas fa-eye"></i> Film Sablon ` + (i + 1) + `
+                                </a> <br>
+                            `;
+                        })
+                        $('#gambar_spk').html(htmlGambar)
                     }
 
                     $('#tbl_detail tbody').html(htmlview)
+                    $('#tbl_detail').DataTable({
+                        paging: false,
+                        info: false,
+                        searching: false,
+                    })
                 }
             })
         }
