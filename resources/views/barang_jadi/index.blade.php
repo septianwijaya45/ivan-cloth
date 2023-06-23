@@ -233,12 +233,12 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         @if (Auth::user()->role_id == 1)
-                            var _url = "{{ route('barang_jadi.delete', 'id') }}";
+                            var _url = "{{ route('barang_jadi.delete', ':id') }}";
                         @endif
                         @if (Auth::user()->role_id == 2)
-                            var _url = "{{ route('a.barang_jadi.delete', 'id') }}";
+                            var _url = "{{ route('a.barang_jadi.delete', ':id') }}";
                         @endif
-                        _url = _url.replace('id', id)
+                        _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,
@@ -280,15 +280,13 @@
                 })
                 .then((result) => {
                     if (result.isConfirmed) {
-                        var _url = '';
-                        var role_id = "{{ Auth::user()->role_id }}";
-
-                        if (role_id == 1) {
-                            _url = "{{ route('barang_jadi.confirm', 'id') }}";
-                        } else if (role_id == 3) {
-                            _url = "{{ route('w.barang_jadi.confirm', 'id') }}";
-                        }
-                        _url = _url.replace('id', id)
+                        @if (Auth::user()->role_id == 1)
+                            var _url = "{{ route('barang_jadi.confirm', ':id') }}";
+                        @endif
+                        @if (Auth::user()->role_id == 3)
+                            var _url = "{{ route('w.barang_jadi.confirm', ':id') }}";
+                        @endif
+                        _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,
