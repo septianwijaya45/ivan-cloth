@@ -256,12 +256,12 @@
         function detailSPK(uuid) {
             var htmlview
             @if (Auth::user()->role_id == 1)
-                var _url = "{{ route('spk.detail', 'uuid') }}"
+                var _url = "{{ route('spk.detail', ':uuid') }}"
             @endif
             @if (Auth::user()->role_id == 3)
-                var _url = "{{ route('w.spk.detail', 'uuid') }}"
+                var _url = "{{ route('w.spk.detail', ':uuid') }}"
             @endif
-            _url = _url.replace('uuid', uuid)
+            _url = _url.replace(':uuid', uuid)
             $.ajax({
                 url: _url,
                 type: 'GET',
@@ -323,12 +323,12 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         @if (Auth::user()->role_id == 1)
-                            var _url = "{{ route('spk.delete', 'kode_spk') }}";
+                            var _url = "{{ route('spk.delete', ':kode_spk') }}";
                         @endif
                         @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.spk.delete', 'kode_spk') }}";
+                            var _url = "{{ route('w.spk.delete', ':kode_spk') }}";
                         @endif
-                        _url = _url.replace('kode_spk', kode_spk)
+                        _url = _url.replace(':kode_spk', kode_spk)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,
@@ -372,12 +372,12 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         @if (Auth::user()->role_id == 1)
-                            var _url = "{{ route('spk.confirm', 'kode_spk') }}";
+                            var _url = "{{ route('spk.confirm', ':kode_spk') }}";
                         @endif
                         @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.spk.confirm', 'kode_spk') }}";
+                            var _url = "{{ route('w.spk.confirm', ':kode_spk') }}";
                         @endif
-                        _url = _url.replace('kode_spk', kode_spk)
+                        _url = _url.replace(':kode_spk', kode_spk)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,
@@ -421,12 +421,12 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         @if (Auth::user()->role_id == 1)
-                            var _url = "{{ route('spk.finished', 'kode_spk') }}";
+                            var _url = "{{ route('spk.finished', ':kode_spk') }}";
                         @endif
                         @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.spk.finished', 'kode_spk') }}";
+                            var _url = "{{ route('w.spk.finished', ':kode_spk') }}";
                         @endif
-                        _url = _url.replace('kode_spk', kode_spk)
+                        _url = _url.replace(':kode_spk', kode_spk)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,
