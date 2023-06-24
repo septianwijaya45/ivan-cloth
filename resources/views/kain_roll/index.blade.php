@@ -32,13 +32,14 @@
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title">Data Kain Roll</h5>
-
-                                <div class="card-tools">
-                                    <button class="btn btn-success btn-sm" data-toggle="modal"
-                                        data-target="#modalAddKainRoll">
-                                        <i class="fas fa-plus"></i> Tambah Data
-                                    </button>
-                                </div>
+                                @if(Auth::user()->role_id == 1)
+                                    <div class="card-tools">
+                                        <button class="btn btn-success btn-sm" data-toggle="modal"
+                                            data-target="#modalAddKainRoll">
+                                            <i class="fas fa-plus"></i> Tambah Data
+                                        </button>
+                                    </div>
+                                @endif
                             </div>
                             <!-- /.card-header -->
                             <div class="card-body">
@@ -55,7 +56,9 @@
                                                 <th>Stok Roll</th>
                                                 <th>Berat /roll</th>
                                                 <th>Total Berat</th>
+                                                @if(Auth::user()->role_id == 1)
                                                 <th width="10%">Aksi</th>
+                                                @endif
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -295,16 +298,19 @@
                         <td>` + data.warna + `</td>
                         <td style='text-align: right;'>` + data.stok_roll + `</td>
                         <td style='text-align: right;'>` + data.berat + ` kg</td>
-                        <td style='text-align: right;'>` + (data.stok_roll * data.berat) + ` kg</td>
-                        <td>
-                          <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailKainRoll('` + data
-                            .uuid + `')"> <i class="fas fa-pencil-alt"></i>
-                          </button>
-                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteKainRoll('` + data
-                            .uuid + `')"> <i class="fas fa-trash"></i>
-                          </button>
-                        </td>
-                       </tr>`
+                        <td style='text-align: right;'>` + (data.stok_roll * data.berat) + ` kg</td>`
+
+                        @if(Auth::user()->role_id == 1)
+                            htmlview += `<td>
+                            <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailKainRoll('` + data
+                                .uuid + `')"> <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteKainRoll('` + data
+                                .uuid + `')"> <i class="fas fa-trash"></i>
+                            </button>
+                            </td>
+                        </tr>`
+                       @endif
                     });
 
                     $('tbody').html(htmlview)

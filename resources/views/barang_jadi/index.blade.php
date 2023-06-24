@@ -192,11 +192,20 @@
                         </td>
                         <td class="text-right"> ` + data.jml_barang + ` </td>`;
                         if (data.status == 'Belum Diambil') {
+                            @if(Auth::user()->role_id == 1)
                             htmlview +=
                                 `<td>
                                         <button class="btn btn-danger btn-sm container-fluid" title="Confirm Data!" 
                                         onClick="confirmBJadi('` + data.id + `')"> Belum Diambil </button></td>
                                     `;
+                            @endif
+                            @if(Auth::user()->role_id == 3)
+                            htmlview +=
+                                `<td>
+                                        <span class="bg-danger p-2 container-fluid">Belum Diambil</span>
+                                        </td>
+                                    `;
+                            @endif
                         }
                         if (data.status == 'Sudah Diambil') {
                             htmlview += `<td>
@@ -283,8 +292,8 @@
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('barang_jadi.confirm', ':id') }}";
                         @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.barang_jadi.confirm', ':id') }}";
+                        @if (Auth::user()->role_id == 2)
+                            var _url = "{{ route('a.barang_jadi.confirm', ':id') }}";
                         @endif
                         _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');

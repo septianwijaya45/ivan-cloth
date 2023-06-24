@@ -17,7 +17,7 @@ class FinishingController extends Controller
 {
     public function index()
     {
-        $karyawan   = Karyawan::where('posisi', 'finishing')->get();
+        $karyawan   = Karyawan::where('posisi', 'finishing')->where('posisi', 'Finishing')->get();
         $gaji       = GajiMaster::all();
         return view('finishing.index', compact(['karyawan', 'gaji']));
     }

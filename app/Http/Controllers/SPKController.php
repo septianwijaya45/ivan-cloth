@@ -68,7 +68,7 @@ class SPKController extends Controller
     public function insert()
     {
         $ukuran     = Ukuran::all();
-        $karyawan   = Karyawan::where('posisi', 'sablon')->get();
+        $karyawan   = Karyawan::where('posisi', 'sablon')->where('posisi', 'Sablon')->get();
         $gaji       = GajiMaster::all();
 
         $date = Carbon::now()->format('Y-m-d');
@@ -243,7 +243,7 @@ class SPKController extends Controller
     {
         $spk = SPK::where('uuid', $uuid)->first();
         $kainroll   = Kain_roll::all();
-        $karyawan   = Karyawan::where('posisi', 'sablon')->get();
+        $karyawan   = Karyawan::where('posisi', 'sablon')->where('posisi', 'Sablon')->get();
         $gaji       = GajiMaster::all();
         $ukuran     = Ukuran::all();
 

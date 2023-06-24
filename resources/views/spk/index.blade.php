@@ -37,9 +37,6 @@
                                     @if (Auth::user()->role_id == 1)
                                         <a href="{{ route('spk.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
                                     @endif
-                                    @if (Auth::user()->role_id == 3)
-                                        <a href="{{ route('w.spk.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
-                                    @endif
                                 </div>
                             </div>
                             <!-- /.card-header -->
@@ -194,6 +191,9 @@
                 @if (Auth::user()->role_id == 1)
                     url: "{{ route('spk.data') }}",
                 @endif
+                @if (Auth::user()->role_id == 2)
+                    url: "{{ route('a.spk.data') }}",
+                @endif
                 @if (Auth::user()->role_id == 3)
                     url: "{{ route('w.spk.data') }}",
                 @endif
@@ -201,6 +201,7 @@
                 success: function(res) {
                     let no = 0;
                     $('tbody').html('')
+                    console.log(res)
                     $.each(res, function(i, data) {
                         htmlview += `<tr>
                         <td style="text-align: center;">` + (no = no + 1) + `</td>
@@ -216,8 +217,7 @@
                             @else
                             htmlview += `<td>
                                 <button class="btn btn-danger btn-sm" title="Confirm Data!" onClick="confirmSPK('` +
-                                data
-                                .kode_spk + `')"> Belum Konfirmasi </button></td>
+                                data.kode_spk + `')"> Belum Konfirmasi </button></td>
                             `;
                             @endif
                         }
@@ -228,9 +228,7 @@
                             `;
                             @else
                             htmlview += `<td>
-                                <button class="btn btn-warning btn-sm" title="Finish Data!" onClick="finishedSPK('` +
-                                data
-                                .kode_spk + `')"> Sedang Dikerjakan </button></td>
+                                <button class="btn btn-warning btn-sm" title="Finish Data!" onClick="finishedSPK('` + data.kode_spk + `')"> Sedang Dikerjakan </button></td>
                             `;
                             @endif
                         }
@@ -240,21 +238,59 @@
                             `;
                         }
                         @if(Auth::user()->role_id == 1)
-                            htmlview += `<td>
-                            <button class="btn btn-secondary btn-sm" title="Detail Data!" 
-                              onClick="detailSPK('` + data.uuid + `')"> <i class="fas fa-eye"></i>
-                            </button>
-                            <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-kerja/edit-data/` +
-                                data.uuid + `"> <i class="fas fa-pencil-alt"></i>
-                            </a>
-                            <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-kerja/print-data/` +
-                                data.uuid + `"> <i class="fas fa-print"></i>
-                            </a>
-                            <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPK('` + data
-                                .kode_spk + `')"> <i class="fas fa-trash"></i>
-                            </button>
-                            </td>
-                        </tr>`
+                            if (data.status == 'Selesai Dikerjakan') {
+                                htmlview += `<td>
+                                    <button class="btn btn-secondary btn-sm" title="Detail Data!" 
+                                    onClick="detailSPK('` + data.uuid + `')"> <i class="fas fa-eye"></i>
+                                    </button>
+                                    <a class="btn btn-info btn-sm" title="Edit Data!" disabled> <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-kerja/print-data/` + data.uuid + `"> <i class="fas fa-print"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" title="Delete Data!" disabled> <i class="fas fa-trash"></i>
+                                    </button>
+                                    </td>
+                                </tr>`
+                            }else{
+                                htmlview += `<td>
+                                    <button class="btn btn-secondary btn-sm" title="Detail Data!" 
+                                    onClick="detailSPK('` + data.uuid + `')"> <i class="fas fa-eye"></i>
+                                    </button>
+                                    <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-kerja/edit-data/` + data.uuid + `"> <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-kerja/print-data/` +
+                                        data.uuid + `"> <i class="fas fa-print"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPK('` + data.kode_spk + `')"> <i class="fas fa-trash"></i>
+                                    </button>
+                                    </td>
+                                </tr>`
+                            }
+                        @endif
+                        @if( Auth::user()->role_id == 2)
+                            if (data.status == 'Selesai Dikerjakan') {
+                                htmlview += `<td>
+                                    <button class="btn btn-secondary btn-sm" title="Detail Data!" 
+                                    onClick="detailSPK('` + data.uuid + `')"> <i class="fas fa-eye"></i>
+                                    </button>
+                                    <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-kerja/print-data/` + data.uuid + `"> <i class="fas fa-print"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" title="Delete Data!" disabled> <i class="fas fa-trash"></i>
+                                    </button>
+                                    </td>
+                                </tr>`
+                            }else{
+                                htmlview += `<td>
+                                    <button class="btn btn-secondary btn-sm" title="Detail Data!" 
+                                    onClick="detailSPK('` + data.uuid + `')"> <i class="fas fa-eye"></i>
+                                    </button>
+                                    <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-kerja/print-data/` + data.uuid + `"> <i class="fas fa-print"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPK('` + data.kode_spk + `')"> <i class="fas fa-trash"></i>
+                                    </button>
+                                    </td>
+                                </tr>`
+                            }
                         @endif
                         @if(Auth::user()->role_id == 3)
                             htmlview += `<td>
@@ -277,6 +313,9 @@
             var htmlview
             @if (Auth::user()->role_id == 1)
                 var _url = "{{ route('spk.detail', ':uuid') }}"
+            @endif
+            @if (Auth::user()->role_id == 2)
+                var _url = "{{ route('a.spk.detail', ':uuid') }}"
             @endif
             @if (Auth::user()->role_id == 3)
                 var _url = "{{ route('w.spk.detail', ':uuid') }}"
@@ -345,8 +384,8 @@
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('spk.delete', ':kode_spk') }}";
                         @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.spk.delete', ':kode_spk') }}";
+                        @if (Auth::user()->role_id == 2)
+                            var _url = "{{ route('a.spk.delete', ':kode_spk') }}";
                         @endif
                         _url = _url.replace(':kode_spk', kode_spk)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -394,8 +433,8 @@
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('spk.confirm', ':kode_spk') }}";
                         @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.spk.confirm', ':kode_spk') }}";
+                        @if (Auth::user()->role_id == 2)
+                            var _url = "{{ route('a.spk.confirm', ':kode_spk') }}";
                         @endif
                         _url = _url.replace(':kode_spk', kode_spk)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -443,8 +482,8 @@
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('spk.finished', ':kode_spk') }}";
                         @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.spk.finished', ':kode_spk') }}";
+                        @if (Auth::user()->role_id == 2)
+                            var _url = "{{ route('a.spk.finished', ':kode_spk') }}";
                         @endif
                         _url = _url.replace(':kode_spk', kode_spk)
                         var _token = $('meta[name="csrf-token"]').attr('content');

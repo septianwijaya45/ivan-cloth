@@ -55,7 +55,7 @@ class SPPController extends Controller
     public function insert()
     {
         $kainroll   = Kain_roll::where('stok_roll', '>', 0)->get();
-        $karyawan   = Karyawan::where('posisi', 'pemotong')->get();
+        $karyawan   = Karyawan::where('posisi', 'pemotong')->where('posisi', 'Pemotong')->get();
         $gaji       = GajiMaster::all();
         $ukuran     = Ukuran::all();
         $date       = Carbon::now()->format('Y-m-d');
@@ -169,7 +169,7 @@ class SPPController extends Controller
         $spp = SPP::where('uuid', $uuid)->first();
         // $spp_all = SPP::where('kode_spp', $spp->kode_spp)->get();
         $kainroll   = Kain_roll::all();
-        $karyawan   = Karyawan::where('posisi', 'pemotong')->get();
+        $karyawan   = Karyawan::where('posisi', 'pemotong')->where('posisi', 'Pemotong')->get();
         $gaji       = GajiMaster::all();
         $ukuran     = Ukuran::all();
 

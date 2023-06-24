@@ -153,6 +153,10 @@
                                             <option value="Supervisor">Supervisor</option>
                                             <option value="Staff Pekerja">Staff Pekerja</option>
                                             <option value="Staff Gudang">Staff Gudang</option>
+                                            <option value="Pemotong">Staff Pemotong</option>
+                                            <option value="Penjahit">Staff Penjahit</option>
+                                            <option value="Sablon">Staff Sablon</option>
+                                            <option value="Finishing">Staff Finishing</option>
                                         </select>
                                     </div>
                                 </div>

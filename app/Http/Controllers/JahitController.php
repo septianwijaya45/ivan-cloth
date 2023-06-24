@@ -18,7 +18,7 @@ class JahitController extends Controller
 {
     public function index()
     {
-        $karyawan   = Karyawan::where('posisi', 'jahit')->get();
+        $karyawan   = Karyawan::where('posisi', 'jahit')->where('posisi', 'Jahit')->get();
         $gaji       = GajiMaster::all();
         return view('jahit.index', compact(['karyawan', 'gaji']));
     }
@@ -68,7 +68,7 @@ class JahitController extends Controller
 
     public function insert()
     {
-        $karyawan   = Karyawan::where('posisi', 'jahit')->get();
+        $karyawan   = Karyawan::where('posisi', 'jahit')->where('posisi', 'Jahit')->get();
         $gaji       = GajiMaster::all();
         $spk        = SPK::all();
 

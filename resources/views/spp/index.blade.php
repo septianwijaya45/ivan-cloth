@@ -37,9 +37,6 @@
                                     @if (Auth::user()->role_id == 1)
                                         <a href="{{ route('spp.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
                                     @endif
-                                    @if (Auth::user()->role_id == 3)
-                                        <a href="{{ route('w.spp.insert') }}" class="btn btn-success btn-sm">Tambah Data</a>
-                                    @endif
                                 </div>
                             </div>
                             <!-- /.card-header -->
@@ -186,6 +183,9 @@
                 @if (Auth::user()->role_id == 1)
                     url: "{{ route('spp.data') }}",
                 @endif
+                @if (Auth::user()->role_id == 2)
+                    url: "{{ route('a.spp.data') }}",
+                @endif
                 @if (Auth::user()->role_id == 3)
                     url: "{{ route('w.spp.data') }}",
                 @endif
@@ -231,23 +231,67 @@
                             `;
                         }
                         @if(Auth::user()->role_id == 1)
-                        htmlview += `<td>
-                          <button class="btn btn-secondary btn-sm" title="Detail Data!" 
-                          onClick="detailSPP('` + data.kode_spp + `')"> <i class="fas fa-eye"></i>
-                          </button>
-                          <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-potong/edit-data/` +
-                            data.uuid +
-                            `"> <i class="fas fa-pencil-alt"></i>
-                          </a>
-                          <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-potong/print-data/` +
-                            data.uuid + `"> <i class="fas fa-print"></i>
-                          </a>
-                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPP('` + data
-                            .kode_spp + `')"> <i class="fas fa-trash"></i>
-                          </button>
-                        </td>
-                       </tr>`
-                       @endif
+                            if (data.status == 'Selesai Dikerjakan') {
+                                htmlview += `<td>
+                                    <button class="btn btn-secondary btn-sm" title="Detail Data!" 
+                                    onClick="detailSPP('` + data.kode_spp + `')"> <i class="fas fa-eye"></i>
+                                    </button>
+                                    <a class="btn btn-info btn-sm" title="Edit Data!" disabled> <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-potong/print-data/` +
+                                        data.uuid + `"> <i class="fas fa-print"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" title="Delete Data!" disabled> <i class="fas fa-trash"></i>
+                                    </button>
+                                    </td>
+                                </tr>`
+                            }else{
+                                htmlview += `<td>
+                                    <button class="btn btn-secondary btn-sm" title="Detail Data!" 
+                                    onClick="detailSPP('` + data.kode_spp + `')"> <i class="fas fa-eye"></i>
+                                    </button>
+                                    <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-potong/edit-data/` +
+                                        data.uuid +
+                                        `"> <i class="fas fa-pencil-alt"></i>
+                                    </a>
+                                    <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-potong/print-data/` +
+                                        data.uuid + `"> <i class="fas fa-print"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPP('` + data
+                                        .kode_spp + `')"> <i class="fas fa-trash"></i>
+                                    </button>
+                                    </td>
+                                </tr>`
+                            }
+                        @endif
+                        @if(Auth::user()->role_id == 2)
+                            if (data.status == 'Selesai Dikerjakan') {
+                                htmlview += `<td>
+                                    <button class="btn btn-secondary btn-sm" title="Detail Data!" 
+                                    onClick="detailSPP('` + data.kode_spp + `')"> <i class="fas fa-eye"></i>
+                                    </button>\
+                                    <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-potong/print-data/` +
+                                        data.uuid + `"> <i class="fas fa-print"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" title="Delete Data!" disabled> <i class="fas fa-trash"></i>
+                                    </button>
+                                    </td>
+                                </tr>`
+                            }else{
+                                htmlview += `<td>
+                                    <button class="btn btn-secondary btn-sm" title="Detail Data!" 
+                                    onClick="detailSPP('` + data.kode_spp + `')"> <i class="fas fa-eye"></i>
+                                    </button>
+                                    <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-potong/print-data/` +
+                                        data.uuid + `"> <i class="fas fa-print"></i>
+                                    </a>
+                                    <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPP('` + data
+                                        .kode_spp + `')"> <i class="fas fa-trash"></i>
+                                    </button>
+                                    </td>
+                                </tr>`
+                            }
+                        @endif
                         @if(Auth::user()->role_id == 3)
                         htmlview += `<td>
                           <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-potong/print-data/` +
@@ -269,6 +313,9 @@
             var htmlview
             @if (Auth::user()->role_id == 1)
                 var _url = "{{ route('spp.detail', ':kode_spp') }}"
+            @endif
+            @if (Auth::user()->role_id == 2)
+                var _url = "{{ route('a.spp.detail', ':kode_spp') }}"
             @endif
             @if (Auth::user()->role_id == 3)
                 var _url = "{{ route('w.spp.detail', ':kode_spp') }}"
@@ -316,8 +363,8 @@
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('spp.delete', ':kode_spp') }}";
                         @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.spp.delete', ':kode_spp') }}";
+                        @if (Auth::user()->role_id == 2)
+                            var _url = "{{ route('a.spp.delete', ':kode_spp') }}";
                         @endif
                         _url = _url.replace(':kode_spp', kode_spp)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -365,8 +412,8 @@
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('spp.confirm', ':kode_spp') }}";
                         @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.spp.confirm', ':kode_spp') }}";
+                        @if (Auth::user()->role_id == 2)
+                            var _url = "{{ route('a.spp.confirm', ':kode_spp') }}";
                         @endif
                         _url = _url.replace(':kode_spp', kode_spp)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -414,8 +461,8 @@
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('spp.finished', ':kode_spp') }}";
                         @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.spp.finished', ':kode_spp') }}";
+                        @if (Auth::user()->role_id == 2)
+                            var _url = "{{ route('a.spp.finished', ':kode_spp') }}";
                         @endif
                         _url = _url.replace(':kode_spp', kode_spp)
                         var _token = $('meta[name="csrf-token"]').attr('content');

@@ -24,8 +24,8 @@
                  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                      data-accordion="false">
                      <li class="nav-item">
-                         <a href="{{ route('loginpage') }}"
-                             class="nav-link {{ request()->is('login') ? ' active' : '' }}">
+                         <a href="{{ route('dashboard') }}"
+                             class="nav-link {{ request()->is('dashboard') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-tachometer-alt"></i>
                              <p>
                                  Dashboard
@@ -34,7 +34,7 @@
                      </li>
                      <li class="nav-header">MASTER</li>
                      <li class="nav-item">
-                         <a href="{{ route('ukuran') }}" class="nav-link">
+                         <a href="{{ route('ukuran') }}" class="nav-link {{ request()->is('ukuran') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-box"></i>
                              <p>
                                  Ukuran
@@ -42,7 +42,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('gaji') }}" class="nav-link">
+                         <a href="{{ route('gaji') }}" class="nav-link {{ request()->is('gaji') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-box"></i>
                              <p>
                                  Gaji
@@ -76,7 +76,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('filmSablon') }}" class="nav-link">
+                         <a href="{{ route('filmSablon') }}" class="nav-link {{ request()->is('Film-Sablon') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-film"></i>
                              <p>
                                  Film Sablon
@@ -86,7 +86,7 @@
                      <li class="nav-header">Stok Barang</li>
                      <li class="nav-item">
                          <a href="{{ route('kain_roll') }}"
-                             class="nav-link {{ request()->is('kain_roll') ? ' active' : '' }}">
+                             class="nav-link {{ request()->is('kain-roll') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-scroll"></i>
                              <p>
                                  Kain Roll
@@ -94,7 +94,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('kain_potongan') }}" class="nav-link">
+                         <a href="{{ route('kain_potongan') }}" class="nav-link {{ request()->is('kain-potongan') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-cut"></i>
                              <p>
                                  Kain Potongan
@@ -102,24 +102,24 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('barang_jadi') }}" class="nav-link">
+                         <a href="{{ route('barang_jadi') }}" class="nav-link {{ request()->is('barang-jadi') || request()->is('barang-jadi/*') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-tshirt"></i>
                              <p>
                                  Barang Jadi
                              </p>
                          </a>
                      </li>
-                     <li class="nav-item">
+                     <!-- <li class="nav-item">
                          <a href="#" class="nav-link">
                              <i class="nav-icon fas fa-warehouse"></i>
                              <p>
                                  Stok
                              </p>
                          </a>
-                     </li>
+                     </li> -->
                      <li class="nav-header">Surat Perintah</li>
                      <li class="nav-item">
-                         <a href="{{ route('spp') }}" class="nav-link">
+                         <a href="{{ route('spp') }}" class="nav-link {{ request()->is('surat-perintah-potong') || request()->is('surat-perintah-potong/*') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-cut"></i>
                              <p>
                                  SPP (Potong)
@@ -127,7 +127,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('spk') }}" class="nav-link">
+                         <a href="{{ route('spk') }}" class="nav-link {{ request()->is('surat-perintah-kerja') || request()->is('surat-perintah-kerja/*') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-palette"></i>
                              <p>
                                  SPK (Sablon)
@@ -135,7 +135,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('jahit') }}" class="nav-link">
+                         <a href="{{ route('jahit') }}" class="nav-link {{ request()->is('jahit') || request()->is('jahit/*') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-layer-group"></i>
                              <p>
                                  Jahit
@@ -143,7 +143,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('finishing') }}" class="nav-link">
+                         <a href="{{ route('finishing') }}" class="nav-link {{ request()->is('finishing') || request()->is('finishing/*') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-clipboard-list"></i>
                              <p>
                                  Finishing
@@ -152,7 +152,7 @@
                      </li>
                      <li class="nav-header">Keuangan</li>
                      <li class="nav-item">
-                         <a href="{{ route('pemasukkan') }}" class="nav-link">
+                         <a href="{{ route('pemasukkan') }}" class="nav-link {{ request()->is('pemasukkan') || request()->is('pemasukkan/*') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-chart-line"></i>
                              <p>
                                  Pemasukkan
@@ -160,7 +160,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('pengeluaran') }}" class="nav-link">
+                         <a href="{{ route('pengeluaran') }}" class="nav-link {{ request()->is('pengeluaran') || request()->is('pengeluaran/*') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-receipt"></i>
                              <p>
                                  Pengeluaran
@@ -168,7 +168,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('tgaji') }}" class="nav-link">
+                         <a href="{{ route('tgaji') }}" class="nav-link {{ request()->is('pengeluaran-gaji') || request()->is('pengeluaran-gaji/*') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-money-bill"></i>
                              <p>
                                  Pengeluaran Gaji
@@ -190,69 +190,50 @@
                  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                      data-accordion="false">
                      <li class="nav-item">
-                         <a href="{{ route('loginpage') }}"
-                             class="nav-link {{ request()->is('login') ? ' active' : '' }}">
+                         <a href="{{ route('dashboard') }}"
+                             class="nav-link {{ request()->is('dashboard') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-tachometer-alt"></i>
                              <p>
                                  Dashboard
                              </p>
                          </a>
                      </li>
-                     <li class="nav-header">MASTER</li>
+                     <li class="nav-header">Surat Perintah</li>
                      <li class="nav-item">
-                         <a href="{{ route('a.ukuran') }}" class="nav-link">
-                             <i class="nav-icon fas fa-box"></i>
+                         <a href="{{ route('a.spp') }}" class="nav-link {{ request()->is('surat-perintah-potong') || request()->is('surat-perintah-potong/*') ? ' active' : '' }}">
+                             <i class="nav-icon fas fa-cut"></i>
                              <p>
-                                 Ukuran
+                                 SPP (Potong)
                              </p>
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('a.gaji') }}" class="nav-link">
-                             <i class="nav-icon fas fa-box"></i>
+                         <a href="{{ route('a.spk') }}" class="nav-link {{ request()->is('surat-perintah-kerja') || request()->is('surat-perintah-kerja/*') ? ' active' : '' }}">
+                             <i class="nav-icon fas fa-palette"></i>
                              <p>
-                                 Gaji
+                                 SPK (Sablon)
                              </p>
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('a.perlengkapan') }}"
-                             class="nav-link {{ request()->is('a.perlengkapan') ? ' active' : '' }}">
-                             <i class="nav-icon fas fa-pencil-ruler"></i>
+                         <a href="{{ route('a.jahit') }}" class="nav-link {{ request()->is('jahit') || request()->is('jahit/*') ? ' active' : '' }}">
+                             <i class="nav-icon fas fa-layer-group"></i>
                              <p>
-                                 Perlengkapan
+                                 Jahit
                              </p>
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('a.karyawan') }}"
-                             class="nav-link {{ request()->is('a.karyawan') ? ' active' : '' }}">
-                             <i class="nav-icon fas fa-users"></i>
+                         <a href="{{ route('a.finishing') }}" class="nav-link {{ request()->is('finishing') || request()->is('finishing/*') ? ' active' : '' }}">
+                             <i class="nav-icon fas fa-clipboard-list"></i>
                              <p>
-                                 Karyawan
-                             </p>
-                         </a>
-                     </li>
-                     <li class="nav-item">
-                         <a href="{{ route('a.aset') }}"
-                             class="nav-link {{ request()->is('a.aset') ? ' active' : '' }}">
-                             <i class="nav-icon fas fa-cubes"></i>
-                             <p>
-                                 Aset
-                             </p>
-                         </a>
-                     </li>
-                     <li class="nav-item">
-                         <a href="{{ route('a.filmSablon') }}" class="nav-link">
-                             <i class="nav-icon fas fa-film"></i>
-                             <p>
-                                 Film Sablon
+                                 Finishing
                              </p>
                          </a>
                      </li>
                      <li class="nav-header">Keuangan</li>
                      <li class="nav-item">
-                         <a href="{{ route('a.pemasukkan') }}" class="nav-link">
+                         <a href="{{ route('a.pemasukkan') }}" class="nav-link {{ request()->is('pemasukkan') || request()->is('pemasukkan/*') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-chart-line"></i>
                              <p>
                                  Pemasukkan
@@ -260,7 +241,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('a.pengeluaran') }}" class="nav-link">
+                         <a href="{{ route('a.pengeluaran') }}" class="nav-link {{ request()->is('pengeluaran') || request()->is('pengeluaran/*') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-receipt"></i>
                              <p>
                                  Pengeluaran
@@ -268,7 +249,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('a.tgaji') }}" class="nav-link">
+                         <a href="{{ route('a.tgaji') }}" class="nav-link {{ request()->is('pengeluaran-gaji') || request()->is('pengeluaran-gaji/*') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-money-bill"></i>
                              <p>
                                  Pengeluaran Gaji
@@ -290,8 +271,8 @@
                  <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                      data-accordion="false">
                      <li class="nav-item">
-                         <a href="{{ route('loginpage') }}"
-                             class="nav-link {{ request()->is('login') ? ' active' : '' }}">
+                         <a href="{{ route('dashboard') }}"
+                             class="nav-link {{ request()->is('dashboard') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-tachometer-alt"></i>
                              <p>
                                  Dashboard
@@ -299,18 +280,18 @@
                          </a>
                      </li>
                      <li class="nav-header">MASTER</li>
-                     <li class="nav-item">
+                     <!-- <li class="nav-item">
                          <a href="#" class="nav-link">
                              <i class="nav-icon fas fa-film"></i>
                              <p>
                                  Film Sablon
                              </p>
                          </a>
-                     </li>
+                     </li> -->
                      <li class="nav-header">Stok Barang</li>
                      <li class="nav-item">
                          <a href="{{ route('w.kain_roll') }}"
-                             class="nav-link {{ request()->is('kain_roll') ? ' active' : '' }}">
+                             class="nav-link {{ request()->is('kain-roll') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-scroll"></i>
                              <p>
                                  Kain Roll
@@ -318,7 +299,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('w.kain_potongan') }}" class="nav-link">
+                         <a href="{{ route('w.kain_potongan') }}" class="nav-link {{ request()->is('kain-potongan') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-cut"></i>
                              <p>
                                  Kain Potongan
@@ -326,24 +307,24 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('w.barang_jadi') }}" class="nav-link">
+                         <a href="{{ route('w.barang_jadi') }}" class="nav-link {{ request()->is('barang-jadi') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-tshirt"></i>
                              <p>
                                  Barang Jadi
                              </p>
                          </a>
                      </li>
-                     <li class="nav-item">
+                     <!-- <li class="nav-item">
                          <a href="#" class="nav-link">
                              <i class="nav-icon fas fa-warehouse"></i>
                              <p>
                                  Stok
                              </p>
                          </a>
-                     </li>
+                     </li> -->
                      <li class="nav-header">Surat Perintah</li>
                      <li class="nav-item">
-                         <a href="{{ route('w.spp') }}" class="nav-link">
+                         <a href="{{ route('w.spp') }}" class="nav-link {{ request()->is('surat-perintah-potong') || request()->is('surat-perintah-potong/*') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-cut"></i>
                              <p>
                                  SPP (Potong)
@@ -351,7 +332,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('w.spk') }}" class="nav-link">
+                         <a href="{{ route('w.spk') }}" class="nav-link {{ request()->is('surat-perintah-kerja') || request()->is('surat-perintah-kerja/*') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-palette"></i>
                              <p>
                                  SPK (Sablon)
@@ -359,7 +340,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('w.jahit') }}" class="nav-link">
+                         <a href="{{ route('w.jahit') }}" class="nav-link {{ request()->is('jahit') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-layer-group"></i>
                              <p>
                                  Jahit
@@ -367,7 +348,7 @@
                          </a>
                      </li>
                      <li class="nav-item">
-                         <a href="{{ route('w.finishing') }}" class="nav-link">
+                         <a href="{{ route('w.finishing') }}" class="nav-link {{ request()->is('finishing') ? ' active' : '' }}">
                              <i class="nav-icon fas fa-clipboard-list"></i>
                              <p>
                                  Finishing

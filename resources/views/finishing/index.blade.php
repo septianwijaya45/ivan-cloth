@@ -78,10 +78,12 @@
                                                 <th>Detail Kain Jahit</th>
                                                 <th>Quantity</th>
                                                 <th>Karyawan</th>
+                                                @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                                                 <th>Gaji</th>
                                                 <th>Status Surat</th>
-                                                @if(Auth::user()->role_id == 1 && Auth::user()->role_id == 2)
                                                 <th width="5%">Aksi</th>
+                                                @else
+                                                <th>Status Surat</th>
                                                 @endif
                                             </tr>
                                         </thead>
@@ -372,6 +374,9 @@
             @if (Auth::user()->role_id == 1)
                 _url = "{{ route('finishing.data', ':status') }}",
             @endif
+            @if (Auth::user()->role_id == 2)
+                _url = "{{ route('a.finishing.data', ':status') }}",
+            @endif
             @if (Auth::user()->role_id == 3)
                 _url = "{{ route('w.finishing.data', ':status') }}",
             @endif
@@ -398,8 +403,11 @@
                             Ukuran Potong : ` + data.ukuran + ` 
                         </td>
                         <td class="text-right"> ` + data.jml_finishing + ` </td>
-                        <td> ` + data.karyawan.replace(',', '<br>') + ` </td>
-                        <td class="text-right"> ` + data.gaji + `</td>`;
+                        <td> ` + data.karyawan.replace(',', '<br>') + ` </td>`;
+
+                        @if(Auth::user()->role_id !== 3)
+                            htmlview  += `<td class="text-right"> ` + data.gaji + `</td>`;
+                        @endif
                         if (data.status == 'Belum Menentukan Karyawan') {
                             @if(Auth::user()->role_id == 3)
                                 htmlview += `<td>
@@ -448,7 +456,7 @@
                                     `;
                         }
                         if (data.status == 'Belum Menentukan Karyawan') {
-                            @if(Auth::user()->role_id == 1)
+                            @if(Auth::user()->role_id != 3)
                                 htmlview +=
                                     `<td class="text-right">
                                     <button class="btn btn-danger btn-sm" title="Delete Data!" 
@@ -458,18 +466,32 @@
                                 </tr>`
                             @endif
                         } else {
-                            @if(Auth::user()->role_id == 1)
-                                htmlview +=
-                                    `<td class="text-right">
-                                    <button class="btn btn-info btn-sm" title="Edit Karyawan Finishing!" 
-                                    onClick="editKaryawanFinishing('` + data.kode_finishing + `')">
-                                        <i class="fas fa-pencil-alt"></i>
-                                    </button>
-                                    <button class="btn btn-danger btn-sm" title="Delete Data!" 
-                                    onClick="deleteFinishing('` + data.kode_finishing + `')"> <i class="fas fa-trash"></i>
-                                    </button>
-                                    </td>
-                                </tr>`
+                            @if(Auth::user()->role_id != 3)
+                                if (data.status == 'Selesai Dikerjakan') {
+                                    htmlview +=
+                                        `<td class="text-right">
+                                        <button class="btn btn-info btn-sm" title="Edit Karyawan Finishing!" 
+                                        disabled>
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" title="Delete Data!" 
+                                        disabled></i>
+                                        </button>
+                                        </td>
+                                    </tr>`;
+                                }else{
+                                    htmlview +=
+                                        `<td class="text-right">
+                                        <button class="btn btn-info btn-sm" title="Edit Karyawan Finishing!" 
+                                        onClick="editKaryawanFinishing('` + data.kode_finishing + `')">
+                                            <i class="fas fa-pencil-alt"></i>
+                                        </button>
+                                        <button class="btn btn-danger btn-sm" title="Delete Data!" 
+                                        onClick="deleteFinishing('` + data.kode_finishing + `')"> <i class="fas fa-trash"></i>
+                                        </button>
+                                        </td>
+                                    </tr>`;
+                                }
                             @endif
                         }
                     });
@@ -495,8 +517,8 @@
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('finishing.delete', ':kode_finishing') }}";
                         @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.finishing.delete', ':kode_finishing') }}";
+                        @if (Auth::user()->role_id == 2)
+                            var _url = "{{ route('a.finishing.delete', ':kode_finishing') }}";
                         @endif
                         _url = _url.replace(':kode_finishing', kode_finishing)
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -543,8 +565,8 @@
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('finishing.confirm', ':kode_finishing') }}";
                         @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.finishing.confirm', ':kode_finishing') }}";
+                        @if (Auth::user()->role_id == 2)
+                            var _url = "{{ route('a.finishing.confirm', ':kode_finishing') }}";
                         @endif
                         _url = _url.replace(':kode_finishing', kode_finishing)
 
@@ -592,8 +614,8 @@
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('finishing.finished', ':kode_finishing') }}";
                         @endif
-                        @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.finishing.finished', ':kode_finishing') }}";
+                        @if (Auth::user()->role_id == 2)
+                            var _url = "{{ route('a.finishing.finished', ':kode_finishing') }}";
                         @endif
                         _url = _url.replace(':kode_finishing', kode_finishing)
 
@@ -632,6 +654,9 @@
             @if (Auth::user()->role_id == 1)
                 var _url = "{{ route('finishing.detailKaryawan', ':kode_finishing') }}"
             @endif
+            @if (Auth::user()->role_id == 2)
+                var _url = "{{ route('a.finishing.detailKaryawan', ':kode_finishing') }}"
+            @endif
             _url = _url.replace(':kode_finishing', kode_finishing)
 
             $.ajax({
@@ -651,6 +676,9 @@
         function editKaryawanFinishing(kode_finishing) {
             @if (Auth::user()->role_id == 1)
                 var _url = "{{ route('finishing.detailKaryawan', ':kode_finishing') }}"
+            @endif
+            @if (Auth::user()->role_id == 2)
+                var _url = "{{ route('a.finishing.detailKaryawan', ':kode_finishing') }}"
             @endif
             _url = _url.replace(':kode_finishing', kode_finishing)
 
@@ -677,6 +705,9 @@
             var id = $('#formAddKaryawan').data('id')
             @if (Auth::user()->role_id == 1)
                 var _url = "{{ route('finishing.addKaryawan', ':id') }}"
+            @endif
+            @if (Auth::user()->role_id == 2)
+                var _url = "{{ route('a.finishing.addKaryawan', ':id') }}"
             @endif
             _url = _url.replace(':id', id)
 
@@ -716,6 +747,9 @@
             var id = $('#formEditKaryawan').data('id')
             @if (Auth::user()->role_id == 1)
                 var _url = "{{ route('finishing.updateKaryawan', ':id') }}"
+            @endif
+            @if (Auth::user()->role_id == 2)
+                var _url = "{{ route('a.finishing.updateKaryawan', ':id') }}"
             @endif
             _url = _url.replace(':id', id)
 

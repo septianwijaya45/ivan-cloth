@@ -46,8 +46,10 @@
                                                 <th>Ukuran</th>
                                                 <th>Warna</th>
                                                 <th>Jenis Kain</th>
-                                                <th>Quantity</th>
-                                                <th width="10%">Aksi</th>
+                                                <th>Quantity</th> 
+                                                @if(Auth::user()->role_id == 1)
+                                                    <th width="10%">Aksi</th>
+                                                @endif
                                             </tr>
                                         </thead>
                                         <tbody>
@@ -258,17 +260,19 @@
                         <td>` + data.ukuran + `</td>
                         <td>` + data.warna + `</td>
                         <td>` + data.jenis_kain + `</td>
-                        <td>` + data.stok + `</td>
-                        <td>
-                          <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailKainPotongan('` + data
-                            .uuid + `')"> <i class="fas fa-pencil-alt"></i>
-                          </button>
-                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteKainPotongan('` +
-                            data
-                            .uuid + `')"> <i class="fas fa-trash"></i>
-                          </button>
-                        </td>
-                       </tr>`
+                        <td>` + data.stok + `</td>`
+                        @if(Auth::user()->role_id == 1)
+                            htmlview += `<td>
+                            <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailKainPotongan('` + data
+                                .uuid + `')"> <i class="fas fa-pencil-alt"></i>
+                            </button>
+                            <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteKainPotongan('` +
+                                data
+                                .uuid + `')"> <i class="fas fa-trash"></i>
+                            </button>
+                            </td>
+                        </tr>`
+                       @endif
                     });
 
                     $('tbody').html(htmlview)
