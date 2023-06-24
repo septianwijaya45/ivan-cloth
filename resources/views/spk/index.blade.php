@@ -75,6 +75,60 @@
         </section>
         <!-- /.content -->
     </div>
+
+    <div class="modal fade" id="modalDetail" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true">
+        <div class="modal-dialog-scrollable modal-dialog modal-dialog-centered modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header bg-secondary">
+                    <h5 class="modal-title" id="exampleModalLongTitle">Detail SPK (Sablon)</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body bg-light">
+                    <div class="row">
+                        <div class="col-lg-12">
+                            <h4 id="kode_spk_detail">Kode SPK : </h4>
+                        </div>
+                        <div class="col-lg-12">
+                            <hr>
+                            <table id="tbl_detail" class="table table-bordered table-striped dataTable"
+                                aria-describedby="tbl_detail" style="width: 100%;">
+                                <thead>
+                                    <tr>
+                                        <th>Tanggal</th>
+                                        <th>Ukuran</th>
+                                        <th>Kain & Warna</th>
+                                        <th>Quantity</th>
+                                        <th>Karyawan</th>
+                                        <th>Gaji</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                </tbody>
+                            </table>
+                        </div>
+                        <div class="col-lg-9 mt-2">
+                            <label for="note">Notes</label>
+                            <textarea name="note" id="note_detail" cols="30" rows="2" placeholder="Notes" class="form-control"
+                                readonly></textarea>
+                        </div>
+
+                        <div class="col-lg-3 mt-2">
+                            <label>Gambar Film Sablon</label>
+                            <div id="gambar_spk" class="p-1 bg-gray-light border border-gray-500">
+
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer container-fluid mt-4">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Kembali</button>
+                </div>
+            </div>
+        </div>
+    </div>
 @endsection
 
 @section('script')
@@ -132,6 +186,8 @@
 
         getSPK()
 
+        $.fn.dataTable.ext.errMode = 'none';
+
         function getSPK() {
             var htmlview
             $.ajax({
@@ -185,6 +241,9 @@
                         }
                         @if(Auth::user()->role_id == 1)
                             htmlview += `<td>
+                            <button class="btn btn-secondary btn-sm" title="Detail Data!" 
+                              onClick="detailSPK('` + data.uuid + `')"> <i class="fas fa-eye"></i>
+                            </button>
                             <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-kerja/edit-data/` +
                                 data.uuid + `"> <i class="fas fa-pencil-alt"></i>
                             </a>
@@ -214,6 +273,65 @@
             })
         }
 
+        function detailSPK(uuid) {
+            var htmlview
+            @if (Auth::user()->role_id == 1)
+                var _url = "{{ route('spk.detail', ':uuid') }}"
+            @endif
+            @if (Auth::user()->role_id == 3)
+                var _url = "{{ route('w.spk.detail', ':uuid') }}"
+            @endif
+            _url = _url.replace(':uuid', uuid)
+            $.ajax({
+                url: _url,
+                type: 'GET',
+                success: function(res) {
+                    $('#modalDetail').modal('show');
+                    $('#tbl_detail tbody').html('')
+                    $('#kode_spk_detail').html('')
+                    $('#note_detail').val('')
+                    $('#gambar_spk').html('')
+                    $("#tbl_detail").DataTable().destroy();
+
+                    $.each(res.spkDetail, function(i, data) {
+                        data.karyawan = data.karyawan.replace(/[\[\]"]/g, '');
+                        htmlview += `<tr>
+                    <td>` + data.tanggal + `</td>
+                    <td>` + data.ukuran + `</td>
+                    <td>` + data.nama_kain_roll + `</td>
+                    <td class="text-right">` + data.quantity + ` ` + data.satuan + `</td>
+                    <td>` + data.karyawan.replace(',', '<br>') + `</td>
+                    <td class="text-right">` + data.gaji + `</td>
+                    </tr>`;
+                    });
+
+                    $('#kode_spk_detail').html(`Kode SPK : ` + res.spk.kode_spk +
+                        `<i class="float-right">Ukuran : ` + res.spk.ukuran + ` ~ Artikel : ` + res
+                        .spk
+                        .artikel + `</i>`)
+                    $('#note_detail').val(res.spk.note)
+                    if (res.gambarSpk != '') {
+                        var htmlGambar = '';
+                        $.each(res.gambarSpk, function(i, data) {
+                            htmlGambar += `
+                                <a href="{{ url('/img/gambar') }}/` + data.nama_foto + `" data-toggle="lightbox" class="btn btn-primary container-fluid mb-1">
+                                   <i class="fas fa-eye"></i> Film Sablon ` + (i + 1) + `
+                                </a> <br>
+                            `;
+                        })
+                        $('#gambar_spk').html(htmlGambar)
+                    }
+
+                    $('#tbl_detail tbody').html(htmlview)
+                    $('#tbl_detail').DataTable({
+                        paging: false,
+                        info: false,
+                        searching: false,
+                    })
+                }
+            })
+        }
+
         function deleteSPK(kode_spk) {
             Swal.fire({
                     title: "Apakah anda yakin hapus data ini?",
@@ -225,12 +343,12 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         @if (Auth::user()->role_id == 1)
-                            var _url = "{{ route('spk.delete', 'kode_spk') }}";
+                            var _url = "{{ route('spk.delete', ':kode_spk') }}";
                         @endif
                         @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.spk.delete', 'kode_spk') }}";
+                            var _url = "{{ route('w.spk.delete', ':kode_spk') }}";
                         @endif
-                        _url = _url.replace('kode_spk', kode_spk)
+                        _url = _url.replace(':kode_spk', kode_spk)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,
@@ -274,12 +392,12 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         @if (Auth::user()->role_id == 1)
-                            var _url = "{{ route('spk.confirm', 'kode_spk') }}";
+                            var _url = "{{ route('spk.confirm', ':kode_spk') }}";
                         @endif
                         @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.spk.confirm', 'kode_spk') }}";
+                            var _url = "{{ route('w.spk.confirm', ':kode_spk') }}";
                         @endif
-                        _url = _url.replace('kode_spk', kode_spk)
+                        _url = _url.replace(':kode_spk', kode_spk)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,
@@ -323,12 +441,12 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         @if (Auth::user()->role_id == 1)
-                            var _url = "{{ route('spk.finished', 'kode_spk') }}";
+                            var _url = "{{ route('spk.finished', ':kode_spk') }}";
                         @endif
                         @if (Auth::user()->role_id == 3)
-                            var _url = "{{ route('w.spk.finished', 'kode_spk') }}";
+                            var _url = "{{ route('w.spk.finished', ':kode_spk') }}";
                         @endif
-                        _url = _url.replace('kode_spk', kode_spk)
+                        _url = _url.replace(':kode_spk', kode_spk)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,

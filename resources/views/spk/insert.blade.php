@@ -294,7 +294,7 @@
                             <!-- /.card-header -->
                             <div class="card-body" style="display: block;">
                                 <div class="row upload-img2 ">
-                                    
+
                                 </div>
                             </div>
                         </div>
@@ -509,8 +509,10 @@
                     let image = event.target.files;
                     $('.upload-img').html("");
 
-                    
-                    var validMimeTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif', 'image/svg+xml'];
+
+                    var validMimeTypes = ['image/jpeg', 'image/png', 'image/jpg', 'image/gif',
+                        'image/svg+xml'
+                    ];
                     for (let i = 0; i < filesAmount; i++) {
                         if (validMimeTypes.indexOf(event.target.files[i].type) === -1) {
                             Swal.fire(
@@ -519,18 +521,18 @@
                                 'error'
                             )
                             $('#gambar').val('');
-                        }else{ 
+                        } else {
                             let reader = new FileReader();
-        
+
                             reader.onload = function(event) {
-                            let html = `
+                                let html = `
                                 <div class = "uploaded-img p-0">
                                     <img src = "${event.target.result}" width="100%" class="p-0">
                                 </div>
                             `;
-                            $(".upload-img").append(html);
-                        }
-                        reader.readAsDataURL(event.target.files[i]);
+                                $(".upload-img").append(html);
+                            }
+                            reader.readAsDataURL(event.target.files[i]);
 
                             $('.upload-info-value').text(filesAmount);
                             $('.upload-img').css('padding', "0px");
@@ -591,16 +593,25 @@
                     .map(function() {
                         return $(this).val();
                     }).get();
-                
-                
+
+
 
                 try {
                     if (kp_id !== null && kp_id !== '' && satuan !== null && satuan !== '' && ukuran !==
                         null && ukuran !== '' && kode_spk !== null && kode_spk !== '' && k1 !== null &&
                         k1 !== '' && gaji !== null && gaji !== '' && k1 !== k2) {
                         let uuidmake = uuid();
-                        
+
                         for (let i = 0; i < kp_id.length; i++) {
+
+                            if (k2 == '') {
+                                var karyawan_dt = [k1[i].split('-')[0]]
+                                var nm_karyawan_dt = [k1[i].split('-')[1]]
+                            } else {
+                                var karyawan_dt = [k1[i].split('-')[0], k2[i].split('-')[0]]
+                                var nm_karyawan_dt = [k1[i].split('-')[1], k2[i].split('-')[1]]
+                            }
+
                             data.push({
                                 "uuid": uuidmake,
                                 "kode_spk": kode_spk,
@@ -613,8 +624,8 @@
                                 "quantity": kain_potongan_dipakai[i],
                                 "satuan": satuan[i],
                                 "quantity_satuan": kain_potongan_dipakai[i] + '|' + satuan[i],
-                                "karyawan": [k1[i].split('-')[0], k2[i].split('-')[0]],
-                                "nama_karyawan": [k1[i].split('-')[1], k2[i].split('-')[1]],
+                                "karyawan": karyawan_dt,
+                                "nama_karyawan": nm_karyawan_dt,
                                 "gaji": gaji[i]
                             })
                         }
@@ -622,7 +633,7 @@
                         let gambarInput = document.getElementById("gambar");
                         let gambar = gambarInput.files;
 
-                        if(gambar.length !== 0){
+                        if (gambar.length !== 0) {
                             saveGambar();
                         }
 
@@ -780,12 +791,14 @@
                                 data.splice(check, 1)
                             }
 
-                            findByUuid = data.find(e => (e.kode_spk === kode_spk && e.artikel === artikel));
+                            findByUuid = data.find(e => (e.kode_spk === kode_spk && e.artikel ===
+                                artikel));
                             let length = findByUuid ? findByUuid.length : 0;
 
-                            if(length === 0){
+                            if (length === 0) {
                                 @if (Auth::user()->role_id == 1)
-                                    let _url = "{{ route('spk.deleteBySPKArtikelGambar', ['kode_spk', 'artikel']) }}";
+                                    let _url =
+                                        "{{ route('spk.deleteBySPKArtikelGambar', ['kode_spk', 'artikel']) }}";
                                     _url = _url.replace('kode_spk', kode_spk)
                                     _url = _url.replace('artikel', artikel)
                                 @endif
@@ -932,7 +945,7 @@
             function saveGambar() {
                 let artikel = $('#artikel').val()
                 let kode_spk = $('#kode_spk').val()
-                
+
                 let gambarInput = document.getElementById("gambar");
                 let gambar = gambarInput.files;
 
@@ -993,7 +1006,7 @@
 
             getGambar()
             // get Gambar
-            function getGambar(){
+            function getGambar() {
                 let kode_spk = $('#kode_spk').val()
                 let formData = new FormData()
                 formData.append('kode_spk', kode_spk)
@@ -1016,8 +1029,8 @@
                         for (let i = 0; i < dataImages.length; i++) {
                             html += `<div class="col-md-4 p-0 uploaded-img">
                                         <div class="col-md-6">
-                                            <p>Artikel: <span>`+dataImages[i].artikel+`</span></p>
-                                            <img src="{{ url('/img/gambar') }}/`+dataImages[i].nama_foto+`"
+                                            <p>Artikel: <span>` + dataImages[i].artikel + `</span></p>
+                                            <img src="{{ url('/img/gambar') }}/` + dataImages[i].nama_foto + `"
                                             width="300" class="text-center">
                                         </div>
                                 </div>`;
@@ -1034,6 +1047,6 @@
                     }
                 })
             }
-    });
+        });
     </script>
 @endsection
