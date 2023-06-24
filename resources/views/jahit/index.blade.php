@@ -404,7 +404,7 @@
                         </td>
                         <td class="text-right"> ` + data.jml_jahit + ` </td>
                         <td> ` + data.karyawan.replace(',', '<br>') + ` </td>`;
-                        @if(Auth::user()->role_id !== 3)
+                        @if(Auth::user()->role_id != 3)
                             htmlview  += `<td class="text-right"> ` + data.gaji + `</td>`;
                         @endif
                         if (data.status == 'Belum Menentukan Karyawan') {
