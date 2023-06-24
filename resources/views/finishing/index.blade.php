@@ -407,7 +407,7 @@
 
                         @if(Auth::user()->role_id !== 3)
                             htmlview  += `<td class="text-right"> ` + data.gaji + `</td>`;
-                        @endif
+                        @endif 
                         if (data.status == 'Belum Menentukan Karyawan') {
                             @if(Auth::user()->role_id == 3)
                                 htmlview += `<td>
