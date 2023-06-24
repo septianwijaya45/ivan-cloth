@@ -439,7 +439,7 @@ class SPPController extends Controller
         $dataSpp = DB::select("
             SELECT spp.ukuran, spp.quantity, spp.hasil_potongan, spp.karyawan, spp.note, kr.kode_lot, CONCAT(kr.jenis_kain, ' | ', kr.warna) as jenis
             FROM t_spps spp, m_kain_rolls kr
-            WHERE spp.kain_roll_id = kr.id
+            WHERE spp.kain_roll_id = kr.id AND spp.kode_spp = '$spp->kode_spp'
         ");
         $no = 1;
 

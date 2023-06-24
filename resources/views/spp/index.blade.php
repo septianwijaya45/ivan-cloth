@@ -200,24 +200,37 @@
                         <td>` + data.total + `</td>
                         <td>` + data.tanggal + `</td>`;
                         if (data.status == 'Belum Konfirmasi') {
-                            htmlview += `<td>
-                                <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="confirmSPP('` +
-                                data
-                                .kode_spp + `')"> Belum Konfirmasi </button></td>
-                            `;
+                            @if(Auth::user()->role_id == 3)
+                                htmlview += `<td>
+                                    <span class="bg-danger p-2">Belum Dikonfirmasi</span></td>
+                                `;
+                            @else
+                                htmlview += `<td>
+                                    <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="confirmSPP('` +
+                                    data
+                                    .kode_spp + `')"> Belum Konfirmasi </button></td>
+                                `;
+                            @endif
                         }
                         if (data.status == 'Sedang Dikerjakan') {
-                            htmlview += `<td>
-                                <button class="btn btn-warning btn-sm" title="Delete Data!" onClick="finishedSPP('` +
-                                data
-                                .kode_spp + `')"> Sedang Dikerjakan </button></td>
-                            `;
+                            @if(Auth::user()->role_id == 3)
+                                htmlview += `<td>
+                                    <span class="bg-warning p-2">Sedang Dikerjakan</span></td>
+                                `;
+                            @else
+                                htmlview += `<td>
+                                    <button class="btn btn-warning btn-sm" title="Delete Data!" onClick="finishedSPP('` +
+                                    data
+                                    .kode_spp + `')"> Sedang Dikerjakan </button></td>
+                                `;
+                            @endif
                         }
                         if (data.status == 'Selesai Dikerjakan') {
                             htmlview += `<td>
                                 <span class="bg-success p-2">Selesai Dikerjakan</span></td>
                             `;
                         }
+                        @if(Auth::user()->role_id == 1)
                         htmlview += `<td>
                           <button class="btn btn-secondary btn-sm" title="Detail Data!" 
                           onClick="detailSPP('` + data.kode_spp + `')"> <i class="fas fa-eye"></i>
@@ -234,6 +247,15 @@
                           </button>
                         </td>
                        </tr>`
+                       @endif
+                        @if(Auth::user()->role_id == 3)
+                        htmlview += `<td>
+                          <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-potong/print-data/` +
+                            data.uuid + `"> <i class="fas fa-print"></i>
+                          </a>
+                        </td>
+                       </tr>`
+                       @endif
                     });
 
                     $('#tbl_ukuran tbody').html(htmlview)

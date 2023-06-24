@@ -209,41 +209,61 @@
                         <td>` + data.tanggal + `</td>
                         `;
                         if (data.status == 'Belum Konfirmasi') {
+                            @if(Auth::user()->role_id == 3)
+                            htmlview += `<td>
+                                <span class="bg-danger p-2">Belum Dikonfirmasi</span></td>
+                            `;
+                            @else
                             htmlview += `<td>
                                 <button class="btn btn-danger btn-sm" title="Confirm Data!" onClick="confirmSPK('` +
                                 data
                                 .kode_spk + `')"> Belum Konfirmasi </button></td>
                             `;
+                            @endif
                         }
                         if (data.status == 'Sedang Dikerjakan') {
+                            @if(Auth::user()->role_id == 3)
+                            htmlview += `<td>
+                                <span class="bg-warning p-2">Sedang Dikerjakan</span></td>
+                            `;
+                            @else
                             htmlview += `<td>
                                 <button class="btn btn-warning btn-sm" title="Finish Data!" onClick="finishedSPK('` +
                                 data
                                 .kode_spk + `')"> Sedang Dikerjakan </button></td>
                             `;
+                            @endif
                         }
                         if (data.status == 'Selesai Dikerjakan') {
                             htmlview += `<td>
                                 <span class="bg-success p-2">Selesai Dikerjakan</span></td>
                             `;
                         }
-                        htmlview += `
-                        <td>
-                          <button class="btn btn-secondary btn-sm" title="Detail Data!" 
-                          onClick="detailSPK('` + data.uuid + `')"> <i class="fas fa-eye"></i>
-                          </button>
-                          <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-kerja/edit-data/` +
-                            data.uuid +
-                            `"> <i class="fas fa-pencil-alt"></i>
-                          </a>
-                          <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-kerja/print-data/` +
-                            data.uuid + `"> <i class="fas fa-print"></i>
-                          </a>
-                          <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPK('` + data
-                            .kode_spk + `')"> <i class="fas fa-trash"></i>
-                          </button>
-                        </td>
-                       </tr>`
+                        @if(Auth::user()->role_id == 1)
+                            htmlview += `<td>
+                            <button class="btn btn-secondary btn-sm" title="Detail Data!" 
+                              onClick="detailSPK('` + data.uuid + `')"> <i class="fas fa-eye"></i>
+                            </button>
+                            <a class="btn btn-info btn-sm" title="Edit Data!" href="surat-perintah-kerja/edit-data/` +
+                                data.uuid + `"> <i class="fas fa-pencil-alt"></i>
+                            </a>
+                            <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-kerja/print-data/` +
+                                data.uuid + `"> <i class="fas fa-print"></i>
+                            </a>
+                            <button class="btn btn-danger btn-sm" title="Delete Data!" onClick="deleteSPK('` + data
+                                .kode_spk + `')"> <i class="fas fa-trash"></i>
+                            </button>
+                            </td>
+                        </tr>`
+                        @endif
+                        @if(Auth::user()->role_id == 3)
+                            htmlview += `<td>
+                            <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-kerja/print-data/` +
+                                data.uuid + `"> <i class="fas fa-print"></i>
+                            </a>
+                            </td>
+                        </tr>`
+                        @endif
                     });
 
                     $('tbody').html(htmlview)
