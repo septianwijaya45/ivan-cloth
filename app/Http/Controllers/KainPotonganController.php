@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Kain_potongan;
 use App\Models\Kain_roll;
 use App\Models\Ukuran;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Ramsey\Uuid\Uuid;
@@ -23,7 +24,7 @@ class KainPotonganController extends Controller
         $data = DB::select("
             SELECT kr.kode_lot , kr.jenis_kain ,  kp.ukuran , kr.warna, kp.stok, kp.uuid, kp.id
             FROM m_kain_rolls kr, m_kain_potongans kp
-            WHERE kr.id = kp.kain_roll_id
+            WHERE kr.id = kp.kain_roll_id AND kp.deleted_at IS NULL
         ");
         return response()->json($data);
     }
@@ -81,7 +82,9 @@ class KainPotonganController extends Controller
     {
         $data = Kain_potongan::where('uuid', $uuid)->first();
         if ($data) {
-            Kain_potongan::where('id', $data->id)->delete();
+            Kain_potongan::where('id', $data->id)->update([
+                'deleted_at'    => Carbon::now()
+            ]);
 
             return response()->json([
                 'code' => 200,

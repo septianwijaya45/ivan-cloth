@@ -184,6 +184,7 @@
                     <th>Ukuran</th>
                     <th>Jenis</th>
                     <th>Warna</th>
+                    <th>Quantity</th>
                     <th>Keterangan</th>
                 </tr>
             </thead>
@@ -194,6 +195,7 @@
                     <td>{{$dt->ukuran}}</td>
                     <td>{{$dt->jenis}}</td>
                     <td>{{$dt->warna}}</td>
+                    <td>{{$dt->quantity}} {{$dt->satuan}}</td>
                     <td>{{$dt->note}}</td>
                 </tr>
             </tbody>

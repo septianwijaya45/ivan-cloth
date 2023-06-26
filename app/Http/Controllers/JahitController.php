@@ -90,17 +90,24 @@ class JahitController extends Controller
     public function addKaryawanJahit(Request $request, $id)
     {
         // try {
+
         $k_id = [$request->karyawan1, $request->karyawan2];
 
         $k1 = Karyawan::where('uuid', $request->karyawan1)->first();
         $k2 = Karyawan::where('uuid', $request->karyawan2)->first();
 
-        $karyawan = [$k1->nama, $k2->nama];
+        if(!is_null($k1) && !is_null($k2)){
+            $karyawan = [$k1->nama, $k2->nama];
+        }
+
+        if(is_null($k2)){
+            $karyawan = [$k1->nama];
+        }
 
         Jahit::where('id', $id)->update([
             'karyawan_id' => json_encode($k_id),
             'karyawan'    => json_encode($karyawan),
-            'gaji'        => $request->gaji,
+            'gaji'        => $request->gaji_add,
             'note'        => $request->note,
             'status'      => 'Belum Konfirmasi',
         ]);
@@ -111,7 +118,7 @@ class JahitController extends Controller
                 [
                     'karyawan_id'       => $k1->id,
                     'kode_transaksi'    => $request->kode_jahit,
-                    'gaji'              => $request->gaji * $request->jumlah_jahit,
+                    'gaji'              => $request->gaji_add * $request->jumlah_jahit,
                     'created_at'        => Carbon::now(),
                     'updated_at'        => Carbon::now()
                 ]
@@ -122,7 +129,7 @@ class JahitController extends Controller
                 [
                     'karyawan_id'       => $k2->id,
                     'kode_transaksi'    => $request->kode_jahit,
-                    'gaji'              => $request->gaji * $request->jumlah_jahit,
+                    'gaji'              => $request->gaji_add * $request->jumlah_jahit,
                     'created_at'        => Carbon::now(),
                     'updated_at'        => Carbon::now()
                 ]
@@ -150,7 +157,13 @@ class JahitController extends Controller
         $k1 = Karyawan::where('uuid', $request->karyawan1)->first();
         $k2 = Karyawan::where('uuid', $request->karyawan2)->first();
 
-        $karyawan = [$k1->nama, $k2->nama];
+        if(!is_null($k1) && !is_null($k2)){
+            $karyawan = [$k1->nama, $k2->nama];
+        }
+
+        if(is_null($k2)){
+            $karyawan = [$k1->nama];
+        }
 
         Jahit::where('id', $id)->update([
             'karyawan_id' => json_encode($k_id),

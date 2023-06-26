@@ -176,7 +176,7 @@
                                 <label for="gaji">Gaji</label>
                                 <div class="col-md-14 row">
                                     <div class="col-md-12">
-                                        <select name="gaji" class="form-control">
+                                        <select name="gaji_add" class="form-control">
                                             <option value="" selected disabled class="text-center">Gaji</option>
                                             @foreach ($gaji as $dtGaji)
                                                 <option value="{{ $dtGaji->gaji }}">

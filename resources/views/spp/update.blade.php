@@ -142,7 +142,7 @@
                                             <label for="quantity">Quantity</label>
                                             <div class="col-md-12">
                                                 <input type="number" name="quantity" id="quantity"
-                                                    class="form-control" placeholder="Quantity">
+                                                    class="form-control" placeholder="Quantity" readonly>
                                             </div>
                                         </div>
                                     </div>

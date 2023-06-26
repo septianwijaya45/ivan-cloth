@@ -143,13 +143,13 @@
                 .then((result) => {
                     if (result.isConfirmed) {
                         @if (Auth::user()->role_id == 1)
-                            var _url = "{{ route('tgaji.confirm', ['sp', 'id']) }}";
+                            var _url = "{{ route('tgaji.confirm', [':sp', ':id']) }}";
                         @endif
                         @if (Auth::user()->role_id == 2)
-                            var _url = "{{ route('a.tgaji.confirm', ['sp', 'id']) }}";
+                            var _url = "{{ route('a.tgaji.confirm', [':sp', ':id']) }}";
                         @endif
-                        _url = _url.replace('sp', sp)
-                        _url = _url.replace('id', id)
+                        _url = _url.replace(':sp', sp)
+                        _url = _url.replace(':id', id)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,

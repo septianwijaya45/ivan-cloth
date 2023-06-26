@@ -675,7 +675,7 @@ class SPKController extends Controller
                 $dt_spk = $spk->first();
 
                 //  update stok kain potongan
-                Kain_potongan::where('kain_roll_id', $dt_spk->kain_roll_id)->update([
+                Kain_potongan::where('id', $dt_spk->kain_potongan_id)->update([
                     'stok'    => $m_kainpotongan->stok + $dt_spk->quantity
                 ]);
 

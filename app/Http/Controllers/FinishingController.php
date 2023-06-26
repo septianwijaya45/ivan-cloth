@@ -62,12 +62,18 @@ class FinishingController extends Controller
         $k1 = Karyawan::where('uuid', $request->karyawan1)->first();
         $k2 = Karyawan::where('uuid', $request->karyawan2)->first();
 
-        $karyawan = [$k1->nama, $k2->nama];
+        if(!is_null($k1) && !is_null($k2)){
+            $karyawan = [$k1->nama, $k2->nama];
+        }
+
+        if(is_null($k2)){
+            $karyawan = [$k1->nama];
+        }
 
         FinishingModel::where('id', $id)->update([
             'karyawan_id' => json_encode($k_id),
             'karyawan'    => json_encode($karyawan),
-            'gaji'        => $request->gaji,
+            'gaji'        => $request->gaji_add,
             'note'        => $request->note,
             'status'      => 'Belum Konfirmasi',
         ]);
@@ -78,7 +84,7 @@ class FinishingController extends Controller
                 [
                     'karyawan_id'       => $k1->id,
                     'kode_transaksi'    => $request->kode_finishing,
-                    'gaji'              => $request->gaji * $request->jumlah_finishing,
+                    'gaji'              => $request->gaji_add * $request->jumlah_finishing,
                     'created_at'        => Carbon::now(),
                     'updated_at'        => Carbon::now()
                 ]
@@ -89,7 +95,7 @@ class FinishingController extends Controller
                 [
                     'karyawan_id'       => $k2->id,
                     'kode_transaksi'    => $request->kode_finishing,
-                    'gaji'              => $request->gaji * $request->jumlah_finishing,
+                    'gaji'              => $request->gaji_add * $request->jumlah_finishing,
                     'created_at'        => Carbon::now(),
                     'updated_at'        => Carbon::now()
                 ]
