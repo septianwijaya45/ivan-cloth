@@ -707,6 +707,6 @@ class SPKController extends Controller
         $no = 1;
 
         $pdf = Pdf::loadView('spk.pdf.index', compact(['spk', 'dataSpk', 'no']));
-        return $pdf->stream('Cetak SPP - ' . $spk->kode_spk);
+        return $pdf->stream('Cetak SPP - ' . $spk->kode_spk . '.pdf');
     }
 }

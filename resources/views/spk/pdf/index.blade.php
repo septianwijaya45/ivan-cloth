@@ -1,147 +1,154 @@
-<?php 
-    use App\Models\FileSPK;
+<?php
+use App\Models\FileSPK;
 ?>
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Cetak SPK - {{ $spk->kode_spk }}</title>
     <style>
-        @page { size: A4; }
+        @page {
+            size: A4;
+        }
 
-       body{
-           font-size: 9pt;
-       }
+        body {
+            font-size: 9pt;
+        }
 
-       .header{
-           width: 100%;
-           height: 40px;
-       }
+        .header {
+            width: 100%;
+            height: 40px;
+        }
 
-       .header .logo{
-           float: left;
-       }
+        .header .logo {
+            float: left;
+        }
 
-       .header .address{
-           float: left;
-           margin-left: 10px;
-           margin-top: -25px;
-           width: 300px;
-           font-size: 9pt;
-       }
+        .header .address {
+            float: left;
+            margin-left: 10px;
+            margin-top: -25px;
+            width: 300px;
+            font-size: 9pt;
+        }
 
-       .header .supplier{
-           float: right;
-           margin-top: -25px;
-           font-size: 9pt;
-       }
+        .header .supplier {
+            float: right;
+            margin-top: -25px;
+            font-size: 9pt;
+        }
 
-       .header .logo img{
-           width:90px; 
-           height:60px;
-       }
+        .header .logo img {
+            width: 90px;
+            height: 60px;
+        }
 
-       .header .supplier {
-           width: 250px;
-       }
+        .header .supplier {
+            width: 250px;
+        }
 
-       .header .supplier .sup{
-           margin-bottom: -10px;
-       }
+        .header .supplier .sup {
+            margin-bottom: -10px;
+        }
 
-       .header .supplier .from{
-           margin-left: 54px;
-       }
+        .header .supplier .from {
+            margin-left: 54px;
+        }
 
-       .header .supplier .addr{
-           height: auto;
-           margin-left: 55px;
-       }
+        .header .supplier .addr {
+            height: auto;
+            margin-left: 55px;
+        }
 
-       .content{
-           width: 100%;
-           height: auto;
-       }
-       
-       .content .judul{
-           text-align: center;
-       }
+        .content {
+            width: 100%;
+            height: auto;
+        }
 
-       .content .subjudul{
-           text-align: center;
-           margin-top: -15px;
-       }
+        .content .judul {
+            text-align: center;
+        }
 
-       .content .periode{
-           text-align: center;
-           margin-top: 5px;
-       }
+        .content .subjudul {
+            text-align: center;
+            margin-top: -15px;
+        }
 
-       .content .tabel-keuangan{
-           font-size: 12pt;
-           width: 100%;
-       }
+        .content .periode {
+            text-align: center;
+            margin-top: 5px;
+        }
 
-       .content .tabel-keuangan .type{
-           text-align: left;
-       }
+        .content .tabel-keuangan {
+            font-size: 12pt;
+            width: 100%;
+        }
 
-       .content .tabel-keuangan .total-pengeluaran{
-           text-align: center;
-       }
+        .content .tabel-keuangan .type {
+            text-align: left;
+        }
 
-       .content .tabel-keuangan .total-pendapatan{
-           text-align: center;
-       }
+        .content .tabel-keuangan .total-pengeluaran {
+            text-align: center;
+        }
+
+        .content .tabel-keuangan .total-pendapatan {
+            text-align: center;
+        }
 
         .table {
             width: 100%;
             border-collapse: collapse;
+            table-layout: fixed;
         }
-        
-        .table th, td {
+
+        .table th,
+        td {
             border: 1px solid #000;
-            padding: 8px;
+            padding: 2px;
         }
-        
+
         .table th {
             background-color: #f2f2f2;
         }
 
-        .footer-nota{
+        .footer-nota {
             width: 100px;
             float: right;
             margin-top: 100px;
         }
 
-       .footer-nota .attention{
-           width: 100%;
-           margin-top: 2px;
-           font-size: 10px
-       }
+        .footer-nota .attention {
+            width: 100%;
+            margin-top: 2px;
+            font-size: 10px
+        }
 
-       .footer-nota .user{
-           width: 400px;
-           bottom: 50px;
-           text-align: center;
-       }
-       .footer-nota .user .penerima{
-           margin-top: -20px;
-           width: 90px;
-           height: 40px;
-           font-size: 10px;
-           float: left;
-       }
+        .footer-nota .user {
+            width: 400px;
+            bottom: 50px;
+            text-align: center;
+        }
 
-       .footer-nota .user .users{
-           width: 200px;
-           float: right;
-           margin-top: 60px;
-       }
-   </style>
+        .footer-nota .user .penerima {
+            margin-top: -20px;
+            width: 90px;
+            height: 40px;
+            font-size: 10px;
+            float: left;
+        }
+
+        .footer-nota .user .users {
+            width: 200px;
+            float: right;
+            margin-top: 60px;
+        }
+    </style>
 </head>
+
 <body>
     <div class="header">
         {{-- <div class="logo">
@@ -155,68 +162,71 @@
             </p>
         </div>
         <div class="supplier">
-            <p>Kode SPP : {{$spk->kode_spk}}</p>
-            <p>Tertanggal : {{date('d F Y', strtotime($spk->tanggal))}}</p>
-            <p>Pukul : {{date('H:i:s', strtotime($spk->created_at))}}</p>
+            <p>Kode SPP : {{ $spk->kode_spk }}</p>
+            <p>Tertanggal : {{ date('d F Y', strtotime($spk->tanggal)) }}</p>
+            <p>Pukul : {{ date('H:i:s', strtotime($spk->created_at)) }}</p>
         </div>
     </div>
     <hr style="margin-top: 25px;">
     <div class="content">
         <h3 class="judul">Surat Perintah Kerja</h3>
-        <p class="subjudul">Kode {{$spk->kode_spk}}</p>
+        <p class="subjudul">Kode {{ $spk->kode_spk }}</p>
     </div>
     <div>
-        <p>Berikut ini adalah Surat Perintah Kerja yang akan dikerjakan berdasarkan artikel dengan catatan yang berada pada kolom <strong>keterangan</strong></p>
+        <p>Berikut ini adalah Surat Perintah Kerja yang akan dikerjakan berdasarkan artikel dengan catatan yang berada
+            pada kolom <strong>keterangan</strong></p>
     </div>
 
-    @foreach($dataSpk as $dt)
     <?php
-        $gambarSPK = FileSPK::where('kode_spk', $spk->kode_spk)
-                    ->where('artikel', $dt->artikel)
-                    ->get();
+    $gambarSPK = FileSPK::where('kode_spk', $spk->kode_spk)
+        ->where('artikel', $spk->artikel)
+        ->get();
     ?>
+
     <div class="content">
         <table class="table">
-            <thead>
-                <tr>
-                    <th>Tanggal</th>
-                    <th>Artikel</th>
-                    <th>Ukuran</th>
-                    <th>Jenis</th>
-                    <th>Warna</th>
-                    <th>Quantity</th>
-                    <th>Keterangan</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr class="judul">
-                    <td>{{date('d F Y', strtotime($dt->tanggal))}}</td>
-                    <td>{{$dt->artikel}}</td>
-                    <td>{{$dt->ukuran}}</td>
-                    <td>{{$dt->jenis}}</td>
-                    <td>{{$dt->warna}}</td>
-                    <td>{{$dt->quantity}} {{$dt->satuan}}</td>
-                    <td>{{$dt->note}}</td>
-                </tr>
-            </tbody>
+            <tr>
+                <th rowspan="8" colspan="2" style="width: 70%;">
+                    @foreach ($gambarSPK as $model)
+                        <img src="{{ public_path() . '/img/gambar/' . $model->nama_foto }}" alt=""
+                            width="350px">
+                        <br>
+                    @endforeach
+                </th>
+
+                <th style="width: 30%;">Artikel</th>
+            </tr>
+            <tr class="judul">
+                <td>{{ $spk->artikel }}</td>
+            </tr>
+            <tr>
+                <th>Ukuran</th>
+            </tr>
+            <tr class="judul">
+                <td>{{ $spk->ukuran }}</td>
+            </tr>
+            <tr>
+                <th>Jenis | Warna</th>
+            </tr>
+            <tr>
+                <td>
+                    @foreach ($dataSpk as $dt)
+                        - {{ $dt->jenis }} ( {{ $dt->quantity }} {{ $dt->satuan }} ) <br>
+                    @endforeach
+                </td>
+            </tr>
+            <tr>
+                <th>Keterangan</th>
+            </tr>
+            <tr>
+                <td>{{ $spk->note }}</td>
+            </tr>
         </table>
-        <h3 class="">Model Sablon</h3>
-        <div class="row">
-            <table>
-                @foreach($gambarSPK as $dg)
-                    <tr style="justify-content: center" class="judul">
-                        <td colspan="4"><img src="{{public_path().'/img/gambar/'.$dg->nama_foto}}" alt="" width="400px"></td>
-                    </tr>
-                @endforeach
-            </table>
-        </div>
-        <br>
     </div>
-    @endforeach
     <div>
         <p>Demikian Surat Perintah Potong yang saya sampaikan. Terima Kasih</p>
     </div>
-        
+
     <div class="footer-nota">
         <div class="user">
             <div class="penerima">
@@ -228,4 +238,5 @@
         </div>
     </div>
 </body>
+
 </html>
