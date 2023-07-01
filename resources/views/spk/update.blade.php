@@ -130,7 +130,7 @@
                                                                             @foreach ($karyawan as $dtKaryawan)
                                                                                 <option
                                                                                     value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}"
-                                                                                    @if ($karyawanDetail[0] == $dtKaryawan->nama) selected @endif>
+                                                                                    @if (isset($karyawanDetail[0]) ? $karyawanDetail[0] == $dtKaryawan->nama : null) selected @endif>
                                                                                     {{ $dtKaryawan->nama }}</option>
                                                                             @endforeach
                                                                         </select>
@@ -146,7 +146,7 @@
                                                                             @foreach ($karyawan as $dtKaryawan)
                                                                                 <option
                                                                                     value="{{ $dtKaryawan->uuid }}-{{ $dtKaryawan->nama }}"
-                                                                                    @if ($karyawanDetail[1] == $dtKaryawan->nama) selected @endif>
+                                                                                    @if (isset($karyawanDetail[1]) ? $karyawanDetail[1] == $dtKaryawan->nama : null) selected @endif>
                                                                                     {{ $dtKaryawan->nama }}</option>
                                                                             @endforeach
                                                                         </select>

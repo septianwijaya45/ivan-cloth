@@ -146,6 +146,46 @@ use App\Models\FileSPK;
             float: right;
             margin-top: 60px;
         }
+
+        .row-img:before .row-img:after {
+            display: table;
+            content: " ";
+            clear:both;
+        }
+
+        .divTable{
+            display: table;
+            width: 100%;
+        }
+        .divTableRow {
+            display: table-row;
+        }
+        .divTableHeading {
+            background-color: #EEE;
+            display: table-header-group;
+        }
+        .divTableCell, .divTableHead {
+            border: 1px solid #999999;
+            display: table-cell;
+            padding: 3px 10px;
+        }
+        .divTableHeading {
+            background-color: #EEE;
+            display: table-header-group;
+            font-weight: bold;
+        }
+        .divTableFoot {
+            background-color: #EEE;
+            display: table-footer-group;
+            font-weight: bold;
+        }
+        .divTableBody {
+            display: table-row-group;
+        }
+        .div-border {
+             border-style: groove;
+             margin-bottom: 5px;
+        }
     </style>
 </head>
 
@@ -184,13 +224,54 @@ use App\Models\FileSPK;
     ?>
 
     <div class="content">
-        <table class="table">
+        <div class="divTable">
+            <div class="divTableBody">
+                <div class="divTableRow">
+                    <div class="divTableCell" style="width: 65%;">
+                        <div class="row-img">
+                            @foreach ($gambarSPK as $model)
+                                <img src="{{ public_path() . '/img/gambar/' . $model->nama_foto }}" alt="" width="130px" style="margin-top: 40px; margin-left: 10px;">
+                            @endforeach
+                        </div>
+                    </div>
+                    <div class="divTableCell">
+                        <div class="div-border">
+                            <p style="font-weight:bold; text-align:center;">Artikel</p>
+                            <hr>
+                            <p style="text-align: center;">{{ $spk->artikel }}</p>
+                        </div>
+                        <div class="div-border">
+                            <p style="font-weight:bold; text-align:center;">Ukuran</p>
+                            <hr>
+                            <p style="text-align: center;">{{ $spk->ukuran }}</p>
+                        </div>
+                        <div class="div-border">
+                            <p style="font-weight:bold; text-align:center;">Jenis | Warna</p>
+                            <hr>
+                            @foreach ($dataSpk as $dt)
+                                <ol>
+                                    <li>{{ $dt->jenis }} ( {{ $dt->quantity }} {{ $dt->satuan }} )</li>
+                                </ol>
+                            @endforeach
+                        </div>
+                        <div class="div-border">
+                            <p style="font-weight:bold; text-align:center;">Keterangan</p>
+                            <hr>
+                            <p style="text-align: center;">{{ !is_null($spk->note) ? $spk->note : 'Tidak Ada Keterangan' }}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- <table class="table">
             <tr>
                 <th rowspan="8" colspan="2" style="width: 70%;">
                     @foreach ($gambarSPK as $model)
-                        <img src="{{ public_path() . '/img/gambar/' . $model->nama_foto }}" alt=""
-                            width="350px">
-                        <br>
+                        <div class="grid-img">
+                            <img src="{{ public_path() . '/img/gambar/' . $model->nama_foto }}" alt=""
+                                width="150px">
+                            <br>
+                        </div>
                     @endforeach
                 </th>
 
@@ -221,7 +302,7 @@ use App\Models\FileSPK;
             <tr>
                 <td>{{ $spk->note }}</td>
             </tr>
-        </table>
+        </table> -->
     </div>
     <div>
         <p>Demikian Surat Perintah Potong yang saya sampaikan. Terima Kasih</p>

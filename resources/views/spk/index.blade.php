@@ -243,8 +243,8 @@
                                     <button class="btn btn-secondary btn-sm" title="Detail Data!" 
                                     onClick="detailSPK('` + data.uuid + `')"> <i class="fas fa-eye"></i>
                                     </button>
-                                    <a class="btn btn-info btn-sm" title="Edit Data!" disabled> <i class="fas fa-pencil-alt"></i>
-                                    </a>
+                                    <button class="btn btn-info btn-sm" title="Edit Data!" disabled> <i class="fas fa-pencil-alt"></i>
+                                    </button>
                                     <a class="btn btn-warning btn-sm" title="Print Data!" href="surat-perintah-kerja/print-data/` + data.uuid + `"> <i class="fas fa-print"></i>
                                     </a>
                                     <button class="btn btn-danger btn-sm" title="Delete Data!" disabled> <i class="fas fa-trash"></i>

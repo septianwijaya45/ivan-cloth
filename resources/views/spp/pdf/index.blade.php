@@ -169,8 +169,8 @@
     <table class="table">
         <thead>
             <tr>
-                <th>Ukuran</th>
-                <th>Kode Lot</th>
+                <th>No</th>
+                <th>Kode Lot | Ukuran</th>
                 <th>Jenis Kain | Warna</th>
                 <th>Quantity</th>
                 <th>Hasil Potongan</th>
@@ -182,7 +182,7 @@
             @foreach($dataSpp as $dt)
                 <tr>
                     <td>{{$no++}}</td>
-                    <td>{{$dt->kode_lot}}</td>
+                    <td>{{$dt->kode_lot}} | {{$dt->ukuran}}</td>
                     <td>{{$dt->jenis}}</td>
                     <td>{{$dt->quantity}}</td>
                     <td>{{$dt->hasil_potongan}}</td>
