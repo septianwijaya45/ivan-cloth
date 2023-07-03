@@ -172,6 +172,7 @@
                 <th>No</th>
                 <th>Kode Lot</th>
                 <th>Jenis Kain | Warna</th>
+                <th>Ukuran</th>
                 <th>Quantity</th>
                 <th>Hasil Potongan</th>
                 <th>Karyawan</th>
@@ -184,6 +185,7 @@
                     <td>{{$no++}}</td>
                     <td>{{$dt->kode_lot}}</td>
                     <td>{{$dt->jenis}}</td>
+                    <td>{{$dt->ukuran}}</td>
                     <td>{{$dt->quantity}}</td>
                     <td>{{$dt->hasil_potongan}}</td>
                     <td>{{$dt->karyawan}}</td>
