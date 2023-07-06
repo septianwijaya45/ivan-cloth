@@ -387,16 +387,36 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
         //     Route::put('update-karyawan/{id}', [FinishingController::class, 'updateKaryawanFinishing'])->name('a.finishing.updateKaryawan');
         // });
 
-        // // Route Barang Jadi
-        // Route::group(['prefix' => 'barang-jadi'], function () {
-        //     // index
-        //     Route::get('', [BarangJadiController::class, 'index'])->name('a.barang_jadi');
-        //     Route::get('data/{status}', [BarangJadiController::class, 'indexData'])->name('a.barang_jadi.data');
-        //     // delete barang_jadi
-        //     Route::delete('delete/{id}', [BarangJadiController::class, 'destroy'])->name('a.barang_jadi.delete');
-        //     // Confirm & barang_jadi
-        //     Route::put('confirm-work/{id}', [BarangJadiController::class, 'confirm'])->name('a.barang_jadi.confirm');
-        // });
+        //Route Module Kain Roll
+        Route::group(['prefix' => 'kain-roll'], function () {
+            Route::get('', [KainRollController::class, 'index'])->name('a.kain_roll');
+            Route::get('data', [KainRollController::class, 'indexData'])->name('a.kain_roll.data');
+            Route::post('', [KainRollController::class, 'addData'])->name('a.kain_roll.add');
+            Route::get('{uuid}', [KainRollController::class, 'detailData'])->name('a.kain_roll.detail');
+            Route::put('{uuid}', [KainRollController::class, 'updateData'])->name('a.kain_roll.update');
+            Route::delete('{uuid}', [KainRollController::class, 'deleteData'])->name('a.kain_roll.delete');
+        });
+
+        // Route Module Kain Potongan
+        Route::group(['prefix' => 'kain-potongan'], function () {
+            Route::get('', [KainPotonganController::class, 'index'])->name('a.kain_potongan');
+            Route::get('data', [KainPotonganController::class, 'indexData'])->name('a.kain_potongan.data');
+            Route::post('', [KainPotonganController::class, 'store'])->name('a.kain_potongan.add');
+            Route::get('{uuid}', [KainPotonganController::class, 'detail'])->name('a.kain_potongan.detail');
+            Route::put('{uuid}', [KainPotonganController::class, 'update'])->name('a.kain_potongan.update');
+            Route::delete('{uuid}', [KainPotonganController::class, 'delete'])->name('a.kain_potongan.delete');
+        });
+
+        // Route Barang Jadi
+        Route::group(['prefix' => 'barang-jadi'], function () {
+            // index
+            Route::get('', [BarangJadiController::class, 'index'])->name('a.barang_jadi');
+            Route::get('data/{status}', [BarangJadiController::class, 'indexData'])->name('a.barang_jadi.data');
+            // delete barang_jadi
+            Route::delete('delete/{id}', [BarangJadiController::class, 'destroy'])->name('a.barang_jadi.delete');
+            // Confirm & barang_jadi
+            Route::put('confirm-work/{id}', [BarangJadiController::class, 'confirm'])->name('a.barang_jadi.confirm');
+        });
 
         // Route SPP
         Route::group(['prefix' => 'surat-perintah-potong'], function () {
@@ -666,6 +686,8 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // create
             Route::get('tambah-data', [JahitController::class, 'insert'])->name('w.jahit.insert');
             Route::post('tambah-data', [JahitController::class, 'store'])->name('w.jahit.store');
+            // confirm
+            Route::put('finished-work/{kode_jahit}', [JahitController::class, 'finished'])->name('w.jahit.finished');
             // edit
             Route::get('edit-data/{uuid}', [JahitController::class, 'edit'])->name('w.jahit.edit');
             Route::post('edit-data', [JahitController::class, 'update'])->name('w.jahit.update');
@@ -680,6 +702,8 @@ Route::group(['middleware' => ['web', 'auth', 'roles']], function () {
             // create
             Route::get('tambah-data', [FinishingController::class, 'insert'])->name('w.finishing.insert');
             Route::post('tambah-data', [FinishingController::class, 'store'])->name('w.finishing.store');
+            // confirm
+            Route::put('finished-work/{kode_finishing}', [FinishingController::class, 'finished'])->name('w.finishing.finished');
             // edit
             Route::get('edit-data/{uuid}', [FinishingController::class, 'edit'])->name('w.finishing.edit');
             Route::post('edit-data', [FinishingController::class, 'update'])->name('w.finishing.update');

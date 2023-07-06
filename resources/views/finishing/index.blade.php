@@ -438,17 +438,11 @@
                             @endif
                         }
                         if (data.status == 'Sedang Dikerjakan') {
-                            @if (Auth::user()->role_id == 3)
-                                htmlview += `<td>
-                                    <span class="bg-danger p-2">Belum Konfirmasi</span></td>
-                                `;
-                            @else
-                                htmlview +=
-                                    `<td>
-                                        <button class="btn btn-warning btn-sm container-fluid" title="Finish Data!" 
-                                        onClick="finishedFinishing('` + data.kode_finishing + `')"> Sedang Dikerjakan </button></td>
-                                        `;
-                            @endif
+                            htmlview +=
+                                `<td>
+                                    <button class="btn btn-warning btn-sm container-fluid" title="Finish Data!" 
+                                    onClick="finishedFinishing('` + data.kode_finishing + `')"> Sedang Dikerjakan </button></td>
+                                    `;
                         }
                         if (data.status == 'Selesai Dikerjakan') {
                             htmlview += `<td>
@@ -617,6 +611,9 @@
                         @if (Auth::user()->role_id == 2)
                             var _url = "{{ route('a.finishing.finished', ':kode_finishing') }}";
                         @endif
+                        @if (Auth::user()->role_id == 3)
+                            var _url = "{{ route('w.finishing.finished', ':kode_finishing') }}";
+                        @endif
                         _url = _url.replace(':kode_finishing', kode_finishing)
 
                         var _token = $('meta[name="csrf-token"]').attr('content');
@@ -625,6 +622,18 @@
                             type: 'PUT',
                             data: {
                                 _token: _token
+                            },
+                            beforeSend: function() {
+                                swal.fire({
+                                    title: "",
+                                    text: "Memproses Data...!",
+                                    icon: "warning",
+                                    showConfirmButton: false,
+                                    onRender: function() {
+                                        // there will only ever be one sweet alert open.
+                                        $('.swal2-content').prepend(sweet_loader);
+                                    }
+                                });
                             },
                             success: function(res) {
                                 Notif.fire({

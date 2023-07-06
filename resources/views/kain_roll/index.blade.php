@@ -32,7 +32,7 @@
                         <div class="card">
                             <div class="card-header">
                                 <h5 class="card-title">Data Kain Roll</h5>
-                                @if(Auth::user()->role_id == 1)
+                                @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                                     <div class="card-tools">
                                         <button class="btn btn-success btn-sm" data-toggle="modal"
                                             data-target="#modalAddKainRoll">
@@ -49,14 +49,14 @@
                                         aria-describedby="tbl_kain_roll" style="width: 100%;">
                                         <thead>
                                             <tr>
-                                                <th width="5%" style="text-align: center;">ID</th>
+                                                <th width="5%" style="text-align: center;">No</th>
                                                 <th>Kode LOT</th>
                                                 <th>Jenis Kain</th>
                                                 <th>Warna</th>
                                                 <th>Stok Roll</th>
                                                 <th>Berat /roll</th>
                                                 <th>Total Berat</th>
-                                                @if(Auth::user()->role_id == 1)
+                                                @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                                                 <th width="10%">Aksi</th>
                                                 @endif
                                             </tr>
@@ -279,10 +279,14 @@
         getKainRoll()
 
         function getKainRoll() {
+            let no = 0;
             var htmlview
             $.ajax({
                 @if (Auth::user()->role_id == 1)
                     url: "{{ route('kain_roll.data') }}",
+                @endif
+                @if (Auth::user()->role_id == 2)
+                    url: "{{ route('a.kain_roll.data') }}",
                 @endif
                 @if (Auth::user()->role_id == 3)
                     url: "{{ route('w.kain_roll.data') }}",
@@ -292,7 +296,7 @@
                     $('tbody').html('')
                     $.each(res, function(i, data) {
                         htmlview += `<tr>
-                        <td style="text-align: center;">` + data.id + `</td>
+                        <td style="text-align: center;">` + (no = no + 1) + `</td>
                         <td>` + data.kode_lot + `</td>
                         <td>` + data.jenis_kain + `</td>
                         <td>` + data.warna + `</td>
@@ -300,7 +304,7 @@
                         <td style='text-align: right;'>` + data.berat + ` kg</td>
                         <td style='text-align: right;'>` + (data.stok_roll * data.berat) + ` kg</td>`
 
-                        @if(Auth::user()->role_id == 1)
+                        @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
                             htmlview += `<td>
                             <button class="btn btn-info btn-sm" title="Edit Data!" onClick="detailKainRoll('` + data
                                 .uuid + `')"> <i class="fas fa-pencil-alt"></i>
@@ -324,6 +328,9 @@
             $.ajax({
                 @if (Auth::user()->role_id == 1)
                     url: "{{ route('kain_roll.add') }}",
+                @endif
+                @if (Auth::user()->role_id == 2)
+                    url: "{{ route('a.kain_roll.add') }}",
                 @endif
                 @if (Auth::user()->role_id == 3)
                     url: "{{ route('w.kain_roll.add') }}",
@@ -363,6 +370,9 @@
             @if (Auth::user()->role_id == 1)
                 var _url = "{{ route('kain_roll.detail', ':id') }}"
             @endif
+            @if (Auth::user()->role_id == 2)
+                var _url = "{{ route('a.kain_roll.detail', ':id') }}"
+            @endif
             @if (Auth::user()->role_id == 3)
                 var _url = "{{ route('w.kain_roll.detail', ':id') }}"
             @endif
@@ -386,6 +396,9 @@
             var id = $('#formEditKainRoll').data('id')
             @if (Auth::user()->role_id == 1)
                 var _url = "{{ route('kain_roll.update', ':id') }}"
+            @endif
+            @if (Auth::user()->role_id == 2)
+                var _url = "{{ route('a.kain_roll.update', ':id') }}"
             @endif
             @if (Auth::user()->role_id == 3)
                 var _url = "{{ route('w.kain_roll.update', ':id') }}"
@@ -451,6 +464,9 @@
                     if (result.isConfirmed) {
                         @if (Auth::user()->role_id == 1)
                             var _url = "{{ route('kain_roll.delete', ':id') }}";
+                        @endif
+                        @if (Auth::user()->role_id == 2)
+                            var _url = "{{ route('a.kain_roll.delete', ':id') }}";
                         @endif
                         @if (Auth::user()->role_id == 3)
                             var _url = "{{ route('w.kain_roll.delete', ':id') }}";

@@ -198,6 +198,32 @@
                              </p>
                          </a>
                      </li>
+                     <li class="nav-header">Stok Barang</li>
+                     <li class="nav-item">
+                         <a href="{{ route('a.kain_roll') }}"
+                             class="nav-link {{ request()->is('kain-roll') ? ' active' : '' }}">
+                             <i class="nav-icon fas fa-scroll"></i>
+                             <p>
+                                 Kain Roll
+                             </p>
+                         </a>
+                     </li>
+                     <li class="nav-item">
+                         <a href="{{ route('a.kain_potongan') }}" class="nav-link {{ request()->is('kain-potongan') ? ' active' : '' }}">
+                             <i class="nav-icon fas fa-cut"></i>
+                             <p>
+                                 Kain Potongan
+                             </p>
+                         </a>
+                     </li>
+                     <li class="nav-item">
+                         <a href="{{ route('a.barang_jadi') }}" class="nav-link {{ request()->is('barang-jadi') || request()->is('barang-jadi/*') ? ' active' : '' }}">
+                             <i class="nav-icon fas fa-tshirt"></i>
+                             <p>
+                                 Barang Jadi
+                             </p>
+                         </a>
+                     </li>
                      <li class="nav-header">Surat Perintah</li>
                      <li class="nav-item">
                          <a href="{{ route('a.spp') }}" class="nav-link {{ request()->is('surat-perintah-potong') || request()->is('surat-perintah-potong/*') ? ' active' : '' }}">

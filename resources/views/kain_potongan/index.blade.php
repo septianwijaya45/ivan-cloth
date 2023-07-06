@@ -247,6 +247,9 @@
                 @if (Auth::user()->role_id == 1)
                     url: "{{ route('kain_potongan.data') }}",
                 @endif
+                @if (Auth::user()->role_id == 2)
+                    url: "{{ route('a.kain_potongan.data') }}",
+                @endif
                 @if (Auth::user()->role_id == 3)
                     url: "{{ route('w.kain_potongan.data') }}",
                 @endif

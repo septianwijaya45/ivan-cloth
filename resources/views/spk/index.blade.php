@@ -222,15 +222,9 @@
                             @endif
                         }
                         if (data.status == 'Sedang Dikerjakan') {
-                            @if(Auth::user()->role_id == 3)
-                            htmlview += `<td>
-                                <span class="bg-warning p-2">Sedang Dikerjakan</span></td>
-                            `;
-                            @else
                             htmlview += `<td>
                                 <button class="btn btn-warning btn-sm" title="Finish Data!" onClick="finishedSPK('` + data.kode_spk + `')"> Sedang Dikerjakan </button></td>
                             `;
-                            @endif
                         }
                         if (data.status == 'Selesai Dikerjakan') {
                             htmlview += `<td>
@@ -484,6 +478,9 @@
                         @endif
                         @if (Auth::user()->role_id == 2)
                             var _url = "{{ route('a.spk.finished', ':kode_spk') }}";
+                        @endif
+                        @if (Auth::user()->role_id == 3)
+                            var _url = "{{ route('w.spk.finished', ':kode_spk') }}";
                         @endif
                         _url = _url.replace(':kode_spk', kode_spk)
                         var _token = $('meta[name="csrf-token"]').attr('content');

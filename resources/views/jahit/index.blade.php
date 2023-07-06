@@ -437,17 +437,11 @@
                             @endif
                         }
                         if (data.status == 'Sedang Dikerjakan') {
-                            @if (Auth::user()->role_id == 3)
-                                htmlview += `<td>
-                                    <span class="bg-warning p-2">Sedang Dikerjakan</span></td>
-                                `;
-                            @else
-                                htmlview +=
-                                    `<td>
-                                        <button class="btn btn-warning btn-sm container-fluid" title="Finish Data!" 
-                                        onClick="finishedJahit('` + data.kode_jahit + `')"> Sedang Dikerjakan </button></td>
-                                        `;
-                            @endif
+                            htmlview +=
+                                `<td>
+                                    <button class="btn btn-warning btn-sm container-fluid" title="Finish Data!" 
+                                    onClick="finishedJahit('` + data.kode_jahit + `')"> Sedang Dikerjakan </button></td>
+                                    `;
                         }
                         if (data.status == 'Selesai Dikerjakan') {
                             htmlview += `<td>
@@ -616,6 +610,9 @@
                         @endif
                         @if (Auth::user()->role_id == 2)
                             var _url = "{{ route('a.jahit.finished', ':kode_jahit') }}";
+                        @endif
+                        @if (Auth::user()->role_id == 3)
+                            var _url = "{{ route('w.jahit.finished', ':kode_jahit') }}";
                         @endif
 
                         _url = _url.replace(':kode_jahit', kode_jahit)

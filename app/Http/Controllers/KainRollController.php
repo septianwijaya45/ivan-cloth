@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
 use App\Models\Kain_roll;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Ramsey\Uuid\Uuid;
 
@@ -16,7 +17,7 @@ class KainRollController extends Controller
 
     public function indexData()
     {
-        $data = Kain_roll::where('stok_roll', '>', 0)->get();
+        $data = Kain_roll::where('stok_roll', '>', 0)->where('deleted_at', null)->get();
         return response()->json($data);
     }
 
@@ -81,7 +82,9 @@ class KainRollController extends Controller
     {
         $data = Kain_roll::where('uuid', $uuid)->first();
         if ($data) {
-            Kain_roll::where('id', $data->id)->delete();
+            Kain_roll::where('id', $data->id)->update([
+                'deleted_at'    => Carbon::now()
+            ]);
 
             return response()->json([
                 'code' => 200,

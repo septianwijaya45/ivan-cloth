@@ -213,17 +213,10 @@
                             @endif
                         }
                         if (data.status == 'Sedang Dikerjakan') {
-                            @if(Auth::user()->role_id == 3)
-                                htmlview += `<td>
-                                    <span class="bg-warning p-2">Sedang Dikerjakan</span></td>
-                                `;
-                            @else
-                                htmlview += `<td>
-                                    <button class="btn btn-warning btn-sm" title="Delete Data!" onClick="finishedSPP('` +
-                                    data
-                                    .kode_spp + `')"> Sedang Dikerjakan </button></td>
-                                `;
-                            @endif
+                            htmlview += `<td>
+                                <button class="btn btn-warning btn-sm" title="Delete Data!" onClick="finishedSPP('` +
+                                data.kode_spp + `')"> Sedang Dikerjakan </button></td>
+                            `;
                         }
                         if (data.status == 'Selesai Dikerjakan') {
                             htmlview += `<td>
@@ -463,6 +456,9 @@
                         @endif
                         @if (Auth::user()->role_id == 2)
                             var _url = "{{ route('a.spp.finished', ':kode_spp') }}";
+                        @endif
+                        @if (Auth::user()->role_id == 3)
+                            var _url = "{{ route('w.spp.finished', ':kode_spp') }}";
                         @endif
                         _url = _url.replace(':kode_spp', kode_spp)
                         var _token = $('meta[name="csrf-token"]').attr('content');
