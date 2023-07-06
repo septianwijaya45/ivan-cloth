@@ -139,6 +139,13 @@
                                                     class="form-control" placeholder="Quantity" readonly>
                                             </div>
                                         </div>
+                                        <div class="col-lg-3">
+                                            <label for="berat">Berat Kain /roll</label>
+                                            <div class="col-md-12">
+                                                <input type="text" name="berat" id="berat" class="form-control"
+                                                    placeholder="Berat kain" readonly>
+                                            </div>
+                                        </div>
                                     </div>
                                     <div class="row">
                                         <div class="col-lg-3">
@@ -295,6 +302,7 @@
                         success: function(res) {
                             $('#warna').val(res.warna)
                             $('#quantity').val(res.stok_roll)
+                            $('#berat').val(res.berat + " kg")
                         }
                     })
                 }
