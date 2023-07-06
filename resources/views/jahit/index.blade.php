@@ -78,12 +78,12 @@
                                                 <th>Detail Kain Sablon</th>
                                                 <th>Quantity</th>
                                                 <th>Karyawan</th>
-                                                @if(Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
-                                                <th>Gaji</th>
-                                                <th>Status Surat</th>
-                                                <th width="5%">Aksi</th>
+                                                @if (Auth::user()->role_id == 1 || Auth::user()->role_id == 2)
+                                                    <th>Gaji</th>
+                                                    <th>Status Surat</th>
+                                                    <th width="5%">Aksi</th>
                                                 @else
-                                                <th>Status Surat</th>
+                                                    <th>Status Surat</th>
                                                 @endif
                                             </tr>
                                         </thead>
@@ -404,11 +404,11 @@
                         </td>
                         <td class="text-right"> ` + data.jml_jahit + ` </td>
                         <td> ` + data.karyawan.replace(',', '<br>') + ` </td>`;
-                        @if(Auth::user()->role_id != 3)
-                            htmlview  += `<td class="text-right"> ` + data.gaji + `</td>`;
+                        @if (Auth::user()->role_id != 3)
+                            htmlview += `<td class="text-right"> ` + data.gaji + `</td>`;
                         @endif
                         if (data.status == 'Belum Menentukan Karyawan') {
-                            @if(Auth::user()->role_id == 3)
+                            @if (Auth::user()->role_id == 3)
                                 htmlview += `<td>
                                     <span class="bg-secondary p-2">Belum Ditentukan Karyawan</span></td>
                                 `;
@@ -424,7 +424,7 @@
                             @endif
                         }
                         if (data.status == 'Belum Konfirmasi') {
-                            @if(Auth::user()->role_id == 3)
+                            @if (Auth::user()->role_id == 3)
                                 htmlview += `<td>
                                     <span class="bg-danger p-2">Belum Konfirmasi</span></td>
                                 `;
@@ -437,7 +437,7 @@
                             @endif
                         }
                         if (data.status == 'Sedang Dikerjakan') {
-                            @if(Auth::user()->role_id == 3)
+                            @if (Auth::user()->role_id == 3)
                                 htmlview += `<td>
                                     <span class="bg-warning p-2">Sedang Dikerjakan</span></td>
                                 `;
@@ -455,7 +455,7 @@
                                     `;
                         }
                         if (data.status == 'Belum Menentukan Karyawan') {
-                            @if(Auth::user()->role_id != 3)
+                            @if (Auth::user()->role_id != 3)
                                 htmlview +=
                                     `<td class="text-right">
                                     <button class="btn btn-danger btn-sm" title="Delete Data!" 
@@ -465,7 +465,7 @@
                                 </tr>`
                             @endif
                         } else {
-                            @if(Auth::user()->role_id != 3)
+                            @if (Auth::user()->role_id != 3)
                                 if (data.status == 'Selesai Dikerjakan') {
                                     htmlview +=
                                         `<td class="text-right">
@@ -478,7 +478,7 @@
                                         </button>
                                         </td>
                                     </tr>`
-                                }else{
+                                } else {
                                     htmlview +=
                                         `<td class="text-right">
                                         <button class="btn btn-info btn-sm" title="Edit Karyawan Jahit!" 
@@ -520,7 +520,7 @@
                             var _url = "{{ route('a.jahit.delete', ':kode_jahit') }}";
                         @endif
                         _url = _url.replace(':kode_jahit', kode_jahit)
-                        
+
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
                             url: _url,
@@ -617,7 +617,7 @@
                         @if (Auth::user()->role_id == 2)
                             var _url = "{{ route('a.jahit.finished', ':kode_jahit') }}";
                         @endif
-                        
+
                         _url = _url.replace(':kode_jahit', kode_jahit)
                         var _token = $('meta[name="csrf-token"]').attr('content');
                         $.ajax({
@@ -716,6 +716,18 @@
                 type: 'PUT',
                 data: $('#formAddKaryawan').serialize(),
                 dataType: 'json',
+                beforeSend: function() {
+                    swal.fire({
+                        title: "",
+                        text: "Memproses Data...!",
+                        icon: "warning",
+                        showConfirmButton: false,
+                        onRender: function() {
+                            // there will only ever be one sweet alert open.
+                            $('.swal2-content').prepend(sweet_loader);
+                        }
+                    });
+                },
                 success: function(res) {
                     if (res.code == 200) {
                         $('#formAddKaryawan').trigger('reset')
@@ -725,7 +737,6 @@
                             icon: 'success',
                             title: res.message,
                         })
-
                         getJahit(status_jahit)
                     }
                 },
@@ -758,6 +769,18 @@
                 type: 'PUT',
                 data: $('#formEditKaryawan').serialize(),
                 dataType: 'json',
+                beforeSend: function() {
+                    swal.fire({
+                        title: "",
+                        text: "Memproses Data...!",
+                        icon: "warning",
+                        showConfirmButton: false,
+                        onRender: function() {
+                            // there will only ever be one sweet alert open.
+                            $('.swal2-content').prepend(sweet_loader);
+                        }
+                    });
+                },
                 success: function(res) {
                     if (res.code == 200) {
                         $('#formEditKaryawan').trigger('reset')
